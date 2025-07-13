@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building, Filter, X } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -11,6 +12,16 @@ const Listings = () => {
   const [visibleCount, setVisibleCount] = useState(6);
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    priceRange: "all",
+    bedrooms: "all",
+    bathrooms: "all",
+    status: "all",
+    propertyType: "all"
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
   // All Crawford Team properties - Actual MLS Listings
   const allProperties = [
@@ -368,14 +379,82 @@ const Listings = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Filter properties based on selected filters
+  const filteredProperties = allProperties.filter(property => {
+    // Price filter
+    if (filters.priceRange !== "all") {
+      const price = parseInt(property.price.replace(/[$,/mo]/g, ''));
+      switch (filters.priceRange) {
+        case "under200k":
+          if (property.status !== "For Rent" && price >= 200000) return false;
+          break;
+        case "200k-400k":
+          if (property.status !== "For Rent" && (price < 200000 || price > 400000)) return false;
+          break;
+        case "400k-600k":
+          if (property.status !== "For Rent" && (price < 400000 || price > 600000)) return false;
+          break;
+        case "over600k":
+          if (property.status !== "For Rent" && price < 600000) return false;
+          break;
+        case "under1500":
+          if (property.status === "For Rent" && price >= 1500) return false;
+          break;
+        case "1500-2000":
+          if (property.status === "For Rent" && (price < 1500 || price > 2000)) return false;
+          break;
+        case "over2000":
+          if (property.status === "For Rent" && price < 2000) return false;
+          break;
+      }
+    }
+
+    // Bedrooms filter
+    if (filters.bedrooms !== "all") {
+      const bedroomCount = parseInt(filters.bedrooms);
+      if (property.beds !== bedroomCount) return false;
+    }
+
+    // Bathrooms filter
+    if (filters.bathrooms !== "all") {
+      const bathroomCount = parseFloat(filters.bathrooms);
+      if (property.baths !== bathroomCount) return false;
+    }
+
+    // Status filter
+    if (filters.status !== "all") {
+      if (filters.status === "sale" && property.status === "For Rent") return false;
+      if (filters.status === "rent" && property.status !== "For Rent") return false;
+    }
+
+    // Property type filter
+    if (filters.propertyType !== "all") {
+      const title = property.title.toLowerCase();
+      const location = property.location.toLowerCase();
+      switch (filters.propertyType) {
+        case "condo":
+          if (!title.includes("condo") && !location.includes("#") && !property.condoFee) return false;
+          break;
+        case "house":
+          if (title.includes("condo") || location.includes("#") || property.condoFee) return false;
+          break;
+        case "duplex":
+          if (!title.includes("duplex")) return false;
+          break;
+      }
+    }
+
+    return true;
+  });
+
   // Handle infinite scroll
   useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 1000) {
-        if (visibleCount < allProperties.length && !isLoading) {
+        if (visibleCount < filteredProperties.length && !isLoading) {
           setIsLoading(true);
           setTimeout(() => {
-            setVisibleCount(prev => Math.min(prev + 6, allProperties.length));
+            setVisibleCount(prev => Math.min(prev + 6, filteredProperties.length));
             setIsLoading(false);
           }, 800);
         }
@@ -384,9 +463,24 @@ const Listings = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [visibleCount, allProperties.length, isLoading]);
+  }, [visibleCount, filteredProperties.length, isLoading]);
 
-  const visibleProperties = allProperties.slice(0, visibleCount);
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [filters]);
+
+  const visibleProperties = filteredProperties.slice(0, visibleCount);
+
+  const clearFilters = () => {
+    setFilters({
+      priceRange: "all",
+      bedrooms: "all",
+      bathrooms: "all",
+      status: "all",
+      propertyType: "all"
+    });
+  };
 
   return (
     <div className="min-h-screen">
@@ -410,6 +504,140 @@ const Listings = () => {
               New Port Richey, Holiday, and Dunnellon. From investment opportunities 
               to dream homes, find your perfect match.
             </p>
+            
+            {/* Filter Toggle */}
+            <div className="mt-8 flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowFilters(!showFilters)}
+                className="gap-2"
+              >
+                <Filter className="w-4 h-4" />
+                Filters
+                {Object.values(filters).some(filter => filter !== "all") && (
+                  <Badge variant="secondary" className="ml-2">{Object.values(filters).filter(filter => filter !== "all").length}</Badge>
+                )}
+              </Button>
+            </div>
+
+            {/* Filters Panel */}
+            {showFilters && (
+              <div className="mt-6 p-6 bg-card rounded-lg border max-w-4xl mx-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Filter Properties</h3>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" onClick={clearFilters}>
+                      Clear All
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setShowFilters(false)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  {/* Status Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Status</label>
+                    <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="sale">For Sale</SelectItem>
+                        <SelectItem value="rent">For Rent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Price Range Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Price Range</label>
+                    <Select value={filters.priceRange} onValueChange={(value) => setFilters({...filters, priceRange: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Prices</SelectItem>
+                        {filters.status === "rent" || filters.status === "all" ? (
+                          <>
+                            <SelectItem value="under1500">Under $1,500/mo</SelectItem>
+                            <SelectItem value="1500-2000">$1,500-$2,000/mo</SelectItem>
+                            <SelectItem value="over2000">Over $2,000/mo</SelectItem>
+                          </>
+                        ) : null}
+                        {filters.status === "sale" || filters.status === "all" ? (
+                          <>
+                            <SelectItem value="under200k">Under $200K</SelectItem>
+                            <SelectItem value="200k-400k">$200K-$400K</SelectItem>
+                            <SelectItem value="400k-600k">$400K-$600K</SelectItem>
+                            <SelectItem value="over600k">Over $600K</SelectItem>
+                          </>
+                        ) : null}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Bedrooms Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Bedrooms</label>
+                    <Select value={filters.bedrooms} onValueChange={(value) => setFilters({...filters, bedrooms: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Any</SelectItem>
+                        <SelectItem value="1">1 Bed</SelectItem>
+                        <SelectItem value="2">2 Beds</SelectItem>
+                        <SelectItem value="3">3 Beds</SelectItem>
+                        <SelectItem value="4">4+ Beds</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Bathrooms Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Bathrooms</label>
+                    <Select value={filters.bathrooms} onValueChange={(value) => setFilters({...filters, bathrooms: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Any</SelectItem>
+                        <SelectItem value="1">1 Bath</SelectItem>
+                        <SelectItem value="1.5">1.5 Baths</SelectItem>
+                        <SelectItem value="2">2 Baths</SelectItem>
+                        <SelectItem value="3">3+ Baths</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Property Type Filter */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Property Type</label>
+                    <Select value={filters.propertyType} onValueChange={(value) => setFilters({...filters, propertyType: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="house">House</SelectItem>
+                        <SelectItem value="condo">Condo</SelectItem>
+                        <SelectItem value="duplex">Duplex</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Results Count */}
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {filteredProperties.length} of {allProperties.length} properties
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
