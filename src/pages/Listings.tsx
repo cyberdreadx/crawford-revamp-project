@@ -1,11 +1,17 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const Listings = () => {
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   // All Crawford Team properties - Actual MLS Listings
   const allProperties = [
     {
@@ -357,6 +363,26 @@ const Listings = () => {
     }
   ];
 
+  // Handle infinite scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 1000) {
+        if (visibleCount < allProperties.length && !isLoading) {
+          setIsLoading(true);
+          setTimeout(() => {
+            setVisibleCount(prev => Math.min(prev + 6, allProperties.length));
+            setIsLoading(false);
+          }, 800);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [visibleCount, allProperties.length, isLoading]);
+
+  const visibleProperties = allProperties.slice(0, visibleCount);
+
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -388,7 +414,7 @@ const Listings = () => {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {allProperties.map((property) => (
+              {visibleProperties.map((property) => (
                 <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                   <div className="relative overflow-hidden">
                     {/* Property Image */}
@@ -477,6 +503,7 @@ const Listings = () => {
                     <Button 
                       variant="outline" 
                       className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors"
+                      onClick={() => setSelectedProperty(property)}
                     >
                       View Details
                       <ArrowRight className="ml-2 w-4 h-4" />
@@ -485,6 +512,26 @@ const Listings = () => {
                 </Card>
               ))}
             </div>
+            
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="text-center py-8">
+                <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-gradient-gold transition ease-in-out duration-150">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Loading more properties...
+                </div>
+              </div>
+            )}
+
+            {/* End of results indicator */}
+            {visibleCount >= allProperties.length && !isLoading && (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">You've viewed all {allProperties.length} properties</p>
+              </div>
+            )}
 
             {/* Contact CTA */}
             <div className="text-center mt-16 bg-gradient-subtle rounded-2xl p-8">
@@ -514,6 +561,159 @@ const Listings = () => {
           </div>
         </div>
       </section>
+
+      {/* Property Details Modal */}
+      <Dialog open={!!selectedProperty} onOpenChange={() => setSelectedProperty(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedProperty && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center justify-between">
+                  <span>{selectedProperty.title}</span>
+                  <Badge className="ml-2">{selectedProperty.status}</Badge>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Property Image */}
+                <div className="space-y-4">
+                  {selectedProperty.id === 1 ? (
+                    <img 
+                      src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
+                      alt={selectedProperty.title}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
+                      <div className="text-center text-muted-foreground">
+                        <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
+                        <p>Property Image</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Property Details Grid */}
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <Bed className="w-4 h-4 text-muted-foreground" />
+                      <span>{selectedProperty.beds} Bedrooms</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Bath className="w-4 h-4 text-muted-foreground" />
+                      <span>{selectedProperty.baths} Bathrooms</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Square className="w-4 h-4 text-muted-foreground" />
+                      <span>{selectedProperty.sqft} Heated SqFt</span>
+                    </div>
+                    {selectedProperty.yearBuilt && (
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span>Built {selectedProperty.yearBuilt}</span>
+                      </div>
+                    )}
+                    {selectedProperty.totalSqft && (
+                      <div className="flex items-center space-x-2">
+                        <Ruler className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty.totalSqft} Total SqFt</span>
+                      </div>
+                    )}
+                    {selectedProperty.subdivision && (
+                      <div className="flex items-center space-x-2">
+                        <Building className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty.subdivision}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Property Information */}
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-accent mb-2">{selectedProperty.price}</h3>
+                    <div className="flex items-start space-x-2 text-muted-foreground mb-4">
+                      <MapPin className="w-4 h-4 mt-1 flex-shrink-0" />
+                      <span>{selectedProperty.location}</span>
+                    </div>
+                    {selectedProperty.mlsNumber && (
+                      <p className="text-sm text-muted-foreground mb-4">MLS: {selectedProperty.mlsNumber}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2">Description</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {selectedProperty.description}
+                    </p>
+                  </div>
+
+                  {selectedProperty.highlights && (
+                    <div>
+                      <h4 className="font-semibold mb-2">Key Features</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedProperty.highlights.map((highlight, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {highlight}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Additional Details */}
+                  <div className="grid grid-cols-2 gap-4 text-sm pt-4 border-t">
+                    {selectedProperty.taxes && (
+                      <div>
+                        <span className="font-medium">Annual Taxes:</span>
+                        <p className="text-muted-foreground">{selectedProperty.taxes}</p>
+                      </div>
+                    )}
+                    {selectedProperty.condoFee && (
+                      <div>
+                        <span className="font-medium">Condo Fee:</span>
+                        <p className="text-muted-foreground">{selectedProperty.condoFee}</p>
+                      </div>
+                    )}
+                    {selectedProperty.hoaFee && (
+                      <div>
+                        <span className="font-medium">HOA Fee:</span>
+                        <p className="text-muted-foreground">{selectedProperty.hoaFee}</p>
+                      </div>
+                    )}
+                    {selectedProperty.lotSize && (
+                      <div>
+                        <span className="font-medium">Lot Size:</span>
+                        <p className="text-muted-foreground">{selectedProperty.lotSize}</p>
+                      </div>
+                    )}
+                    {selectedProperty.floodZone && (
+                      <div>
+                        <span className="font-medium">Flood Zone:</span>
+                        <p className="text-muted-foreground">{selectedProperty.floodZone}</p>
+                      </div>
+                    )}
+                    {selectedProperty.grossIncome && (
+                      <div>
+                        <span className="font-medium">Gross Income:</span>
+                        <p className="text-muted-foreground">{selectedProperty.grossIncome}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex space-x-4 pt-4">
+                    <Button className="flex-1 bg-gradient-gold hover:shadow-button">
+                      Contact Agent
+                    </Button>
+                    <Button variant="outline" className="flex-1">
+                      Schedule Showing
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

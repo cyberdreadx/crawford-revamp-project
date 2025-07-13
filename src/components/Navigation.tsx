@@ -2,21 +2,28 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone, Mail } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const navItems = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Properties", href: "#properties" },
-    { name: "Services", href: "#services" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/", section: "#home" },
+    { name: "About", href: "/", section: "#about" },
+    { name: "Properties", href: "/listings", section: "#properties" },
+    { name: "Services", href: "/", section: "#services" },
+    { name: "Contact", href: "/", section: "#contact" },
   ];
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: "smooth" });
+  const handleNavClick = (item: any) => {
+    if (item.href === "/" && item.section && isHomePage) {
+      // If we're on homepage and clicking a section link, scroll to section
+      const element = document.querySelector(item.section);
+      element?.scrollIntoView({ behavior: "smooth" });
+    }
+    // For non-homepage navigation, React Router will handle the routing
     setIsOpen(false);
   };
 
@@ -26,23 +33,36 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-              The Crawford Team
-            </h1>
+            <Link to="/">
+              <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+                The Crawford Team
+              </h1>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-                >
-                  {item.name}
-                  <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                </button>
+                item.href === "/listings" ? (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
+                  >
+                    {item.name}
+                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                  </Link>
+                ) : (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavClick(item)}
+                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
+                  >
+                    {item.name}
+                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                  </button>
+                )
               ))}
             </div>
           </div>
@@ -62,7 +82,7 @@ const Navigation = () => {
             <Button 
               variant="default"
               className="bg-gradient-gold hover:shadow-button transition-all duration-200"
-              onClick={() => scrollToSection("#contact")}
+              onClick={() => handleNavClick({ href: "/", section: "#contact" })}
             >
               Get Started
             </Button>
@@ -79,13 +99,24 @@ const Navigation = () => {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col space-y-6 mt-6">
                   {navItems.map((item) => (
-                    <button
-                      key={item.name}
-                      onClick={() => scrollToSection(item.href)}
-                      className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
-                    >
-                      {item.name}
-                    </button>
+                    item.href === "/listings" ? (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
+                      >
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <button
+                        key={item.name}
+                        onClick={() => handleNavClick(item)}
+                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
+                      >
+                        {item.name}
+                      </button>
+                    )
                   ))}
                   <div className="pt-6 border-t border-border space-y-4">
                     <a href="tel:727-599-1944" className="flex items-center space-x-2 text-muted-foreground hover:text-accent transition-colors">
@@ -98,7 +129,7 @@ const Navigation = () => {
                     </a>
                     <Button 
                       className="w-full bg-gradient-gold"
-                      onClick={() => scrollToSection("#contact")}
+                      onClick={() => handleNavClick({ href: "/", section: "#contact" })}
                     >
                       Get Started
                     </Button>
