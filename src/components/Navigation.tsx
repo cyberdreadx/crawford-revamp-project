@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Phone, Mail } from "lucide-react";
+import { Menu, Phone, Mail, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const { user } = useAuth();
 
   const navItems = [
     { name: "Home", href: "/", section: "#home" },
@@ -101,19 +103,41 @@ const Navigation = () => {
                 <span>hello@yourcrawfordteam.com</span>
               </a>
             </div>
-            <Button 
-              variant="default"
-              className="bg-gradient-gold hover:shadow-button transition-all duration-200"
-              asChild={!isHomePage}
-            >
-              {!isHomePage ? (
-                <a href="/#contact">Get Started</a>
-              ) : (
-                <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
-                  Get Started
-                </span>
-              )}
-            </Button>
+            
+            {user ? (
+              <Button 
+                variant="outline"
+                className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+                asChild
+              >
+                <Link to="/member-portal">
+                  <User className="w-4 h-4 mr-2" />
+                  Member Portal
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button 
+                  variant="outline"
+                  asChild
+                >
+                  <Link to="/auth">Sign In</Link>
+                </Button>
+                <Button 
+                  variant="default"
+                  className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+                  asChild={!isHomePage}
+                >
+                  {!isHomePage ? (
+                    <a href="/#contact">Get Started</a>
+                  ) : (
+                    <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
+                      Get Started
+                    </span>
+                  )}
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -173,18 +197,41 @@ const Navigation = () => {
                       <Mail className="w-5 h-5" />
                       <span>hello@yourcrawfordteam.com</span>
                     </a>
-                    <Button 
-                      className="w-full bg-gradient-gold"
-                      asChild={!isHomePage}
-                    >
-                      {!isHomePage ? (
-                        <a href="/#contact">Get Started</a>
-                      ) : (
-                        <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
-                          Get Started
-                        </span>
-                      )}
-                    </Button>
+                    
+                    {user ? (
+                      <Button 
+                        className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground"
+                        variant="outline"
+                        asChild
+                      >
+                        <Link to="/member-portal">
+                          <User className="w-4 h-4 mr-2" />
+                          Member Portal
+                        </Link>
+                      </Button>
+                    ) : (
+                      <>
+                        <Button 
+                          className="w-full"
+                          variant="outline"
+                          asChild
+                        >
+                          <Link to="/auth">Sign In</Link>
+                        </Button>
+                        <Button 
+                          className="w-full bg-gradient-gold"
+                          asChild={!isHomePage}
+                        >
+                          {!isHomePage ? (
+                            <a href="/#contact">Get Started</a>
+                          ) : (
+                            <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
+                              Get Started
+                            </span>
+                          )}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </nav>
               </SheetContent>
