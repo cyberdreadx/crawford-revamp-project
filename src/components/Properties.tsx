@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bed, Bath, Square, MapPin, ArrowRight } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Properties = () => {
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
   // Featured properties from The Crawford Team - Actual MLS Listings
   const featuredProperties = [
     {
@@ -155,6 +158,7 @@ const Properties = () => {
                   <Button 
                     variant="outline" 
                     className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors"
+                    onClick={() => setSelectedProperty(property)}
                   >
                     View Details
                     <ArrowRight className="ml-2 w-4 h-4" />
@@ -181,12 +185,150 @@ const Properties = () => {
             </Button>
           </div>
         </div>
+
+        {/* Property Details Modal */}
+        <Dialog open={!!selectedProperty} onOpenChange={() => setSelectedProperty(null)}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            {selectedProperty && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center justify-between">
+                    <span>{selectedProperty.title}</span>
+                    <Badge className="ml-2">{selectedProperty.status}</Badge>
+                  </DialogTitle>
+                </DialogHeader>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Property Image */}
+                  <div className="space-y-4">
+                    {selectedProperty.id === 1 ? (
+                      <img 
+                        src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
+                        alt={selectedProperty.title}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
+                        <div className="text-center text-muted-foreground">
+                          <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
+                          <p>Property Image</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Property Details Grid */}
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Bed className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty.beds} Bedrooms</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Bath className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty.baths} Bathrooms</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Square className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty.sqft} Heated SqFt</span>
+                      </div>
+                      {selectedProperty.yearBuilt && (
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-4 h-4 text-muted-foreground" />
+                          <span>Built {selectedProperty.yearBuilt}</span>
+                        </div>
+                      )}
+                      {selectedProperty.totalSqft && (
+                        <div className="flex items-center space-x-2">
+                          <Ruler className="w-4 h-4 text-muted-foreground" />
+                          <span>{selectedProperty.totalSqft} Total SqFt</span>
+                        </div>
+                      )}
+                      {selectedProperty.subdivision && (
+                        <div className="flex items-center space-x-2">
+                          <Building className="w-4 h-4 text-muted-foreground" />
+                          <span>{selectedProperty.subdivision}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Property Information */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-accent mb-2">{selectedProperty.price}</h3>
+                      <div className="flex items-start space-x-2 text-muted-foreground mb-4">
+                        <MapPin className="w-4 h-4 mt-1 flex-shrink-0" />
+                        <span>{selectedProperty.location}</span>
+                      </div>
+                      {selectedProperty.mlsNumber && (
+                        <p className="text-sm text-muted-foreground mb-4">MLS: {selectedProperty.mlsNumber}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">Description</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {selectedProperty.description}
+                      </p>
+                    </div>
+
+                    {selectedProperty.highlights && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Key Features</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedProperty.highlights.map((highlight, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {highlight}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Additional Details */}
+                    <div className="grid grid-cols-2 gap-4 text-sm pt-4 border-t">
+                      {selectedProperty.taxes && (
+                        <div>
+                          <span className="font-medium">Annual Taxes:</span>
+                          <p className="text-muted-foreground">{selectedProperty.taxes}</p>
+                        </div>
+                      )}
+                      {selectedProperty.lotSize && (
+                        <div>
+                          <span className="font-medium">Lot Size:</span>
+                          <p className="text-muted-foreground">{selectedProperty.lotSize}</p>
+                        </div>
+                      )}
+                      {selectedProperty.floodZone && (
+                        <div>
+                          <span className="font-medium">Flood Zone:</span>
+                          <p className="text-muted-foreground">{selectedProperty.floodZone}</p>
+                        </div>
+                      )}
+                      {selectedProperty.subdivision && (
+                        <div>
+                          <span className="font-medium">Subdivision:</span>
+                          <p className="text-muted-foreground">{selectedProperty.subdivision}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex space-x-4 pt-4">
+                      <Button className="flex-1 bg-gradient-gold hover:shadow-button">
+                        Contact Agent
+                      </Button>
+                      <Button variant="outline" className="flex-1">
+                        Schedule Showing
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
 };
-
-// Import the missing Home icon
-import { Home } from "lucide-react";
 
 export default Properties;
