@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bed, Bath, Square, MapPin, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Properties = () => {
   // Featured properties from The Crawford Team
@@ -93,7 +94,7 @@ const Properties = () => {
 
           {/* Properties Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredProperties.map((property) => (
+            {featuredProperties.slice(0, 3).map((property) => (
               <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                 <div className="relative overflow-hidden">
                   {/* Property Image Placeholder */}
@@ -168,9 +169,12 @@ const Properties = () => {
             <Button 
               size="lg"
               className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+              asChild
             >
-              View All Listings
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <Link to="/listings">
+                View All Listings
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
             </Button>
           </div>
         </div>
