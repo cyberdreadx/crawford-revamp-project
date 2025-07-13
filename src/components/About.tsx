@@ -93,8 +93,12 @@ const About = () => {
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
                   <div className="flex-shrink-0">
-                    <div className="w-24 h-24 bg-gradient-gold rounded-full flex items-center justify-center">
-                      <Users className="w-12 h-12 text-navy-deep" />
+                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                      <img 
+                        src="/lovable-uploads/a85ebc72-6d4e-410d-a5f4-0575142b2e22.png" 
+                        alt="Ashley Eidam"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                   <div className="flex-1">
