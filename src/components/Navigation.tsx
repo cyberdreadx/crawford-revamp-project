@@ -35,12 +35,12 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
-      <div className="container mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/">
-              <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+            <Link to="/" className="block">
+              <h1 className="text-xl lg:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
                 The Crawford Team
               </h1>
             </Link>
@@ -48,7 +48,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-6 flex items-baseline space-x-6">
               {navItems.map((item) => (
                 item.href === "/listings" ? (
                   <Link
@@ -91,40 +91,42 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Contact Info & CTA */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+          {/* Contact Info & CTA - Simplified */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <div className="flex items-center space-x-3 text-sm text-muted-foreground">
               <a href="tel:727-599-1944" className="flex items-center space-x-1 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4" />
-                <span>(727) 599-1944</span>
+                <span className="hidden xl:inline">(727) 599-1944</span>
               </a>
               <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center space-x-1 hover:text-accent transition-colors">
                 <Mail className="w-4 h-4" />
-                <span>hello@yourcrawfordteam.com</span>
+                <span className="hidden xl:inline">hello@yourcrawfordteam.com</span>
               </a>
             </div>
             
             {user ? (
               <Button 
                 variant="outline"
+                size="sm"
                 className="border-accent text-accent hover:bg-accent hover:text-accent-foreground"
                 asChild
               >
                 <Link to="/member-portal">
-                  <User className="w-4 h-4 mr-2" />
-                  Member Portal
+                  <User className="w-4 h-4 lg:mr-2" />
+                  <span className="hidden lg:inline">Portal</span>
                 </Link>
               </Button>
             ) : (
-              <>
+              <div className="flex items-center space-x-2">
                 <Button 
-                  variant="outline"
+                  variant="ghost"
+                  size="sm"
                   asChild
                 >
                   <Link to="/auth">Sign In</Link>
                 </Button>
                 <Button 
-                  variant="default"
+                  size="sm"
                   className="bg-gradient-gold hover:shadow-button transition-all duration-200"
                   asChild={!isHomePage}
                 >
@@ -136,104 +138,134 @@ const Navigation = () => {
                     </span>
                   )}
                 </Button>
-              </>
+              </div>
             )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden flex items-center space-x-2">
+            {user && (
+              <Button 
+                variant="ghost"
+                size="sm"
+                asChild
+              >
+                <Link to="/member-portal">
+                  <User className="w-4 h-4" />
+                </Link>
+              </Button>
+            )}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-6 w-6" />
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col space-y-6 mt-6">
-                  {navItems.map((item) => (
-                    item.href === "/listings" ? (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    ) : item.href === "/" && item.section && !isHomePage ? (
-                      <a
-                        key={item.name}
-                        href={`/${item.section}`}
-                        onClick={() => setIsOpen(false)}
-                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
-                      >
-                        {item.name}
-                      </a>
-                    ) : item.href === "/" && !isHomePage ? (
-                      <Link
-                        key={item.name}
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    ) : (
-                      <button
-                        key={item.name}
-                        onClick={() => handleNavClick(item)}
-                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
-                      >
-                        {item.name}
-                      </button>
-                    )
-                  ))}
-                  <div className="pt-6 border-t border-border space-y-4">
-                    <a href="tel:727-599-1944" className="flex items-center space-x-2 text-muted-foreground hover:text-accent transition-colors">
-                      <Phone className="w-5 h-5" />
-                      <span>(727) 599-1944</span>
-                    </a>
-                    <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center space-x-2 text-muted-foreground hover:text-accent transition-colors">
-                      <Mail className="w-5 h-5" />
-                      <span>hello@yourcrawfordteam.com</span>
-                    </a>
-                    
-                    {user ? (
-                      <Button 
-                        className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground"
-                        variant="outline"
-                        asChild
-                      >
-                        <Link to="/member-portal">
-                          <User className="w-4 h-4 mr-2" />
-                          Member Portal
+              <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="py-4 border-b border-border">
+                    <h2 className="text-lg font-semibold bg-gradient-hero bg-clip-text text-transparent">
+                      The Crawford Team
+                    </h2>
+                  </div>
+
+                  {/* Navigation */}
+                  <nav className="flex flex-col space-y-1 py-4 flex-1">
+                    {navItems.map((item) => (
+                      item.href === "/listings" ? (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center py-3 px-3 text-base font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                        >
+                          {item.name}
                         </Link>
-                      </Button>
-                    ) : (
-                      <>
+                      ) : item.href === "/" && item.section && !isHomePage ? (
+                        <a
+                          key={item.name}
+                          href={`/${item.section}`}
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center py-3 px-3 text-base font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                        >
+                          {item.name}
+                        </a>
+                      ) : item.href === "/" && !isHomePage ? (
+                        <Link
+                          key={item.name}
+                          to={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className="flex items-center py-3 px-3 text-base font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                        >
+                          {item.name}
+                        </Link>
+                      ) : (
+                        <button
+                          key={item.name}
+                          onClick={() => handleNavClick(item)}
+                          className="flex items-center py-3 px-3 text-base font-medium text-left rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                        >
+                          {item.name}
+                        </button>
+                      )
+                    ))}
+                  </nav>
+
+                  {/* Footer */}
+                  <div className="border-t border-border pt-4 space-y-4">
+                    <div className="space-y-3">
+                      <a href="tel:727-599-1944" className="flex items-center space-x-3 text-muted-foreground hover:text-accent transition-colors p-2 rounded-lg hover:bg-accent/10">
+                        <Phone className="w-4 h-4" />
+                        <span className="text-sm">(727) 599-1944</span>
+                      </a>
+                      <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center space-x-3 text-muted-foreground hover:text-accent transition-colors p-2 rounded-lg hover:bg-accent/10">
+                        <Mail className="w-4 h-4" />
+                        <span className="text-sm">hello@yourcrawfordteam.com</span>
+                      </a>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {user ? (
                         <Button 
                           className="w-full"
                           variant="outline"
                           asChild
                         >
-                          <Link to="/auth">Sign In</Link>
+                          <Link to="/member-portal" onClick={() => setIsOpen(false)}>
+                            <User className="w-4 h-4 mr-2" />
+                            Member Portal
+                          </Link>
                         </Button>
-                        <Button 
-                          className="w-full bg-gradient-gold"
-                          asChild={!isHomePage}
-                        >
-                          {!isHomePage ? (
-                            <a href="/#contact">Get Started</a>
-                          ) : (
-                            <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
-                              Get Started
-                            </span>
-                          )}
-                        </Button>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <Button 
+                            className="w-full"
+                            variant="outline"
+                            asChild
+                          >
+                            <Link to="/auth" onClick={() => setIsOpen(false)}>Sign In</Link>
+                          </Button>
+                          <Button 
+                            className="w-full bg-gradient-gold"
+                            asChild={!isHomePage}
+                          >
+                            {!isHomePage ? (
+                              <a href="/#contact" onClick={() => setIsOpen(false)}>Get Started</a>
+                            ) : (
+                              <span onClick={() => {
+                                handleNavClick({ href: "/", section: "#contact" });
+                                setIsOpen(false);
+                              }}>
+                                Get Started
+                              </span>
+                            )}
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </nav>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
