@@ -22,6 +22,10 @@ const Navigation = () => {
       // If we're on homepage and clicking a section link, scroll to section
       const element = document.querySelector(item.section);
       element?.scrollIntoView({ behavior: "smooth" });
+    } else if (item.href === "/" && item.section) {
+      // If we're not on homepage but clicking a section link, navigate to homepage with hash
+      window.location.href = `/${item.section}`;
+      return;
     }
     // For non-homepage navigation, React Router will handle the routing
     setIsOpen(false);
@@ -53,6 +57,15 @@ const Navigation = () => {
                     {item.name}
                     <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
                   </Link>
+                ) : item.href === "/" && item.section && !isHomePage ? (
+                  <a
+                    key={item.name}
+                    href={`/${item.section}`}
+                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
+                  >
+                    {item.name}
+                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                  </a>
                 ) : item.href === "/" && !isHomePage ? (
                   <Link
                     key={item.name}
@@ -94,7 +107,7 @@ const Navigation = () => {
               asChild={!isHomePage}
             >
               {!isHomePage ? (
-                <Link to="/">Get Started</Link>
+                <a href="/#contact">Get Started</a>
               ) : (
                 <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
                   Get Started
@@ -123,6 +136,15 @@ const Navigation = () => {
                       >
                         {item.name}
                       </Link>
+                    ) : item.href === "/" && item.section && !isHomePage ? (
+                      <a
+                        key={item.name}
+                        href={`/${item.section}`}
+                        onClick={() => setIsOpen(false)}
+                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
+                      >
+                        {item.name}
+                      </a>
                     ) : item.href === "/" && !isHomePage ? (
                       <Link
                         key={item.name}
@@ -156,7 +178,7 @@ const Navigation = () => {
                       asChild={!isHomePage}
                     >
                       {!isHomePage ? (
-                        <Link to="/">Get Started</Link>
+                        <a href="/#contact">Get Started</a>
                       ) : (
                         <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
                           Get Started
