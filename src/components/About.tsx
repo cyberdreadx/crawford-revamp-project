@@ -51,62 +51,120 @@ const About = () => {
             </p>
           </div>
 
-          {/* Main Content */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            {/* Text Content */}
-            <div className="space-y-6">
-              <h3 className="text-2xl md:text-3xl font-semibold text-foreground">
-                Your Trusted Real Estate Partners in St. Petersburg
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                With over 15 years of combined experience in the Tampa Bay real estate market, 
-                The Crawford Team brings unparalleled expertise and dedication to every transaction. 
-                We understand that buying or selling a home is one of life's most significant decisions.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                Our approach combines cutting-edge market analysis with personalized service, 
-                ensuring you make informed decisions every step of the way. From first-time homebuyers 
-                to luxury property investors, we tailor our services to meet your unique needs.
-              </p>
-              
-              {/* Key Points */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-foreground font-medium">Local Market Expertise</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-foreground font-medium">Personalized Service Approach</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-foreground font-medium">Full-Service Support Team</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-foreground font-medium">Proven Track Record</span>
-                </div>
-              </div>
-            </div>
+          {/* Team Overview */}
+          <div className="text-center mb-16">
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              Meet the exceptional professionals who make up The Crawford Team. With over 15 years of combined experience 
+              in the Tampa Bay real estate market, we bring unparalleled expertise, dedication, and a personalized approach 
+              to every transaction.
+            </p>
+          </div>
 
-            {/* Team Image Placeholder */}
-            <div className="relative">
-              <Card className="shadow-elegant border-0 overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="aspect-[4/3] bg-gradient-hero flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <Users className="w-16 h-16 mx-auto mb-4 opacity-80" />
-                      <p className="text-lg font-medium">Professional Team Photo</p>
-                      <p className="text-sm opacity-80">Coming Soon</p>
+          {/* Team Members */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {/* Monica Crawford */}
+            <Card className="shadow-elegant border-0 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-6">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-gold rounded-full flex items-center justify-center">
+                      <Users className="w-12 h-12 text-navy-deep" />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-              {/* Decorative Elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/10 rounded-full blur-xl"></div>
-            </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Monica Crawford</h3>
+                    <Badge variant="secondary" className="mb-4">Owner & Lead Listing Agent</Badge>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Born and raised in Kentucky, Monica made St. Petersburg her home in 2012. Licensed since 2013, 
+                      she's honored to be part of Keller Williams St Pete MarketCenter and consistently ranks in the 
+                      Top 100 Agents of Pinellas County.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      With over 425 clients served and $141M+ in volume, Monica's C.A.R.E. approach has earned 95% 
+                      referral business, building lasting relationships through exceptional results.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Ashley Eidam */}
+            <Card className="shadow-elegant border-0 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-6">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-gold rounded-full flex items-center justify-center">
+                      <Users className="w-12 h-12 text-navy-deep" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Ashley Eidam</h3>
+                    <Badge variant="secondary" className="mb-4">Team Coordinator & Realtor</Badge>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Brazilian-American from Miami, Ashley brings a vibrant multicultural perspective to real estate. 
+                      Fluent in three languages and highly tech-savvy, she uses innovative solutions to streamline 
+                      operations and elevate client experiences.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      Whether paddleboarding at sunrise or organizing seamless transactions, Ashley delivers 
+                      white-glove service with passion for meaningful connections.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Aline Sarria */}
+            <Card className="shadow-elegant border-0 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-6">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-gold rounded-full flex items-center justify-center">
+                      <Users className="w-12 h-12 text-navy-deep" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Aline Sarria</h3>
+                    <Badge variant="secondary" className="mb-4">Luxury Property Matchmaker</Badge>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Specializing in waterfront condos and high-end real estate in downtown St. Petersburg, 
+                      Aline brings a visionary approach to luxury properties. Her decades as an educator 
+                      help her identify and nurture potential in every property.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      Offering multilingual service in English, Spanish, and French, Aline serves global 
+                      clientele seeking Florida's Gulf Coast lifestyle.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Sabra Charpentier */}
+            <Card className="shadow-elegant border-0 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="flex items-start space-x-6">
+                  <div className="flex-shrink-0">
+                    <div className="w-24 h-24 bg-gradient-gold rounded-full flex items-center justify-center">
+                      <Users className="w-12 h-12 text-navy-deep" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
+                    <Badge variant="secondary" className="mb-4">Realtor</Badge>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      With 10 years at Keller Williams, Sabra specializes in first-time homebuyers and investors. 
+                      As a young property owner herself, she brings real-world investment knowledge to help 
+                      clients navigate the market.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      A former athlete, Sabra brings determination, discipline, and teamwork to every client 
+                      interaction, combining competitive spirit with emotional intelligence.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Achievement Stats */}
