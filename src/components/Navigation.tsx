@@ -53,6 +53,15 @@ const Navigation = () => {
                     {item.name}
                     <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
                   </Link>
+                ) : item.href === "/" && !isHomePage ? (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
+                  >
+                    {item.name}
+                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                  </Link>
                 ) : (
                   <button
                     key={item.name}
@@ -82,9 +91,15 @@ const Navigation = () => {
             <Button 
               variant="default"
               className="bg-gradient-gold hover:shadow-button transition-all duration-200"
-              onClick={() => handleNavClick({ href: "/", section: "#contact" })}
+              asChild={!isHomePage}
             >
-              Get Started
+              {!isHomePage ? (
+                <Link to="/">Get Started</Link>
+              ) : (
+                <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
+                  Get Started
+                </span>
+              )}
             </Button>
           </div>
 
@@ -100,6 +115,15 @@ const Navigation = () => {
                 <nav className="flex flex-col space-y-6 mt-6">
                   {navItems.map((item) => (
                     item.href === "/listings" ? (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        onClick={() => setIsOpen(false)}
+                        className="text-lg font-medium text-left py-2 hover:text-accent transition-colors"
+                      >
+                        {item.name}
+                      </Link>
+                    ) : item.href === "/" && !isHomePage ? (
                       <Link
                         key={item.name}
                         to={item.href}
@@ -129,9 +153,15 @@ const Navigation = () => {
                     </a>
                     <Button 
                       className="w-full bg-gradient-gold"
-                      onClick={() => handleNavClick({ href: "/", section: "#contact" })}
+                      asChild={!isHomePage}
                     >
-                      Get Started
+                      {!isHomePage ? (
+                        <Link to="/">Get Started</Link>
+                      ) : (
+                        <span onClick={() => handleNavClick({ href: "/", section: "#contact" })}>
+                          Get Started
+                        </span>
+                      )}
                     </Button>
                   </div>
                 </nav>
