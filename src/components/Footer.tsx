@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -97,25 +97,31 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex space-x-6 mb-4 md:mb-0">
                 <a 
-                  href="#" 
+                  href="https://www.facebook.com/yourcrawfordteam" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white/60 hover:text-gold-warm transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-6 h-6" />
                 </a>
                 <a 
-                  href="#" 
+                  href="https://www.instagram.com/yourcrawfordteam/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white/60 hover:text-gold-warm transition-colors"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-6 h-6" />
                 </a>
                 <a 
-                  href="#" 
+                  href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white/60 hover:text-gold-warm transition-colors"
-                  aria-label="LinkedIn"
+                  aria-label="YouTube"
                 >
-                  <Linkedin className="w-6 h-6" />
+                  <Youtube className="w-6 h-6" />
                 </a>
               </div>
               
