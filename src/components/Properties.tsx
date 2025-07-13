@@ -97,13 +97,21 @@ const Properties = () => {
             {featuredProperties.slice(0, 3).map((property) => (
               <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                 <div className="relative overflow-hidden">
-                  {/* Property Image Placeholder */}
-                  <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                    <div className="text-center text-muted-foreground">
-                      <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
-                      <p className="text-sm">Property Image</p>
+                  {/* Property Image */}
+                  {property.id === 1 ? (
+                    <img 
+                      src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
+                      alt={property.title}
+                      className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                      <div className="text-center text-muted-foreground">
+                        <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
+                        <p className="text-sm">Property Image</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
                   {/* Status Badge */}
                   <Badge 
