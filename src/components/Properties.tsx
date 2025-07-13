@@ -5,69 +5,64 @@ import { Bed, Bath, Square, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Properties = () => {
-  // Featured properties from The Crawford Team
+  // Featured properties from The Crawford Team - Actual MLS Listings
   const featuredProperties = [
     {
       id: 1,
+      mlsNumber: "TB8400218",
       title: "Charming Coastal Retreat",
-      location: "6730 10th Avenue Terrace S, St. Petersburg",
+      location: "6730 10th Avenue Ter S, St. Petersburg, FL 33707",
       price: "$210,000",
       beds: 2,
       baths: 1,
       sqft: "886",
       totalSqft: "1,490",
-      status: "For Sale",
-      description: "Perfect beachside retreat with oversized screened porch and fully fenced backyard. Minutes to St. Pete Beach & Treasure Island.",
-      highlights: ["AE Flood Zone", "Tile & Parquet Floors", "Airbnb Ready"]
+      yearBuilt: "1953",
+      status: "Active",
+      floodZone: "AE",
+      description: "Not Substantially Damaged! Welcome to one of St. Pete's most charming pockets, this property is just a short jaunt to St. Pete Beach, Treasure Island, near sunny parks, and close to the heart of downtown.",
+      highlights: ["AE Flood Zone", "Stucco & Wood Frame", "Fully Fenced Yard", "Screened Porch"],
+      subdivision: "Brookwood 1st Add",
+      taxes: "$1,371",
+      lotSize: "4,674 SqFt"
     },
     {
       id: 2,
-      title: "Investment Opportunity",
-      location: "5204 Mile Stretch Dr, Holiday",
-      price: "$155,000",
+      mlsNumber: "TB8395009",
+      title: "Corner Lot Gem Near 4th Street",
+      location: "5700 Pacific St N, St. Petersburg, FL 33703",
+      price: "$375,000",
       beds: 2,
       baths: 1,
-      sqft: "714",
-      totalSqft: "1,232",
-      status: "Cash Only",
-      description: "Income-producing property with current tenant through August 2024. Near Tarpon Springs and beaches.",
-      highlights: ["$1,100/mo Income", "Enclosed Bonus Room", "Cash or Hard Money"]
+      sqft: "936",
+      totalSqft: "1,254",
+      yearBuilt: "1973",
+      status: "Active",
+      floodZone: "AE",
+      description: "Charming Corner Lot Home Near 4th St Corridor – Move-In Ready! Recently updated with new roof (2019), electrical panel (2022), and HVAC (2022).",
+      highlights: ["Corner Lot", "Recent Updates", "No Hurricane Damage", "Climate-Controlled Garage"],
+      subdivision: "North St Petersburg",
+      taxes: "$2,216",
+      lotSize: "8,233 SqFt"
     },
     {
       id: 3,
-      title: "Duplex Investment",
-      location: "8322 Galewood St, New Port Richey",
-      price: "$289,000",
-      beds: 4,
-      baths: 2,
-      sqft: "N/A",
-      status: "For Sale",
-      description: "2-unit duplex with recent upgrades. One unit vacant, one producing $1,250/month. Potential $2,500+/month income.",
-      highlights: ["New Roof 2020", "New HVAC 2022", "Block Construction"]
-    },
-    {
-      id: 4,
-      title: "Move-In Ready Rental",
-      location: "10231 Ivanhoe Dr, New Port Richey",
-      price: "$168,000",
-      beds: 2,
-      baths: 1,
-      sqft: "N/A",
-      status: "Tenant Occupied",
-      description: "Solid investment with long-term tenant paying $1,250/month. Tiled floors and enclosed back room.",
-      highlights: ["Current Income", "Washer/Dryer Included", "Move-In Ready"]
-    },
-    {
-      id: 5,
+      mlsNumber: "TB8398514",
       title: "Rainbow Lakes Paradise",
-      location: "18384 Miami Blvd, Dunnellon",
-      price: "$179,000",
-      beds: 2,
+      location: "21078 SW Honeysuckle St, Dunnellon, FL 34431",
+      price: "$250,000",
+      beds: 3,
       baths: 2,
-      sqft: "1,104",
-      status: "Furnished",
-      description: "Fully furnished retreat near Rainbow Springs State Park. Perfect for vacationers, snowbirds, or digital nomads.",
-      highlights: ["STR Friendly", "No HOA", "Screened Lanai"]
+      sqft: "1,395",
+      totalSqft: "2,342",
+      yearBuilt: "1969",
+      status: "Active",
+      floodZone: "X",
+      description: "Charming Mid-Century Gem in Rainbow Lakes Estates – Fully Furnished & Move-In Ready! Perfect turnkey home, seasonal retreat, or investment property.",
+      highlights: ["Fully Furnished", "2-Car Garage", "Fireplace", "Near Rainbow Springs"],
+      subdivision: "Rainbow Lakes Estate",
+      taxes: "$657",
+      lotSize: "10,454 SqFt"
     }
   ];
 
