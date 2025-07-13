@@ -1,23 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
-
 const Hero = () => {
   const scrollToContact = () => {
-    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+    document.querySelector("#contact")?.scrollIntoView({
+      behavior: "smooth"
+    });
   };
-
   const scrollToProperties = () => {
-    document.querySelector("#properties")?.scrollIntoView({ behavior: "smooth" });
+    document.querySelector("#properties")?.scrollIntoView({
+      behavior: "smooth"
+    });
   };
-
-  return (
-    <section id="home" className="relative min-h-screen flex items-center">
+  return <section id="home" className="relative min-h-screen flex items-center">
       {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
+      backgroundImage: `url(${heroImage})`
+    }}>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
       </div>
 
@@ -27,9 +26,7 @@ const Hero = () => {
           {/* Badge */}
           <div className="inline-flex items-center space-x-2 bg-background/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6 animate-fade-in">
             <div className="flex items-center space-x-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-gold-warm text-gold-warm" />
-              ))}
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-gold-warm text-gold-warm" />)}
             </div>
             <span className="text-white text-sm font-medium">Trusted by 500+ Families</span>
           </div>
@@ -65,20 +62,11 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 animate-slide-up">
-            <Button 
-              size="lg"
-              className="bg-gradient-gold hover:shadow-elegant text-navy-deep font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105"
-              onClick={scrollToContact}
-            >
+            <Button size="lg" className="bg-gradient-gold hover:shadow-elegant text-navy-deep font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105" onClick={scrollToContact}>
               Start Your Journey
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button 
-              variant="outline"
-              size="lg"
-              className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-4 text-lg transition-all duration-300"
-              onClick={scrollToProperties}
-            >
+            <Button variant="outline" size="lg" onClick={scrollToProperties} className="border-white/30 text-white backdrop-blur-sm px-8 py-4 text-lg transition-all duration-300 bg-transparent">
               View Properties
             </Button>
           </div>
@@ -104,8 +92,6 @@ const Hero = () => {
           <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
