@@ -21,7 +21,7 @@ const Listings = () => {
     status: "all",
     propertyType: "all"
   });
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   // All Crawford Team properties - Actual MLS Listings
   const allProperties = [
