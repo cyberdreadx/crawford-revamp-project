@@ -26,9 +26,9 @@ const Hero = () => {
           {/* Badge */}
           <div className="inline-flex items-center space-x-2 bg-background/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6 animate-fade-in">
             <div className="flex items-center space-x-1">
-              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-gold-warm text-gold-warm" />)}
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 sm:w-4 sm:h-4 fill-gold-warm text-gold-warm" />)}
             </div>
-            <span className="text-white text-sm font-medium">Trusted by 500+ Families</span>
+            <span className="text-white text-sm sm:text-sm font-medium">Trusted by 500+ Families</span>
           </div>
 
           {/* Main Headline */}
