@@ -40,7 +40,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="block">
-              <h1 className="text-xl lg:text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+              <h1 className="text-xl lg:text-2xl font-bold bg-gradient-teal bg-clip-text text-transparent">
                 The Crawford Team
               </h1>
             </Link>
@@ -127,7 +127,7 @@ const Navigation = () => {
                 </Button>
                 <Button 
                   size="sm"
-                  className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+                  className="bg-gradient-teal hover:shadow-button transition-all duration-200"
                   asChild={!isHomePage}
                 >
                   {!isHomePage ? (
@@ -165,7 +165,7 @@ const Navigation = () => {
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="py-4 border-b border-border">
-                    <h2 className="text-lg font-semibold bg-gradient-hero bg-clip-text text-transparent">
+                    <h2 className="text-lg font-semibold bg-gradient-teal bg-clip-text text-transparent">
                       The Crawford Team
                     </h2>
                   </div>
@@ -247,7 +247,7 @@ const Navigation = () => {
                             <Link to="/auth" onClick={() => setIsOpen(false)}>Sign In</Link>
                           </Button>
                           <Button 
-                            className="w-full bg-gradient-gold"
+                            className="w-full bg-gradient-teal"
                             asChild={!isHomePage}
                           >
                             {!isHomePage ? (
