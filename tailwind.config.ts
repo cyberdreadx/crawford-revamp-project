@@ -67,17 +67,19 @@ export default {
 					deep: 'hsl(var(--navy-deep))',
 					medium: 'hsl(var(--navy-medium))'
 				},
-				gold: {
-					warm: 'hsl(var(--gold-warm))',
-					light: 'hsl(var(--gold-light))'
+				teal: {
+					primary: 'hsl(var(--teal-primary))',
+					light: 'hsl(var(--teal-light))'
 				},
-				cream: 'hsl(var(--cream))',
-				'gray-light': 'hsl(var(--gray-light))',
-				'gray-medium': 'hsl(var(--gray-medium))'
+				sage: {
+					green: 'hsl(var(--sage-green))',
+					light: 'hsl(var(--sage-light))'
+				}
 			},
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-gold': 'var(--gradient-gold)',
+				'gradient-teal': 'var(--gradient-teal)',
+				'gradient-sage': 'var(--gradient-sage)',
 				'gradient-subtle': 'var(--gradient-subtle)'
 			},
 			boxShadow: {

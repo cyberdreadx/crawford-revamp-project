@@ -1,47 +1,50 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+
 const Hero = () => {
-  const scrollToContact = () => {
-    document.querySelector("#contact")?.scrollIntoView({
-      behavior: "smooth"
-    });
-  };
   const scrollToProperties = () => {
     document.querySelector("#properties")?.scrollIntoView({
       behavior: "smooth"
     });
   };
-  return <section id="home" className="relative min-h-screen flex items-center">
+
+  return (
+    <section id="home" className="relative min-h-screen flex items-center justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url(${heroImage})`
-    }}>
+        backgroundImage: `url(${heroImage})`
+      }}>
         <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 lg:px-8">
-        <div className="max-w-4xl">
-          {/* Main Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
-            Find Your Dream Home in{" "}
-            <span className="bg-gradient-gold bg-clip-text text-transparent">
-              St. Petersburg
-            </span>
-          </h1>
+      <div className="relative z-10 text-center px-6 lg:px-8">
+        {/* Small headline */}
+        <p className="text-white/90 text-sm md:text-base mb-4 tracking-wide uppercase animate-fade-in">
+          Top 5% of Pinellas County
+        </p>
 
-          {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed animate-fade-in">
-            The Crawford Team - Powered by Keller Williams St Pete Realty
-          </p>
+        {/* Main Headline */}
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6 animate-fade-in">
+          The Crawford Team
+        </h1>
 
-          {/* Single CTA Button */}
-          <div className="animate-fade-in">
-            <Button size="lg" className="bg-gradient-gold hover:shadow-elegant text-navy-deep font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105" onClick={scrollToProperties}>
-              View Properties
-            </Button>
-          </div>
+        {/* Subheadline */}
+        <p className="text-white/90 text-lg md:text-xl mb-10 animate-fade-in">
+          Powered by Keller Williams St Pete Realty
+        </p>
+
+        {/* Single CTA Button */}
+        <div className="animate-fade-in">
+          <Button 
+            size="lg" 
+            onClick={scrollToProperties}
+            className="bg-gradient-teal hover:shadow-elegant text-white font-medium px-8 py-4 text-base transition-all duration-300 transform hover:scale-105 border border-white/20"
+          >
+            Search All Homes
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
         </div>
       </div>
 
@@ -51,6 +54,8 @@ const Hero = () => {
           <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;
