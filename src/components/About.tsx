@@ -45,19 +45,19 @@ const About = () => {
                 Crawford Team
               </span>
             </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+              The Crawford Team is a top-producing real estate team in Tampa Bay. Comprised of fierce females with a shared commitment to educating and empowering our clients, The Crawford Team is powered by Keller Williams St Pete Realty, the top producing real estate brokerage in Pinellas County. Our team consistently performs in the Top 5% of Pinellas County and has helped more than 425 families achieve their real estate goals with closed volume of more than $141 million... and counting!
+            </p>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+              Creating A Referable Experience (C.A.R.E.) is our commitment to every client, and it's achieved with the unique systems and processes designed to guide clients through their real estate journey. As a result, we are proud and honored that nearly 90% of our business comes from referrals and repeat clients.
+            </p>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              We're not just real estate agents – we're your neighbors, your advocates, 
-              and your partners in making your real estate dreams a reality.
+              Each member of The Crawford Team provides her own area of expertise to our clients, whether you are an investor building your portfolio, shopping for your first home, or finally getting that waterfront luxury home of your dreams. We are here to learn more about you and your goals and dreams and to utilize our experience and expertise to develop a strategy, just for you!
             </p>
           </div>
 
           {/* Team Overview */}
           <div className="text-center mb-16">
-            <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              Meet the exceptional professionals who make up The Crawford Team. With over 15 years of combined experience 
-              in the Tampa Bay real estate market, we bring unparalleled expertise, dedication, and a personalized approach 
-              to every transaction.
-            </p>
           </div>
 
           {/* Team Members */}
