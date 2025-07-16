@@ -19,7 +19,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 lg:px-8">
+      <div className="relative z-10 text-center px-6 lg:px-8 animate-fade-in" style={{ animationDelay: '0.5s', animationDuration: '1.2s' }}>
         {/* Small headline */}
         <p className="text-white/90 text-sm md:text-base mb-4 tracking-wide uppercase animate-fade-in">
           Top 5% of Pinellas County
