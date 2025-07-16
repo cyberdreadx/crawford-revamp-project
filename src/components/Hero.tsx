@@ -32,7 +32,7 @@ const Hero = () => {
 
         {/* Subheadline */}
         <p className="text-white/90 text-lg md:text-xl mb-10 animate-fade-in">
-          Powered by Keller Williams St Pete Realty
+          Keller Williams St Pete
         </p>
 
         {/* Single CTA Button */}
