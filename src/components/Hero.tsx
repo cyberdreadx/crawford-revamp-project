@@ -23,16 +23,8 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 lg:px-8">
         <div className="max-w-4xl">
-          {/* Badge */}
-          <div className="inline-flex items-center space-x-3 bg-background/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 mb-6 animate-fade-in">
-            <div className="flex items-center space-x-1">
-              {[...Array(5)].map((_, i) => <Star key={i} className="w-6 h-6 md:w-5 md:h-5 fill-gold-warm text-gold-warm" />)}
-            </div>
-            <span className="text-white text-base md:text-sm font-medium whitespace-nowrap">Trusted by 500+ Families</span>
-          </div>
-
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 animate-slide-up">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
             Find Your Dream Home in{" "}
             <span className="bg-gradient-gold bg-clip-text text-transparent">
               St. Petersburg
@@ -40,48 +32,15 @@ const Hero = () => {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed animate-slide-up">
-            Expert real estate guidance with personalized service. We make your home buying and selling journey seamless and successful.
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl leading-relaxed animate-fade-in">
+            The Crawford Team - Powered by Keller Williams St Pete Realty
           </p>
 
-          {/* Stats */}
-          <div className="flex flex-wrap items-center gap-8 mb-10 animate-fade-in">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gold-warm">500+</div>
-              <div className="text-white/80 text-sm">Homes Sold</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gold-warm">15+</div>
-              <div className="text-white/80 text-sm">Years Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gold-warm">98%</div>
-              <div className="text-white/80 text-sm">Client Satisfaction</div>
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 animate-slide-up">
-            <Button size="lg" className="bg-gradient-gold hover:shadow-elegant text-navy-deep font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105" onClick={scrollToContact}>
-              Start Your Journey
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button variant="outline" size="lg" onClick={scrollToProperties} className="border-white/30 text-white backdrop-blur-sm px-8 py-4 text-lg transition-all duration-300 bg-transparent">
+          {/* Single CTA Button */}
+          <div className="animate-fade-in">
+            <Button size="lg" className="bg-gradient-gold hover:shadow-elegant text-navy-deep font-semibold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105" onClick={scrollToProperties}>
               View Properties
             </Button>
-          </div>
-
-          {/* Trust Indicators */}
-          <div className="mt-12 flex flex-wrap items-center gap-8 opacity-80 animate-fade-in">
-            <div className="text-white/70 text-sm">
-              <span className="font-semibold">Keller Williams</span> St Pete Realty
-            </div>
-            <div className="text-white/70 text-sm">
-              Licensed Real Estate Professionals
-            </div>
-            <div className="text-white/70 text-sm">
-              MLS Certified Agents
-            </div>
           </div>
         </div>
       </div>
