@@ -31,8 +31,16 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-subtle">
-      <div className="container mx-auto px-6 lg:px-8">
+    <section id="about" className="relative py-20 bg-gradient-subtle">
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
+        backgroundImage: `url(https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1920&q=80)`
+      }}>
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/90"></div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
