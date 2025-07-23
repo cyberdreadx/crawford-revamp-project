@@ -40,7 +40,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="block">
-              <h1 className="text-xl lg:text-2xl font-bold bg-gradient-teal bg-clip-text text-transparent">
+              <h1 className="text-xl lg:text-2xl font-bold text-foreground">
                 The Crawford Team
               </h1>
             </Link>
