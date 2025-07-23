@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Company Info */}
             <div className="lg:col-span-2">
-              <h3 className="text-2xl font-bold mb-4 bg-gradient-gold bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold mb-4 text-white">
                 The Crawford Team
               </h3>
               <p className="text-white/80 mb-6 max-w-md leading-relaxed">
