@@ -82,10 +82,7 @@ const Contact = () => {
               Contact Us
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Ready to{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Get Started?
-              </span>
+              Ready to Get Started?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Let's discuss your real estate goals. Whether you're buying, selling, or investing, 
