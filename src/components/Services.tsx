@@ -80,10 +80,7 @@ const Services = () => {
               Our Services
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Comprehensive{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Real Estate Services
-              </span>
+              Comprehensive Real Estate Services
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               From buying your first home to building an investment portfolio, 
