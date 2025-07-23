@@ -79,10 +79,7 @@ const Properties = () => {
               Featured Properties
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Discover Your{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Perfect Home
-              </span>
+              Discover Your Perfect Home
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               From waterfront estates to charming historic homes, we have properties 
