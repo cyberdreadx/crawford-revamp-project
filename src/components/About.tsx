@@ -48,10 +48,7 @@ const About = () => {
               About Us
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Meet The{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Crawford Team
-              </span>
+              Meet The Crawford Team
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
               The Crawford Team is a top-producing real estate team in Tampa Bay. Comprised of fierce females with a shared commitment to educating and empowering our clients, The Crawford Team is powered by Keller Williams St Pete Realty, the top producing real estate brokerage in Pinellas County. Our team consistently performs in the Top 5% of Pinellas County and has helped more than 425 families achieve their real estate goals with closed volume of more than $141 million... and counting!
