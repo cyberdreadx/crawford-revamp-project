@@ -190,7 +190,7 @@ const About = () => {
                     <div className="flex-shrink-0">
                       <div className="w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden">
                         <img 
-                          src="/lovable-uploads/c4bbf418-3d6b-4bb3-a237-32fffd29e34f.png" 
+                          src="/lovable-uploads/af237420-08c6-4ffc-84bf-7e85f6f3df22.png" 
                           alt="Aline Sarria"
                           className="w-full h-full object-cover"
                         />
