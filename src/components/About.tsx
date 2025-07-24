@@ -223,7 +223,7 @@ const About = () => {
                   <div className="flex-shrink-0 self-center sm:self-start">
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                       <img 
-                        src="/lovable-uploads/cc60f5df-ced2-4e6a-ad9d-688f36ca956c.png" 
+                        src="/lovable-uploads/606fc2f7-c96c-420f-b90d-41d5d6c7cdb8.png" 
                         alt="Sabra Charpentier"
                         className="w-full h-full object-cover"
                       />
