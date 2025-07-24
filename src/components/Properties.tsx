@@ -212,9 +212,9 @@ const Properties = () => {
                 variant="outline"
                 size="lg"
                 onClick={previousProperty}
-                className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm border-0 shadow-elegant hover:bg-white"
+                className="w-16 h-16 rounded-full bg-white shadow-2xl border-2 border-gray-200 hover:bg-gray-50 hover:shadow-elegant transition-all duration-200"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-8 h-8 text-gray-800" />
               </Button>
             </div>
             
@@ -223,9 +223,9 @@ const Properties = () => {
                 variant="outline"
                 size="lg"
                 onClick={nextProperty}
-                className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm border-0 shadow-elegant hover:bg-white"
+                className="w-16 h-16 rounded-full bg-white shadow-2xl border-2 border-gray-200 hover:bg-gray-50 hover:shadow-elegant transition-all duration-200"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-8 h-8 text-gray-800" />
               </Button>
             </div>
 
