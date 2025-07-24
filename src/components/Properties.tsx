@@ -147,7 +147,7 @@ const Properties = () => {
           </div>
 
           {/* Hero Property Display */}
-          <div className="relative mb-16">
+          <div className="relative mb-12">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentPropertyIndex}
@@ -155,11 +155,11 @@ const Properties = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.5 }}
-                className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]"
+                className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[70vh] lg:min-h-[80vh]"
               >
                 {/* Property Image */}
-                <div className="relative">
-                  <div className="aspect-[4/3] lg:aspect-square max-w-none">
+                <div className="relative order-1">
+                  <div className="aspect-[4/3] lg:aspect-square">
                     {currentProperty.id === 1 ? (
                       <img 
                         src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
@@ -169,15 +169,15 @@ const Properties = () => {
                     ) : (
                       <div className="w-full h-full bg-gradient-subtle flex items-center justify-center rounded-lg shadow-elegant">
                         <div className="text-center text-muted-foreground">
-                          <Home className="w-20 h-20 mx-auto mb-4 opacity-60" />
-                          <p className="text-lg">Property Image</p>
+                          <Home className="w-16 lg:w-20 h-16 lg:h-20 mx-auto mb-4 opacity-60" />
+                          <p className="text-base lg:text-lg">Property Image</p>
                         </div>
                       </div>
                     )}
                     
                     {/* Status Badge */}
                     <Badge 
-                      className={`absolute top-6 left-6 text-base px-4 py-2 ${
+                      className={`absolute top-4 left-4 text-sm lg:text-base px-3 lg:px-4 py-1 lg:py-2 ${
                         currentProperty.status === 'Pending' 
                           ? 'bg-orange-500 hover:bg-orange-600' 
                           : 'bg-green-600 hover:bg-green-700'
@@ -189,44 +189,44 @@ const Properties = () => {
                 </div>
 
                 {/* Property Details */}
-                <div className="space-y-8">
+                <div className="space-y-6 lg:space-y-8 order-2 px-4 lg:px-0">
                   <div>
-                    <h3 className="text-4xl lg:text-5xl font-light text-foreground mb-4">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light text-foreground mb-3 lg:mb-4 leading-tight">
                       {currentProperty.location.split(',')[0]}
                     </h3>
-                    <div className="flex items-start text-lg text-muted-foreground mb-6">
-                      <MapPin className="w-5 h-5 mr-2 mt-1 flex-shrink-0" />
-                      <span>{currentProperty.location.split(',').slice(1).join(',').trim()}</span>
+                    <div className="flex items-start text-sm lg:text-lg text-muted-foreground mb-4 lg:mb-6">
+                      <MapPin className="w-4 lg:w-5 h-4 lg:h-5 mr-2 mt-1 flex-shrink-0" />
+                      <span className="leading-relaxed">{currentProperty.location.split(',').slice(1).join(',').trim()}</span>
                     </div>
                   </div>
                   
-                  <div className="text-5xl lg:text-6xl font-light text-foreground">
+                  <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-foreground">
                     {currentProperty.price}
                   </div>
                   
-                  <div className="flex items-center space-x-8 text-lg text-muted-foreground">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8 space-y-2 sm:space-y-0 text-sm lg:text-lg text-muted-foreground">
                     <div className="flex items-center space-x-2">
-                      <Bed className="w-5 h-5" />
+                      <Bed className="w-4 lg:w-5 h-4 lg:h-5" />
                       <span>{currentProperty.beds} Bedrooms</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Bath className="w-5 h-5" />
+                      <Bath className="w-4 lg:w-5 h-4 lg:h-5" />
                       <span>{currentProperty.baths} Bathrooms</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Square className="w-5 h-5" />
+                      <Square className="w-4 lg:w-5 h-4 lg:h-5" />
                       <span>{currentProperty.sqft} Sq.Ft.</span>
                     </div>
                   </div>
 
-                  <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                  <p className="text-base lg:text-lg text-muted-foreground leading-relaxed">
                     {currentProperty.description}
                   </p>
 
-                  <div className="flex space-x-4">
+                  <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                     <Button 
                       size="lg"
-                      className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+                      className="bg-gradient-gold hover:shadow-button transition-all duration-200 w-full sm:w-auto"
                       onClick={() => setSelectedProperty(currentProperty)}
                     >
                       View Details
@@ -235,7 +235,7 @@ const Properties = () => {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="text-lg px-8"
+                      className="text-base lg:text-lg px-6 lg:px-8 w-full sm:w-auto"
                     >
                       Contact Agent
                     </Button>
