@@ -73,7 +73,7 @@ const Properties = () => {
   return (
     <section id="properties" className="py-20 bg-background">
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
             <motion.div
@@ -87,13 +87,13 @@ const Properties = () => {
               </Badge>
             </motion.div>
             <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+              className="text-4xl md:text-6xl font-light text-foreground mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
               viewport={{ once: true }}
             >
-              Discover Your Perfect Home
+              Exclusive Listings
             </motion.h2>
             <motion.p 
               className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
@@ -116,10 +116,11 @@ const Properties = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -5 }}
+                className="group cursor-pointer"
+                onClick={() => setSelectedProperty(property)}
               >
-                <Card className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden rounded-lg shadow-elegant hover:shadow-2xl transition-all duration-300">
                   {/* Property Image */}
                   {property.id === 1 ? (
                     <img 
@@ -146,50 +147,31 @@ const Properties = () => {
                   >
                     {property.status}
                   </Badge>
-                  
-                  {/* Price Badge */}
-                  <div className="absolute top-4 right-4 bg-navy-deep/90 backdrop-blur-sm text-white px-3 py-1 rounded-lg font-semibold">
-                    {property.price}
-                  </div>
                 </div>
 
-                <CardContent className="p-6">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
-                      {property.title}
+                {/* Property Details */}
+                <div className="pt-6 space-y-3">
+                  <div>
+                    <h3 className="text-lg font-normal text-foreground mb-1">
+                      {property.location.split(',')[0]}
                     </h3>
-                    <div className="flex items-center text-muted-foreground text-sm">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      {property.location}
-                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {property.location.split(',').slice(1).join(',').trim()}
+                    </p>
                   </div>
-
-                  {/* Property Details */}
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-6">
-                    <div className="flex items-center space-x-1">
-                      <Bed className="w-4 h-4" />
-                      <span>{property.beds} Beds</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Bath className="w-4 h-4" />
-                      <span>{property.baths} Baths</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Square className="w-4 h-4" />
-                      <span>{property.sqft} sqft</span>
-                    </div>
+                  
+                  <div className="text-2xl font-light text-foreground">
+                    {property.price}
                   </div>
-
-                  <Button 
-                    variant="outline" 
-                    className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors"
-                    onClick={() => setSelectedProperty(property)}
-                  >
-                    View Details
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </CardContent>
-              </Card>
+                  
+                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                    <span>{property.beds} Bedrooms</span>
+                    <span>•</span>
+                    <span>{property.baths} Bathrooms</span>
+                    <span>•</span>
+                    <span>{property.sqft} Sq.Ft.</span>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
