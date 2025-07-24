@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Properties = () => {
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
@@ -75,22 +76,49 @@ const Properties = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4 px-4 py-2 animate-slide-in-right" style={{ animationDelay: '0.1s' }}>
-              Featured Properties
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-scale-in" style={{ animationDelay: '0.3s', animationDuration: '1s' }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                Featured Properties
+              </Badge>
+            </motion.div>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
+              viewport={{ once: true }}
+            >
               Discover Your Perfect Home
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.5s', animationDuration: '1s' }}>
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              viewport={{ once: true }}
+            >
               From waterfront estates to charming historic homes, we have properties 
               that match every lifestyle and budget in St. Petersburg.
-            </p>
+            </motion.p>
           </div>
 
           {/* Properties Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredProperties.slice(0, 3).map((property) => (
-              <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
+            {featuredProperties.slice(0, 3).map((property, index) => (
+              <motion.div
+                key={property.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+              >
+                <Card className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                 <div className="relative overflow-hidden">
                   {/* Property Image */}
                   {property.id === 1 ? (
@@ -162,6 +190,7 @@ const Properties = () => {
                   </Button>
                 </CardContent>
               </Card>
+              </motion.div>
             ))}
           </div>
 

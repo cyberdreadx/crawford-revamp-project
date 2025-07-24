@@ -14,6 +14,7 @@ import {
   MessageSquare,
   Star
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -78,22 +79,47 @@ const Contact = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4 px-4 py-2 animate-slide-in-right" style={{ animationDelay: '0.1s' }}>
-              Contact Us
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-scale-in" style={{ animationDelay: '0.3s', animationDuration: '1s' }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                Contact Us
+              </Badge>
+            </motion.div>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
+              viewport={{ once: true }}
+            >
               Ready to Get Started?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.5s', animationDuration: '1s' }}>
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              viewport={{ once: true }}
+            >
               Let's discuss your real estate goals. Whether you're buying, selling, or investing, 
               we're here to provide expert guidance every step of the way.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Contact Form */}
             <div className="lg:col-span-2">
-              <Card className="shadow-elegant border-0">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <Card className="shadow-elegant border-0">
                 <CardContent className="p-8">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="p-3 bg-gradient-gold rounded-full">
@@ -196,6 +222,7 @@ const Contact = () => {
                   </form>
                 </CardContent>
               </Card>
+              </motion.div>
             </div>
 
             {/* Contact Information */}
@@ -203,7 +230,15 @@ const Contact = () => {
               {contactInfo.map((info, index) => {
                 const Icon = info.icon;
                 return (
-                  <Card key={index} className="p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <Card className="p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
                     <CardContent className="p-0">
                       <div className="flex items-start space-x-4">
                         <div className="p-3 bg-accent/10 rounded-full flex-shrink-0">
@@ -230,11 +265,18 @@ const Contact = () => {
                       </div>
                     </CardContent>
                   </Card>
+                  </motion.div>
                 );
               })}
 
               {/* Trust Indicators */}
-              <Card className="p-6 shadow-card border-0 bg-gradient-subtle">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <Card className="p-6 shadow-card border-0 bg-gradient-subtle">
                 <CardContent className="p-0">
                   <div className="text-center">
                     <div className="flex justify-center items-center space-x-1 mb-3">
@@ -251,6 +293,7 @@ const Contact = () => {
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             </div>
           </div>
         </div>

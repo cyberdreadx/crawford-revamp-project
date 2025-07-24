@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Award, Users, Home, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 const About = () => {
   const achievements = [
@@ -44,21 +45,52 @@ const About = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4 px-4 py-2 animate-slide-in-right" style={{ animationDelay: '0.1s' }}>
-              About Us
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-scale-in" style={{ animationDelay: '0.3s', animationDuration: '1s' }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                About Us
+              </Badge>
+            </motion.div>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
+              viewport={{ once: true }}
+            >
               Meet The Crawford Team
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in" style={{ animationDelay: '0.5s', animationDuration: '1s' }}>
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              viewport={{ once: true }}
+            >
               The Crawford Team is a top-producing real estate team in Tampa Bay. Comprised of fierce females with a shared commitment to educating and empowering our clients, The Crawford Team is powered by Keller Williams St Pete Realty, the top producing real estate brokerage in Pinellas County. Our team consistently performs in the Top 5% of Pinellas County and has helped more than 425 families achieve their real estate goals with closed volume of more than $141 million... and counting!
-            </p>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in" style={{ animationDelay: '0.7s', animationDuration: '1s' }}>
+            </motion.p>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 1 }}
+              viewport={{ once: true }}
+            >
               Creating A Referable Experience (C.A.R.E.) is our commitment to every client, and it's achieved with the unique systems and processes designed to guide clients through their real estate journey. As a result, we are proud and honored that nearly 90% of our business comes from referrals and repeat clients.
-            </p>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.9s', animationDuration: '1s' }}>
+            </motion.p>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 1 }}
+              viewport={{ once: true }}
+            >
               Each member of The Crawford Team provides her own area of expertise to our clients, whether you are an investor building your portfolio, shopping for your first home, or finally getting that waterfront luxury home of your dreams. We are here to learn more about you and your goals and dreams and to utilize our experience and expertise to develop a strategy, just for you!
-            </p>
+            </motion.p>
           </div>
 
           {/* Team Overview */}
@@ -68,7 +100,13 @@ const About = () => {
           {/* Team Members */}
           <div className="grid md:grid-cols-2 gap-8 mb-16">
             {/* Monica Crawford */}
-            <Card className="shadow-elegant border-0 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
                   <div className="flex-shrink-0">
@@ -96,9 +134,16 @@ const About = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
 
             {/* Ashley Eidam */}
-            <Card className="shadow-elegant border-0 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
                   <div className="flex-shrink-0">
@@ -126,9 +171,16 @@ const About = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
 
             {/* Aline Sarria */}
-            <Card className="shadow-elegant border-0 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
                   <div className="flex-shrink-0">
@@ -156,9 +208,16 @@ const About = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
 
             {/* Sabra Charpentier */}
-            <Card className="shadow-elegant border-0 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="flex items-start space-x-6">
                   <div className="flex-shrink-0">
@@ -186,6 +245,7 @@ const About = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
           </div>
 
           {/* Achievement Stats */}
@@ -193,22 +253,41 @@ const About = () => {
             {achievements.map((achievement, index) => {
               const Icon = achievement.icon;
               return (
-                <Card key={index} className="text-center p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
-                  <CardContent className="p-0">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-gold rounded-full mb-4">
-                      <Icon className="w-8 h-8 text-navy-deep" />
-                    </div>
-                    <div className="text-3xl font-bold text-foreground mb-2">
-                      {achievement.number}
-                    </div>
-                    <div className="font-semibold text-foreground mb-1">
-                      {achievement.label}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {achievement.description}
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <Card className="text-center p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
+                    <CardContent className="p-0">
+                      <motion.div 
+                        className="inline-flex items-center justify-center w-16 h-16 bg-gradient-gold rounded-full mb-4"
+                        whileHover={{ rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Icon className="w-8 h-8 text-navy-deep" />
+                      </motion.div>
+                      <motion.div 
+                        className="text-3xl font-bold text-foreground mb-2"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: 0.3 + index * 0.1 }}
+                        viewport={{ once: true }}
+                      >
+                        {achievement.number}
+                      </motion.div>
+                      <div className="font-semibold text-foreground mb-1">
+                        {achievement.label}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {achievement.description}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>

@@ -11,6 +11,7 @@ import {
   Clock,
   Award
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Services = () => {
   const services = [
@@ -76,16 +77,35 @@ const Services = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-4 px-4 py-2 animate-slide-in-right" style={{ animationDelay: '0.1s' }}>
-              Our Services
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 animate-scale-in" style={{ animationDelay: '0.3s', animationDuration: '1s' }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                Our Services
+              </Badge>
+            </motion.div>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-foreground mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
+              viewport={{ once: true }}
+            >
               Comprehensive Real Estate Services
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.5s', animationDuration: '1s' }}>
+            </motion.h2>
+            <motion.p 
+              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              viewport={{ once: true }}
+            >
               From buying your first home to building an investment portfolio, 
               we provide expert guidance and support throughout your real estate journey.
-            </p>
+            </motion.p>
           </div>
 
           {/* Services Grid */}
@@ -93,30 +113,54 @@ const Services = () => {
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <Card key={index} className="group p-6 shadow-card hover:shadow-elegant transition-all duration-300 border-0 hover:-translate-y-1">
-                  <CardContent className="p-0">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-gold rounded-full mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <Icon className="w-8 h-8 text-navy-deep" />
-                    </div>
-                    
-                    <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
-                      {service.title}
-                    </h3>
-                    
-                    <p className="text-muted-foreground mb-4 leading-relaxed">
-                      {service.description}
-                    </p>
-                    
-                    <ul className="space-y-2">
-                      {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center text-sm text-muted-foreground">
-                          <div className="w-1.5 h-1.5 bg-accent rounded-full mr-3"></div>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -10 }}
+                >
+                  <Card className="group p-6 shadow-card hover:shadow-elegant transition-all duration-300 border-0">
+                    <CardContent className="p-0">
+                      <motion.div 
+                        className="inline-flex items-center justify-center w-16 h-16 bg-gradient-gold rounded-full mb-6"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <Icon className="w-8 h-8 text-navy-deep" />
+                      </motion.div>
+                      
+                      <motion.h3 
+                        className="text-xl font-semibold text-foreground mb-3 group-hover:text-accent transition-colors"
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        {service.title}
+                      </motion.h3>
+                      
+                      <p className="text-muted-foreground mb-4 leading-relaxed">
+                        {service.description}
+                      </p>
+                      
+                      <ul className="space-y-2">
+                        {service.features.map((feature, featureIndex) => (
+                          <motion.li 
+                            key={featureIndex} 
+                            className="flex items-center text-sm text-muted-foreground"
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 + featureIndex * 0.1 }}
+                            viewport={{ once: true }}
+                          >
+                            <div className="w-1.5 h-1.5 bg-accent rounded-full mr-3"></div>
+                            {feature}
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
