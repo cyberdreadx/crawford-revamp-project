@@ -122,13 +122,13 @@ const About = () => {
                     <h3 className="text-xl font-bold text-foreground mb-2">Monica Crawford</h3>
                     <Badge variant="secondary" className="mb-4">Owner & Lead Listing Agent</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                      Born and raised in Kentucky, Monica made St. Petersburg her home in 2012. Licensed since 2013, 
-                      she's honored to be part of Keller Williams St Pete MarketCenter and consistently ranks in the 
-                      Top 100 Agents of Pinellas County.
+                      Monica Crawford was born and raised among the beautiful horse farms and Bourbon trails in Kentucky. In 2012, she and her husband, Adam, traded the Bluegrass for the sandy Gulf beaches and decided to call Gulfport their home. Along with their two children, Leeland and Willa, they love to spend time playing outside at the various parks and beaches and taking family road trips to visit National Parks.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019. You will find Monica's name consistently in the Top 100 Agents of Pinellas County and her team is in the Top 5% of the Keller Williams St Pete brokerage.
                     </p>
                     <p className="text-muted-foreground leading-relaxed text-sm">
-                      With over 425 clients served and $141M+ in volume, Monica's C.A.R.E. approach has earned 95% 
-                      referral business, building lasting relationships through exceptional results.
+                      Since 2013, Monica and her teammates have helped more than 425 clients achieve their real estate goals and have closed over $141 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients and she credits this achievement with her C.A.R.E. approach; Creating A Referable Experience.
                     </p>
                   </div>
                 </div>
@@ -159,13 +159,13 @@ const About = () => {
                     <h3 className="text-xl font-bold text-foreground mb-2">Ashley Eidam</h3>
                     <Badge variant="secondary" className="mb-4">Team Coordinator & Realtor</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                      Brazilian-American from Miami, Ashley brings a vibrant multicultural perspective to real estate. 
-                      Fluent in three languages and highly tech-savvy, she uses innovative solutions to streamline 
-                      operations and elevate client experiences.
+                      Ashley Eidam is a Brazilian-American, originally from Miami, who brings a vibrant and multicultural perspective to the real estate industry. After relocating to Texas in 2016, she returned to Florida in 2023 to be closer to family and embrace the coastal lifestyle she cherishes. As the Team Coordinator at The Crawford Team, Ashley combines her expertise in real estate and property management with a deep passion for organization and client success.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Fluent in three languages and highly tech-savvy, Ashley uses innovative solutions to streamline operations and elevate the client experience, delivering a white-glove level of service.
                     </p>
                     <p className="text-muted-foreground leading-relaxed text-sm">
-                      Whether paddleboarding at sunrise or organizing seamless transactions, Ashley delivers 
-                      white-glove service with passion for meaningful connections.
+                      Outside of real estate, Ashley is an avid music lover and adventure enthusiast. Whether she's paddleboarding at sunrise or immersing herself in music festivals, she thrives on building meaningful connections and making every experience seamless and enjoyable for those she works with.
                     </p>
                   </div>
                 </div>
@@ -196,13 +196,13 @@ const About = () => {
                     <h3 className="text-xl font-bold text-foreground mb-2">Aline Sarria</h3>
                     <Badge variant="secondary" className="mb-4">Luxury Property Matchmaker</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                      Specializing in waterfront condos and high-end real estate in downtown St. Petersburg, 
-                      Aline brings a visionary approach to luxury properties. Her decades as an educator 
-                      help her identify and nurture potential in every property.
+                      Aline Sarria is a dedicated luxury property matchmaker specializing in waterfront condos and high-end real estate in downtown St. Petersburg (DTSP). Known for her ability to uncover the hidden potential in every property, Aline brings a visionary approach to both buying and selling luxury homes. Whether it's a sleek penthouse overlooking Tampa Bay or a modern retreat near the vibrant arts district, she helps clients discover properties that align with their dreams and elevate their investment portfolios.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate, where she transforms overlooked spaces into valuable assets and curates personalized experiences for her clients.
                     </p>
                     <p className="text-muted-foreground leading-relaxed text-sm">
-                      Offering multilingual service in English, Spanish, and French, Aline serves global 
-                      clientele seeking Florida's Gulf Coast lifestyle.
+                      Now a proud St. Petersburg resident, Aline is passionate about showcasing the city's best properties to local buyers and international investors alike, especially those drawn to Florida's Gulf Coast lifestyle. She offers multilingual service in English, Spanish, and French, ensuring seamless communication for global clientele.
                     </p>
                   </div>
                 </div>
@@ -233,13 +233,13 @@ const About = () => {
                     <h3 className="text-xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
                     <Badge variant="secondary" className="mb-4">Realtor</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                      With 10 years at Keller Williams, Sabra specializes in first-time homebuyers and investors. 
-                      As a young property owner herself, she brings real-world investment knowledge to help 
-                      clients navigate the market.
+                      Sabra Charpentier is a licensed Realtor serving and specializing in St Petersburg, Florida, and has been a licensed Realtor with Keller Williams for a total of 10 years. Throughout those years, Sabra has found her niche with first time home buyers and investors. She currently owns multiple properties that were acquired at a young age, and uses the knowledge from those experiences to help investors navigate the market.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">
+                      Sabra is passionate about bringing knowledge and financial literacy into the experience, while connecting them to their dream homes. She brings a unique blend of energy, emotional intelligence, and competitive spirit to the real estate market.
                     </p>
                     <p className="text-muted-foreground leading-relaxed text-sm">
-                      A former athlete, Sabra brings determination, discipline, and teamwork to every client 
-                      interaction, combining competitive spirit with emotional intelligence.
+                      As a former athlete, Sabra understands the importance of determination, discipline and teamwork- qualities that apply to every client interaction. Beyond her professional expertise, she is deeply committed to her community, whether it's through local Chamber of Commerce events or team activities.
                     </p>
                   </div>
                 </div>
