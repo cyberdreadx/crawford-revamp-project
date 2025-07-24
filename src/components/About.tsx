@@ -97,8 +97,8 @@ const About = () => {
           <div className="text-center mb-16">
           </div>
 
-          {/* Team Members - Hero Sized */}
-          <div className="space-y-16 mb-16">
+          {/* Team Members - Hero Layout */}
+          <div className="space-y-20 mb-16">
             {/* Monica Crawford */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -106,36 +106,34 @@ const About = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                <CardContent className="p-12 lg:p-16">
-                  <div className="flex flex-col lg:flex-row items-center lg:items-start lg:space-x-12 space-y-8 lg:space-y-0">
-                    <div className="flex-shrink-0">
-                      <div className="w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden">
-                        <img 
-                          src="/lovable-uploads/a3981d27-8283-4f63-bf4a-14cfc1f69f8d.png" 
-                          alt="Monica Crawford"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-center lg:text-left">
-                      <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Monica Crawford</h3>
-                      <Badge variant="secondary" className="mb-6 text-lg px-6 py-2">Owner & Lead Listing Agent</Badge>
-                      <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                        <p>
-                          Monica Crawford was born and raised among the beautiful horse farms and Bourbon trails in Kentucky. In 2012, she and her husband, Adam, traded the Bluegrass for the sandy Gulf beaches and decided to call Gulfport their home. Along with their two children, Leeland and Willa, they love to spend time playing outside at the various parks and beaches and taking family road trips to visit National Parks.
-                        </p>
-                        <p>
-                          Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019. You will find Monica's name consistently in the Top 100 Agents of Pinellas County and her team is in the Top 5% of the Keller Williams St Pete brokerage.
-                        </p>
-                        <p>
-                          Since 2013, Monica and her teammates have helped more than 425 clients achieve their real estate goals and have closed over $141 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients and she credits this achievement with her C.A.R.E. approach; Creating A Referable Experience.
-                        </p>
-                      </div>
-                    </div>
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="relative">
+                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                    <img 
+                      src="/lovable-uploads/a3981d27-8283-4f63-bf4a-14cfc1f69f8d.png" 
+                      alt="Monica Crawford"
+                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Monica Crawford</h3>
+                    <Badge variant="secondary" className="text-lg px-6 py-2">Owner & Lead Listing Agent</Badge>
+                  </div>
+                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+                    <p>
+                      Monica Crawford was born and raised among the beautiful horse farms and Bourbon trails in Kentucky. In 2012, she and her husband, Adam, traded the Bluegrass for the sandy Gulf beaches and decided to call Gulfport their home.
+                    </p>
+                    <p>
+                      Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019.
+                    </p>
+                    <p>
+                      Since 2013, Monica and her teammates have helped more than 425 clients achieve their real estate goals and have closed over $141 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Ashley Eidam */}
@@ -145,36 +143,34 @@ const About = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                <CardContent className="p-12 lg:p-16">
-                  <div className="flex flex-col lg:flex-row-reverse items-center lg:items-start lg:space-x-12 lg:space-x-reverse space-y-8 lg:space-y-0">
-                    <div className="flex-shrink-0">
-                      <div className="w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden">
-                        <img 
-                          src="/lovable-uploads/c9f0030f-440e-4f22-be50-e9e50d1e6f87.png" 
-                          alt="Ashley Eidam"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-center lg:text-left">
-                      <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Ashley Eidam</h3>
-                      <Badge variant="secondary" className="mb-6 text-lg px-6 py-2">Team Coordinator & Realtor</Badge>
-                      <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                        <p>
-                          Ashley Eidam is a Brazilian-American, originally from Miami, who brings a vibrant and multicultural perspective to the real estate industry. After relocating to Texas in 2016, she returned to Florida in 2023 to be closer to family and embrace the coastal lifestyle she cherishes. As the Team Coordinator at The Crawford Team, Ashley combines her expertise in real estate and property management with a deep passion for organization and client success.
-                        </p>
-                        <p>
-                          Fluent in three languages and highly tech-savvy, Ashley uses innovative solutions to streamline operations and elevate the client experience, delivering a white-glove level of service.
-                        </p>
-                        <p>
-                          Outside of real estate, Ashley is an avid music lover and adventure enthusiast. Whether she's paddleboarding at sunrise or immersing herself in music festivals, she thrives on building meaningful connections and making every experience seamless and enjoyable for those she works with.
-                        </p>
-                      </div>
-                    </div>
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="lg:order-2 relative">
+                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                    <img 
+                      src="/lovable-uploads/c9f0030f-440e-4f22-be50-e9e50d1e6f87.png" 
+                      alt="Ashley Eidam"
+                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="lg:order-1 space-y-6">
+                  <div>
+                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Ashley Eidam</h3>
+                    <Badge variant="secondary" className="text-lg px-6 py-2">Team Coordinator & Realtor</Badge>
+                  </div>
+                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+                    <p>
+                      Ashley Eidam is a Brazilian-American, originally from Miami, who brings a vibrant and multicultural perspective to the real estate industry. After relocating to Texas in 2016, she returned to Florida in 2023 to be closer to family and embrace the coastal lifestyle she cherishes.
+                    </p>
+                    <p>
+                      Fluent in three languages and highly tech-savvy, Ashley uses innovative solutions to streamline operations and elevate the client experience, delivering a white-glove level of service.
+                    </p>
+                    <p>
+                      Outside of real estate, Ashley is an avid music lover and adventure enthusiast. Whether she's paddleboarding at sunrise or immersing herself in music festivals, she thrives on building meaningful connections.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Aline Sarria */}
@@ -184,36 +180,34 @@ const About = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                <CardContent className="p-12 lg:p-16">
-                  <div className="flex flex-col lg:flex-row items-center lg:items-start lg:space-x-12 space-y-8 lg:space-y-0">
-                    <div className="flex-shrink-0">
-                      <div className="w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden">
-                        <img 
-                          src="/lovable-uploads/af237420-08c6-4ffc-84bf-7e85f6f3df22.png" 
-                          alt="Aline Sarria"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-center lg:text-left">
-                      <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Aline Sarria</h3>
-                      <Badge variant="secondary" className="mb-6 text-lg px-6 py-2">Luxury Property Matchmaker</Badge>
-                      <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                        <p>
-                          Aline Sarria is a dedicated luxury property matchmaker specializing in waterfront condos and high-end real estate in downtown St. Petersburg (DTSP). Known for her ability to uncover the hidden potential in every property, Aline brings a visionary approach to both buying and selling luxury homes. Whether it's a sleek penthouse overlooking Tampa Bay or a modern retreat near the vibrant arts district, she helps clients discover properties that align with their dreams and elevate their investment portfolios.
-                        </p>
-                        <p>
-                          Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate, where she transforms overlooked spaces into valuable assets and curates personalized experiences for her clients.
-                        </p>
-                        <p>
-                          Now a proud St. Petersburg resident, Aline is passionate about showcasing the city's best properties to local buyers and international investors alike, especially those drawn to Florida's Gulf Coast lifestyle. She offers multilingual service in English, Spanish, and French, ensuring seamless communication for global clientele.
-                        </p>
-                      </div>
-                    </div>
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="relative">
+                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                    <img 
+                      src="/lovable-uploads/af237420-08c6-4ffc-84bf-7e85f6f3df22.png" 
+                      alt="Aline Sarria"
+                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Aline Sarria</h3>
+                    <Badge variant="secondary" className="text-lg px-6 py-2">Luxury Property Matchmaker</Badge>
+                  </div>
+                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+                    <p>
+                      Aline Sarria is a dedicated luxury property matchmaker specializing in waterfront condos and high-end real estate in downtown St. Petersburg (DTSP). Known for her ability to uncover the hidden potential in every property, Aline brings a visionary approach to both buying and selling luxury homes.
+                    </p>
+                    <p>
+                      Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate.
+                    </p>
+                    <p>
+                      Now a proud St. Petersburg resident, Aline is passionate about showcasing the city's best properties to local buyers and international investors alike, especially those drawn to Florida's Gulf Coast lifestyle.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             {/* Sabra Charpentier */}
@@ -223,36 +217,34 @@ const About = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                <CardContent className="p-12 lg:p-16">
-                  <div className="flex flex-col lg:flex-row-reverse items-center lg:items-start lg:space-x-12 lg:space-x-reverse space-y-8 lg:space-y-0">
-                    <div className="flex-shrink-0">
-                      <div className="w-48 h-48 lg:w-64 lg:h-64 rounded-full overflow-hidden">
-                        <img 
-                          src="/lovable-uploads/606fc2f7-c96c-420f-b90d-41d5d6c7cdb8.png" 
-                          alt="Sabra Charpentier"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-center lg:text-left">
-                      <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Sabra Charpentier</h3>
-                      <Badge variant="secondary" className="mb-6 text-lg px-6 py-2">Realtor</Badge>
-                      <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-                        <p>
-                          Sabra Charpentier is a licensed Realtor serving and specializing in St Petersburg, Florida, and has been a licensed Realtor with Keller Williams for a total of 10 years. Throughout those years, Sabra has found her niche with first time home buyers and investors. She currently owns multiple properties that were acquired at a young age, and uses the knowledge from those experiences to help investors navigate the market.
-                        </p>
-                        <p>
-                          Sabra is passionate about bringing knowledge and financial literacy into the experience, while connecting them to their dream homes. She brings a unique blend of energy, emotional intelligence, and competitive spirit to the real estate market.
-                        </p>
-                        <p>
-                          As a former athlete, Sabra understands the importance of determination, discipline and teamwork- qualities that apply to every client interaction. Beyond her professional expertise, she is deeply committed to her community, whether it's through local Chamber of Commerce events or team activities.
-                        </p>
-                      </div>
-                    </div>
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="lg:order-2 relative">
+                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                    <img 
+                      src="/lovable-uploads/606fc2f7-c96c-420f-b90d-41d5d6c7cdb8.png" 
+                      alt="Sabra Charpentier"
+                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="lg:order-1 space-y-6">
+                  <div>
+                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
+                    <Badge variant="secondary" className="text-lg px-6 py-2">Realtor</Badge>
+                  </div>
+                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+                    <p>
+                      Sabra Charpentier is a licensed Realtor serving and specializing in St Petersburg, Florida, and has been a licensed Realtor with Keller Williams for a total of 10 years. Throughout those years, Sabra has found her niche with first time home buyers and investors.
+                    </p>
+                    <p>
+                      Sabra is passionate about bringing knowledge and financial literacy into the experience, while connecting them to their dream homes. She brings a unique blend of energy, emotional intelligence, and competitive spirit to the real estate market.
+                    </p>
+                    <p>
+                      As a former athlete, Sabra understands the importance of determination, discipline and teamwork- qualities that apply to every client interaction. Beyond her professional expertise, she is deeply committed to her community.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
 
