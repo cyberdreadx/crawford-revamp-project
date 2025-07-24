@@ -11,17 +11,19 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center">
+    <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-        backgroundImage: `url(${heroImage})`
-      }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
+      <div className="absolute inset-0 w-full h-full">
+        <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
+          backgroundImage: `url(${heroImage})`
+        }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
+        </div>
       </div>
 
       {/* Content */}
       <motion.div 
-        className="relative z-10 text-center px-6 lg:px-8"
+        className="relative z-10 text-center px-6 lg:px-8 w-full max-w-5xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}

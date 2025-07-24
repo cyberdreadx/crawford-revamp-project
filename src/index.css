@@ -117,7 +117,29 @@
     @apply border-border;
   }
 
+  /* Prevent horizontal overflow globally */
+  html, body {
+    @apply overflow-x-hidden;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  /* Ensure all containers respect viewport width */
+  .container,
+  [class*="container"] {
+    @apply max-w-full;
+  }
+
+  /* Fix potential layout issues */
+  img, video, iframe {
+    @apply max-w-full h-auto;
+  }
+
+  /* Prevent text overflow */
+  p, h1, h2, h3, h4, h5, h6 {
+    @apply break-words;
   }
 }

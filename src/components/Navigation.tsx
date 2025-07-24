@@ -35,13 +35,13 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-transparent z-50">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="fixed top-0 w-full bg-transparent z-50 overflow-hidden">
+      <div className="container mx-auto px-4 lg:px-8 max-w-full">
+        <div className="flex items-center justify-between h-16 w-full">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="block">
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground">
+              <h1 className="text-xl lg:text-2xl font-bold text-foreground truncate">
                 {"The Crawford Team".split("").map((char, index) => (
                   <motion.span
                     key={index}
@@ -62,8 +62,8 @@ const Navigation = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-6 flex items-baseline space-x-6">
+          <div className="hidden md:flex flex-1 justify-center max-w-lg mx-4">
+            <div className="flex items-baseline justify-center space-x-6 w-full">
               {navItems.map((item) => (
                 item.href === "/listings" ? (
                   <Link
@@ -106,8 +106,8 @@ const Navigation = () => {
             </div>
           </div>
 
-          {/* Contact Info & CTA - Simplified */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Contact Info & CTA - Flex shrink */}
+          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
             <div className="flex items-center space-x-3 text-sm text-muted-foreground">
               <a href="tel:727-599-1944" className="flex items-center space-x-1 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4" />
