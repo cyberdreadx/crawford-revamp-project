@@ -108,9 +108,9 @@ const About = () => {
             >
               <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
-                <div className="flex items-start space-x-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-6 space-y-4 sm:space-y-0">
+                  <div className="flex-shrink-0 self-center sm:self-start">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                       <img 
                         src="/lovable-uploads/e93072c1-2cf4-49ac-8e59-cfe8cd60fa84.png" 
                         alt="Monica Crawford"
@@ -118,7 +118,7 @@ const About = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left">
                     <h3 className="text-xl font-bold text-foreground mb-2">Monica Crawford</h3>
                     <Badge variant="secondary" className="mb-4">Owner & Lead Listing Agent</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
@@ -145,9 +145,9 @@ const About = () => {
             >
               <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
-                <div className="flex items-start space-x-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-6 space-y-4 sm:space-y-0">
+                  <div className="flex-shrink-0 self-center sm:self-start">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                       <img 
                         src="/lovable-uploads/1e002cfa-b4a8-4a25-a05e-1590c51406c1.png" 
                         alt="Ashley Eidam"
@@ -155,7 +155,7 @@ const About = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left">
                     <h3 className="text-xl font-bold text-foreground mb-2">Ashley Eidam</h3>
                     <Badge variant="secondary" className="mb-4">Team Coordinator & Realtor</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
@@ -182,9 +182,9 @@ const About = () => {
             >
               <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
-                <div className="flex items-start space-x-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-6 space-y-4 sm:space-y-0">
+                  <div className="flex-shrink-0 self-center sm:self-start">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                       <img 
                         src="/lovable-uploads/c4bbf418-3d6b-4bb3-a237-32fffd29e34f.png" 
                         alt="Aline Sarria"
@@ -192,7 +192,7 @@ const About = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left">
                     <h3 className="text-xl font-bold text-foreground mb-2">Aline Sarria</h3>
                     <Badge variant="secondary" className="mb-4">Luxury Property Matchmaker</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
@@ -219,9 +219,9 @@ const About = () => {
             >
               <Card className="shadow-elegant border-0 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-8">
-                <div className="flex items-start space-x-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-6 space-y-4 sm:space-y-0">
+                  <div className="flex-shrink-0 self-center sm:self-start">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                       <img 
                         src="/lovable-uploads/cc60f5df-ced2-4e6a-ad9d-688f36ca956c.png" 
                         alt="Sabra Charpentier"
@@ -229,7 +229,7 @@ const About = () => {
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-center sm:text-left">
                     <h3 className="text-xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
                     <Badge variant="secondary" className="mb-4">Realtor</Badge>
                     <p className="text-muted-foreground leading-relaxed text-sm mb-4">
