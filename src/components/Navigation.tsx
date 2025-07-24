@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone, Mail, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { motion } from "framer-motion";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +42,21 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <Link to="/" className="block">
               <h1 className="text-xl lg:text-2xl font-bold text-foreground">
-                The Crawford Team
+                {"The Crawford Team".split("").map((char, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                      delay: index * 0.05,
+                      duration: 0.5,
+                      ease: "easeOut"
+                    }}
+                    style={{ display: char === " " ? "inline" : "inline-block" }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
               </h1>
             </Link>
           </div>

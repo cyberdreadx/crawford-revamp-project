@@ -37,14 +37,23 @@ const Hero = () => {
         </motion.p>
 
         {/* Main Headline */}
-        <motion.h1 
-          className="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 1.2, type: "spring", stiffness: 100 }}
-        >
-          The Crawford Team
-        </motion.h1>
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6">
+          {"The Crawford Team".split("").map((char, index) => (
+            <motion.span
+              key={index}
+              initial={{ y: -100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                delay: 0.5 + index * 0.08,
+                duration: 0.6,
+                ease: "easeOut"
+              }}
+              style={{ display: char === " " ? "inline" : "inline-block" }}
+            >
+              {char === " " ? "\u00A0" : char}
+            </motion.span>
+          ))}
+        </h1>
 
         {/* Subheadline */}
         <motion.p 
