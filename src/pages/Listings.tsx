@@ -494,10 +494,7 @@ const Listings = () => {
               All Properties
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Browse All{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Available Listings
-              </span>
+              Browse All Available Listings
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Explore our complete portfolio of properties across St. Petersburg, 
