@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Phone, Mail, User } from "lucide-react";
@@ -8,9 +8,36 @@ import { motion } from "framer-motion";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const { user } = useAuth();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Only hide nav after scrolling past 100px to avoid flickering at top
+      if (currentScrollY > 100) {
+        if (currentScrollY > lastScrollY) {
+          // Scrolling down - hide nav
+          setIsVisible(false);
+        } else {
+          // Scrolling up - show nav
+          setIsVisible(true);
+        }
+      } else {
+        // Always show nav when near top
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const navItems = [
     { name: "Home", href: "/", section: "#home" },
@@ -35,7 +62,11 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-transparent z-50 overflow-hidden">
+    <nav 
+      className={`fixed top-0 w-full bg-transparent z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <div className="container mx-auto px-4 lg:px-8 max-w-full">
         <div className="flex items-center justify-between h-16 w-full">
           {/* Logo */}
