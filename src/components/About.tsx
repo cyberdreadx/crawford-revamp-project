@@ -108,11 +108,11 @@ const About = () => {
             >
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="relative">
-                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                  <div className="max-w-lg mx-auto lg:mx-0">
                     <img 
                       src="/lovable-uploads/a3981d27-8283-4f63-bf4a-14cfc1f69f8d.png" 
                       alt="Monica Crawford"
-                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                      className="w-full h-auto object-cover rounded-lg shadow-elegant"
                     />
                   </div>
                 </div>
@@ -145,11 +145,11 @@ const About = () => {
             >
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="lg:order-2 relative">
-                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                  <div className="max-w-lg mx-auto lg:mx-0">
                     <img 
                       src="/lovable-uploads/c9f0030f-440e-4f22-be50-e9e50d1e6f87.png" 
                       alt="Ashley Eidam"
-                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                      className="w-full h-auto object-cover rounded-lg shadow-elegant"
                     />
                   </div>
                 </div>
@@ -182,11 +182,11 @@ const About = () => {
             >
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="relative">
-                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                  <div className="max-w-lg mx-auto lg:mx-0">
                     <img 
                       src="/lovable-uploads/af237420-08c6-4ffc-84bf-7e85f6f3df22.png" 
                       alt="Aline Sarria"
-                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                      className="w-full h-auto object-cover rounded-lg shadow-elegant"
                     />
                   </div>
                 </div>
@@ -219,11 +219,11 @@ const About = () => {
             >
               <div className="grid lg:grid-cols-2 gap-12 items-center">
                 <div className="lg:order-2 relative">
-                  <div className="aspect-square max-w-lg mx-auto lg:mx-0">
+                  <div className="max-w-lg mx-auto lg:mx-0">
                     <img 
                       src="/lovable-uploads/606fc2f7-c96c-420f-b90d-41d5d6c7cdb8.png" 
                       alt="Sabra Charpentier"
-                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                      className="w-full h-auto object-cover rounded-lg shadow-elegant"
                     />
                   </div>
                 </div>
