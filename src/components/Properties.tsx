@@ -207,7 +207,7 @@ const Properties = () => {
             </AnimatePresence>
 
             {/* Navigation Controls */}
-            <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+            <div className="absolute top-1/2 -left-20 transform -translate-y-1/2 hidden lg:block">
               <Button
                 variant="outline"
                 size="lg"
@@ -218,7 +218,7 @@ const Properties = () => {
               </Button>
             </div>
             
-            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+            <div className="absolute top-1/2 -right-20 transform -translate-y-1/2 hidden lg:block">
               <Button
                 variant="outline"
                 size="lg"
@@ -226,6 +226,26 @@ const Properties = () => {
                 className="w-16 h-16 rounded-full bg-white shadow-2xl border-2 border-gray-200 hover:bg-gray-50 hover:shadow-elegant transition-all duration-200"
               >
                 <ChevronRight className="w-8 h-8 text-gray-800" />
+              </Button>
+            </div>
+
+            {/* Mobile Navigation - Bottom positioned */}
+            <div className="flex justify-center space-x-4 mt-8 lg:hidden">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={previousProperty}
+                className="w-12 h-12 rounded-full bg-white shadow-2xl border-2 border-gray-200 hover:bg-gray-50"
+              >
+                <ChevronLeft className="w-6 h-6 text-gray-800" />
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={nextProperty}
+                className="w-12 h-12 rounded-full bg-white shadow-2xl border-2 border-gray-200 hover:bg-gray-50"
+              >
+                <ChevronRight className="w-6 h-6 text-gray-800" />
               </Button>
             </div>
 
