@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Listings from "./pages/Listings";
 import Auth from "./pages/Auth";
 import MemberPortal from "./pages/MemberPortal";
+import Admin from "./pages/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <MemberPortal />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <Admin />
                 </ProtectedRoute>
               } 
             />

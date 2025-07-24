@@ -1,123 +1,141 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight, Bed, Bath, Square, Calendar, MapPin, Car, Home, DollarSign, ArrowRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
+
+interface Property {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  sqft: number;
+  year_built?: number;
+  property_type: string;
+  status: string;
+  description?: string;
+  key_features?: string[];
+  taxes?: number;
+  flood_zone?: string;
+  is_featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface PropertyImage {
+  id: string;
+  property_id: string;
+  image_url: string;
+  is_primary: boolean;
+  display_order: number;
+}
 
 const Properties = () => {
-  const [selectedProperty, setSelectedProperty] = useState<any>(null);
-  const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
-  // Featured properties from The Crawford Team - Actual MLS Listings
-  const featuredProperties = [
-    {
-      id: 1,
-      mlsNumber: "TB8400218",
-      title: "Charming Coastal Retreat",
-      location: "6730 10th Avenue Ter S, St. Petersburg, FL 33707",
-      price: "$210,000",
-      beds: 2,
-      baths: 1,
-      sqft: "886",
-      totalSqft: "1,490",
-      yearBuilt: "1953",
-      status: "Active",
-      floodZone: "AE",
-      description: "Not Substantially Damaged! Welcome to one of St. Pete's most charming pockets, this property is just a short jaunt to St. Pete Beach, Treasure Island, near sunny parks, and close to the heart of downtown.",
-      highlights: ["AE Flood Zone", "Stucco & Wood Frame", "Fully Fenced Yard", "Screened Porch"],
-      subdivision: "Brookwood 1st Add",
-      taxes: "$1,371",
-      lotSize: "4,674 SqFt"
-    },
-    {
-      id: 2,
-      mlsNumber: "TB8395009",
-      title: "Corner Lot Gem Near 4th Street",
-      location: "5700 Pacific St N, St. Petersburg, FL 33703",
-      price: "$375,000",
-      beds: 2,
-      baths: 1,
-      sqft: "936",
-      totalSqft: "1,254",
-      yearBuilt: "1973",
-      status: "Active",
-      floodZone: "AE",
-      description: "Charming Corner Lot Home Near 4th St Corridor – Move-In Ready! Recently updated with new roof (2019), electrical panel (2022), and HVAC (2022).",
-      highlights: ["Corner Lot", "Recent Updates", "No Hurricane Damage", "Climate-Controlled Garage"],
-      subdivision: "North St Petersburg",
-      taxes: "$2,216",
-      lotSize: "8,233 SqFt"
-    },
-    {
-      id: 3,
-      mlsNumber: "TB8398514",
-      title: "Rainbow Lakes Paradise",
-      location: "21078 SW Honeysuckle St, Dunnellon, FL 34431",
-      price: "$250,000",
-      beds: 3,
-      baths: 2,
-      sqft: "1,395",
-      totalSqft: "2,342",
-      yearBuilt: "1969",
-      status: "Active",
-      floodZone: "X",
-      description: "Charming Mid-Century Gem in Rainbow Lakes Estates – Fully Furnished & Move-In Ready! Perfect turnkey home, seasonal retreat, or investment property.",
-      highlights: ["Fully Furnished", "2-Car Garage", "Fireplace", "Near Rainbow Springs"],
-      subdivision: "Rainbow Lakes Estate",
-      taxes: "$657",
-      lotSize: "10,454 SqFt"
-    },
-    {
-      id: 4,
-      mlsNumber: "TB8405123",
-      title: "Downtown St. Pete Luxury Condo",
-      location: "175 2nd Street N, St. Petersburg, FL 33701",
-      price: "$685,000",
-      beds: 2,
-      baths: 2,
-      sqft: "1,250",
-      totalSqft: "1,400",
-      yearBuilt: "2018",
-      status: "Active",
-      floodZone: "X",
-      description: "Stunning luxury condo in the heart of downtown St. Petersburg with panoramic views of Tampa Bay. Modern finishes, floor-to-ceiling windows, and premium amenities including rooftop pool and fitness center.",
-      highlights: ["Bay Views", "Modern Finishes", "Rooftop Pool", "Downtown Location"],
-      subdivision: "The Salvador",
-      taxes: "$5,200",
-      lotSize: "N/A"
-    },
-    {
-      id: 5,
-      mlsNumber: "TB8399876",
-      title: "Waterfront Estate Paradise",
-      location: "8945 Bay Shore Drive NE, St. Petersburg, FL 33702",
-      price: "$1,250,000",
-      beds: 4,
-      baths: 3,
-      sqft: "2,850",
-      totalSqft: "3,200",
-      yearBuilt: "2005",
-      status: "Pending",
-      floodZone: "AE",
-      description: "Magnificent waterfront estate with private dock and stunning sunrise views over Tampa Bay. Recently renovated with chef's kitchen, master suite retreat, and expansive outdoor entertaining areas.",
-      highlights: ["Private Dock", "Waterfront", "Recently Renovated", "Chef's Kitchen"],
-      subdivision: "Bay Shore Estates",
-      taxes: "$8,950",
-      lotSize: "0.75 Acres"
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [propertyImages, setPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchFeaturedProperties();
+  }, []);
+
+  const fetchFeaturedProperties = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch featured properties
+      const { data: propertiesData, error: propertiesError } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('is_featured', true)
+        .order('created_at', { ascending: false });
+
+      if (propertiesError) throw propertiesError;
+
+      if (propertiesData && propertiesData.length > 0) {
+        setProperties(propertiesData);
+
+        // Fetch images for all properties
+        const { data: imagesData, error: imagesError } = await supabase
+          .from('property_images')
+          .select('*')
+          .in('property_id', propertiesData.map(p => p.id))
+          .order('display_order');
+
+        if (imagesError) throw imagesError;
+
+        // Group images by property_id
+        const imagesByProperty: { [key: string]: PropertyImage[] } = {};
+        imagesData?.forEach(image => {
+          if (!imagesByProperty[image.property_id]) {
+            imagesByProperty[image.property_id] = [];
+          }
+          imagesByProperty[image.property_id].push(image);
+        });
+
+        setPropertyImages(imagesByProperty);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch properties: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const getPrimaryImage = (propertyId: string) => {
+    const images = propertyImages[propertyId] || [];
+    const primaryImage = images.find(img => img.is_primary);
+    return primaryImage?.image_url || images[0]?.image_url || '/placeholder.svg';
+  };
 
   const nextProperty = () => {
-    setCurrentPropertyIndex((prev) => (prev + 1) % featuredProperties.length);
+    setCurrentIndex((prevIndex) => 
+      prevIndex === properties.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   const previousProperty = () => {
-    setCurrentPropertyIndex((prev) => (prev - 1 + featuredProperties.length) % featuredProperties.length);
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? properties.length - 1 : prevIndex - 1
+    );
   };
 
-  const currentProperty = featuredProperties[currentPropertyIndex];
+  if (loading) {
+    return (
+      <section className="min-h-[70vh] bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading properties...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (!properties.length) {
+    return (
+      <section className="min-h-[70vh] bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">No Featured Properties</h2>
+          <p className="text-muted-foreground">Check back soon for new listings!</p>
+        </div>
+      </section>
+    );
+  }
+
+  const currentProperty = properties[currentIndex];
 
   return (
     <section id="properties" className="py-20 bg-background">
@@ -150,7 +168,7 @@ const Properties = () => {
           <div className="relative mb-12">
             <AnimatePresence mode="wait">
               <motion.div
-                key={currentPropertyIndex}
+                key={currentIndex}
                 initial={{ opacity: 0, x: 300 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -300 }}
@@ -160,20 +178,11 @@ const Properties = () => {
                 {/* Property Image */}
                 <div className="relative order-1">
                   <div className="aspect-[4/3] lg:aspect-square">
-                    {currentProperty.id === 1 ? (
-                      <img 
-                        src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
-                        alt={currentProperty.title}
-                        className="w-full h-full object-cover rounded-lg shadow-elegant"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-subtle flex items-center justify-center rounded-lg shadow-elegant">
-                        <div className="text-center text-muted-foreground">
-                          <Home className="w-16 lg:w-20 h-16 lg:h-20 mx-auto mb-4 opacity-60" />
-                          <p className="text-base lg:text-lg">Property Image</p>
-                        </div>
-                      </div>
-                    )}
+                    <img 
+                      src={getPrimaryImage(currentProperty.id)}
+                      alt={currentProperty.title}
+                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                    />
                     
                     {/* Status Badge */}
                     <Badge 
@@ -192,35 +201,35 @@ const Properties = () => {
                 <div className="space-y-6 lg:space-y-8 order-2 px-4 lg:px-0">
                   <div>
                     <h3 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light text-foreground mb-3 lg:mb-4 leading-tight">
-                      {currentProperty.location.split(',')[0]}
+                      {currentProperty.title}
                     </h3>
                     <div className="flex items-start text-sm lg:text-lg text-muted-foreground mb-4 lg:mb-6">
                       <MapPin className="w-4 lg:w-5 h-4 lg:h-5 mr-2 mt-1 flex-shrink-0" />
-                      <span className="leading-relaxed">{currentProperty.location.split(',').slice(1).join(',').trim()}</span>
+                      <span className="leading-relaxed">{currentProperty.location}</span>
                     </div>
                   </div>
                   
                   <div className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-foreground">
-                    {currentProperty.price}
+                    ${currentProperty.price?.toLocaleString() || 'Price on request'}
                   </div>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8 space-y-2 sm:space-y-0 text-sm lg:text-lg text-muted-foreground">
                     <div className="flex items-center space-x-2">
                       <Bed className="w-4 lg:w-5 h-4 lg:h-5" />
-                      <span>{currentProperty.beds} Bedrooms</span>
+                      <span>{currentProperty.bedrooms} Bedrooms</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Bath className="w-4 lg:w-5 h-4 lg:h-5" />
-                      <span>{currentProperty.baths} Bathrooms</span>
+                      <span>{currentProperty.bathrooms} Bathrooms</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Square className="w-4 lg:w-5 h-4 lg:h-5" />
-                      <span>{currentProperty.sqft} Sq.Ft.</span>
+                      <span>{currentProperty.sqft?.toLocaleString()} Sq.Ft.</span>
                     </div>
                   </div>
 
                   <p className="text-base lg:text-lg text-muted-foreground leading-relaxed">
-                    {currentProperty.description}
+                    {currentProperty.description || 'No description available.'}
                   </p>
 
                   <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
@@ -289,12 +298,12 @@ const Properties = () => {
 
             {/* Property Indicators */}
             <div className="flex justify-center space-x-2 mt-8">
-              {featuredProperties.map((_, index) => (
+              {properties.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentPropertyIndex(index)}
+                  onClick={() => setCurrentIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentPropertyIndex 
+                    index === currentIndex 
                       ? 'bg-foreground' 
                       : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
                   }`}
@@ -324,141 +333,104 @@ const Properties = () => {
         {/* Property Details Modal */}
         <Dialog open={!!selectedProperty} onOpenChange={() => setSelectedProperty(null)}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            {selectedProperty && (
-              <>
-                <DialogHeader>
-                  <DialogTitle className="flex items-center justify-between">
-                    <span>{selectedProperty.title}</span>
-                    <Badge className="ml-2">{selectedProperty.status}</Badge>
-                  </DialogTitle>
-                </DialogHeader>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Property Image */}
-                  <div className="space-y-4">
-                    {selectedProperty.id === 1 ? (
-                      <img 
-                        src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
-                        alt={selectedProperty.title}
-                        className="w-full h-64 object-cover rounded-lg"
-                      />
-                    ) : (
-                      <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
-                        <div className="text-center text-muted-foreground">
-                          <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
-                          <p>Property Image</p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Property Details Grid */}
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">{selectedProperty?.title}</DialogTitle>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                <span>{selectedProperty?.location}</span>
+                <Badge variant="secondary" className="ml-auto">{selectedProperty?.status}</Badge>
+              </div>
+            </DialogHeader>
+            
+            <div className="space-y-6">
+              <div className="aspect-video relative overflow-hidden rounded-lg">
+                <img
+                  src={selectedProperty ? getPrimaryImage(selectedProperty.id) : '/placeholder.svg'}
+                  alt={selectedProperty?.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Property Details</h3>
                     <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <Bed className="w-4 h-4 text-muted-foreground" />
-                        <span>{selectedProperty.beds} Bedrooms</span>
+                        <span>{selectedProperty?.bedrooms} Bedrooms</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <Bath className="w-4 h-4 text-muted-foreground" />
-                        <span>{selectedProperty.baths} Bathrooms</span>
+                        <span>{selectedProperty?.bathrooms} Bathrooms</span>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <Square className="w-4 h-4 text-muted-foreground" />
-                        <span>{selectedProperty.sqft} Heated SqFt</span>
+                        <span>{selectedProperty?.sqft?.toLocaleString()} sqft</span>
                       </div>
-                      {selectedProperty.yearBuilt && (
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span>Built {selectedProperty.yearBuilt}</span>
-                        </div>
-                      )}
-                      {selectedProperty.totalSqft && (
-                        <div className="flex items-center space-x-2">
-                          <Ruler className="w-4 h-4 text-muted-foreground" />
-                          <span>{selectedProperty.totalSqft} Total SqFt</span>
-                        </div>
-                      )}
-                      {selectedProperty.subdivision && (
-                        <div className="flex items-center space-x-2">
-                          <Building className="w-4 h-4 text-muted-foreground" />
-                          <span>{selectedProperty.subdivision}</span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span>Built {selectedProperty?.year_built || 'N/A'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Home className="w-4 h-4 text-muted-foreground" />
+                        <span>{selectedProperty?.property_type}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-muted-foreground" />
+                        <span>${selectedProperty?.price?.toLocaleString()}</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Property Information */}
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-accent mb-2">{selectedProperty.price}</h3>
-                      <div className="flex items-start space-x-2 text-muted-foreground mb-4">
-                        <MapPin className="w-4 h-4 mt-1 flex-shrink-0" />
-                        <span>{selectedProperty.location}</span>
-                      </div>
-                      {selectedProperty.mlsNumber && (
-                        <p className="text-sm text-muted-foreground mb-4">MLS: {selectedProperty.mlsNumber}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <h4 className="font-semibold mb-2">Description</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {selectedProperty.description}
-                      </p>
-                    </div>
-
-                    {selectedProperty.highlights && (
-                      <div>
-                        <h4 className="font-semibold mb-2">Key Features</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedProperty.highlights.map((highlight, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {highlight}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Additional Details */}
-                    <div className="grid grid-cols-2 gap-4 text-sm pt-4 border-t">
-                      {selectedProperty.taxes && (
-                        <div>
-                          <span className="font-medium">Annual Taxes:</span>
-                          <p className="text-muted-foreground">{selectedProperty.taxes}</p>
-                        </div>
-                      )}
-                      {selectedProperty.lotSize && (
-                        <div>
-                          <span className="font-medium">Lot Size:</span>
-                          <p className="text-muted-foreground">{selectedProperty.lotSize}</p>
-                        </div>
-                      )}
-                      {selectedProperty.floodZone && (
-                        <div>
-                          <span className="font-medium">Flood Zone:</span>
-                          <p className="text-muted-foreground">{selectedProperty.floodZone}</p>
-                        </div>
-                      )}
-                      {selectedProperty.subdivision && (
-                        <div>
-                          <span className="font-medium">Subdivision:</span>
-                          <p className="text-muted-foreground">{selectedProperty.subdivision}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex space-x-4 pt-4">
-                      <Button className="flex-1 bg-gradient-gold hover:shadow-button">
-                        Contact Agent
-                      </Button>
-                      <Button variant="outline" className="flex-1">
-                        Schedule Showing
-                      </Button>
-                    </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Description</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedProperty?.description || 'No description available.'}
+                    </p>
                   </div>
                 </div>
-              </>
-            )}
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Key Features</h3>
+                    <ul className="space-y-2">
+                      {selectedProperty?.key_features?.map((feature: string, index: number) => (
+                        <li key={index} className="flex items-center gap-2 text-sm">
+                          <div className="w-2 h-2 bg-primary rounded-full"></div>
+                          <span>{feature}</span>
+                        </li>
+                      )) || <li className="text-sm text-muted-foreground">No features listed</li>}
+                    </ul>
+                  </div>
+
+                  {(selectedProperty?.taxes || selectedProperty?.flood_zone) && (
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">Additional Details</h3>
+                      <div className="space-y-2 text-sm">
+                        {selectedProperty?.taxes && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Annual Taxes:</span>
+                            <span>${selectedProperty.taxes.toLocaleString()}</span>
+                          </div>
+                        )}
+                        {selectedProperty?.flood_zone && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Flood Zone:</span>
+                            <span>{selectedProperty.flood_zone}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="pt-4 space-y-2">
+                    <Button className="w-full">Contact Agent</Button>
+                    <Button variant="outline" className="w-full">Schedule Showing</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
