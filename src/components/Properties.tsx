@@ -68,6 +68,44 @@ const Properties = () => {
       subdivision: "Rainbow Lakes Estate",
       taxes: "$657",
       lotSize: "10,454 SqFt"
+    },
+    {
+      id: 4,
+      mlsNumber: "TB8405123",
+      title: "Downtown St. Pete Luxury Condo",
+      location: "175 2nd Street N, St. Petersburg, FL 33701",
+      price: "$685,000",
+      beds: 2,
+      baths: 2,
+      sqft: "1,250",
+      totalSqft: "1,400",
+      yearBuilt: "2018",
+      status: "Active",
+      floodZone: "X",
+      description: "Stunning luxury condo in the heart of downtown St. Petersburg with panoramic views of Tampa Bay. Modern finishes, floor-to-ceiling windows, and premium amenities including rooftop pool and fitness center.",
+      highlights: ["Bay Views", "Modern Finishes", "Rooftop Pool", "Downtown Location"],
+      subdivision: "The Salvador",
+      taxes: "$5,200",
+      lotSize: "N/A"
+    },
+    {
+      id: 5,
+      mlsNumber: "TB8399876",
+      title: "Waterfront Estate Paradise",
+      location: "8945 Bay Shore Drive NE, St. Petersburg, FL 33702",
+      price: "$1,250,000",
+      beds: 4,
+      baths: 3,
+      sqft: "2,850",
+      totalSqft: "3,200",
+      yearBuilt: "2005",
+      status: "Pending",
+      floodZone: "AE",
+      description: "Magnificent waterfront estate with private dock and stunning sunrise views over Tampa Bay. Recently renovated with chef's kitchen, master suite retreat, and expansive outdoor entertaining areas.",
+      highlights: ["Private Dock", "Waterfront", "Recently Renovated", "Chef's Kitchen"],
+      subdivision: "Bay Shore Estates",
+      taxes: "$8,950",
+      lotSize: "0.75 Acres"
     }
   ];
 
