@@ -3,12 +3,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building } from "lucide-react";
+import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Ruler, Building, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Properties = () => {
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
   // Featured properties from The Crawford Team - Actual MLS Listings
   const featuredProperties = [
     {
@@ -70,6 +71,16 @@ const Properties = () => {
     }
   ];
 
+  const nextProperty = () => {
+    setCurrentPropertyIndex((prev) => (prev + 1) % featuredProperties.length);
+  };
+
+  const previousProperty = () => {
+    setCurrentPropertyIndex((prev) => (prev - 1 + featuredProperties.length) % featuredProperties.length);
+  };
+
+  const currentProperty = featuredProperties[currentPropertyIndex];
+
   return (
     <section id="properties" className="py-20 bg-background">
       <div className="container mx-auto px-6 lg:px-8">
@@ -95,85 +106,143 @@ const Properties = () => {
             >
               Exclusive Listings
             </motion.h2>
-            <motion.p 
-              className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 1 }}
-              viewport={{ once: true }}
-            >
-              From waterfront estates to charming historic homes, we have properties 
-              that match every lifestyle and budget in St. Petersburg.
-            </motion.p>
           </div>
 
-          {/* Properties Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredProperties.slice(0, 3).map((property, index) => (
+          {/* Hero Property Display */}
+          <div className="relative mb-16">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={property.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-                className="group cursor-pointer"
-                onClick={() => setSelectedProperty(property)}
+                key={currentPropertyIndex}
+                initial={{ opacity: 0, x: 300 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -300 }}
+                transition={{ duration: 0.5 }}
+                className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]"
               >
-                <div className="relative overflow-hidden rounded-lg shadow-elegant hover:shadow-2xl transition-all duration-300">
-                  {/* Property Image */}
-                  {property.id === 1 ? (
-                    <img 
-                      src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
-                      alt={property.title}
-                      className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                      <div className="text-center text-muted-foreground">
-                        <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
-                        <p className="text-sm">Property Image</p>
+                {/* Property Image */}
+                <div className="relative">
+                  <div className="aspect-[4/3] lg:aspect-square max-w-none">
+                    {currentProperty.id === 1 ? (
+                      <img 
+                        src="/lovable-uploads/d52f2c38-b140-4592-9f86-849096bf6c47.png"
+                        alt={currentProperty.title}
+                        className="w-full h-full object-cover rounded-lg shadow-elegant"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-subtle flex items-center justify-center rounded-lg shadow-elegant">
+                        <div className="text-center text-muted-foreground">
+                          <Home className="w-20 h-20 mx-auto mb-4 opacity-60" />
+                          <p className="text-lg">Property Image</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  
-                  {/* Status Badge */}
-                  <Badge 
-                    className={`absolute top-4 left-4 ${
-                      property.status === 'Pending' 
-                        ? 'bg-orange-500 hover:bg-orange-600' 
-                        : 'bg-green-600 hover:bg-green-700'
-                    }`}
-                  >
-                    {property.status}
-                  </Badge>
+                    )}
+                    
+                    {/* Status Badge */}
+                    <Badge 
+                      className={`absolute top-6 left-6 text-base px-4 py-2 ${
+                        currentProperty.status === 'Pending' 
+                          ? 'bg-orange-500 hover:bg-orange-600' 
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
+                    >
+                      {currentProperty.status}
+                    </Badge>
+                  </div>
                 </div>
 
                 {/* Property Details */}
-                <div className="pt-6 space-y-3">
+                <div className="space-y-8">
                   <div>
-                    <h3 className="text-lg font-normal text-foreground mb-1">
-                      {property.location.split(',')[0]}
+                    <h3 className="text-4xl lg:text-5xl font-light text-foreground mb-4">
+                      {currentProperty.location.split(',')[0]}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {property.location.split(',').slice(1).join(',').trim()}
-                    </p>
+                    <div className="flex items-start text-lg text-muted-foreground mb-6">
+                      <MapPin className="w-5 h-5 mr-2 mt-1 flex-shrink-0" />
+                      <span>{currentProperty.location.split(',').slice(1).join(',').trim()}</span>
+                    </div>
                   </div>
                   
-                  <div className="text-2xl font-light text-foreground">
-                    {property.price}
+                  <div className="text-5xl lg:text-6xl font-light text-foreground">
+                    {currentProperty.price}
                   </div>
                   
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                    <span>{property.beds} Bedrooms</span>
-                    <span>•</span>
-                    <span>{property.baths} Bathrooms</span>
-                    <span>•</span>
-                    <span>{property.sqft} Sq.Ft.</span>
+                  <div className="flex items-center space-x-8 text-lg text-muted-foreground">
+                    <div className="flex items-center space-x-2">
+                      <Bed className="w-5 h-5" />
+                      <span>{currentProperty.beds} Bedrooms</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Bath className="w-5 h-5" />
+                      <span>{currentProperty.baths} Bathrooms</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Square className="w-5 h-5" />
+                      <span>{currentProperty.sqft} Sq.Ft.</span>
+                    </div>
+                  </div>
+
+                  <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                    {currentProperty.description}
+                  </p>
+
+                  <div className="flex space-x-4">
+                    <Button 
+                      size="lg"
+                      className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+                      onClick={() => setSelectedProperty(currentProperty)}
+                    >
+                      View Details
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      className="text-lg px-8"
+                    >
+                      Contact Agent
+                    </Button>
                   </div>
                 </div>
               </motion.div>
-            ))}
+            </AnimatePresence>
+
+            {/* Navigation Controls */}
+            <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={previousProperty}
+                className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm border-0 shadow-elegant hover:bg-white"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </Button>
+            </div>
+            
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={nextProperty}
+                className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm border-0 shadow-elegant hover:bg-white"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </Button>
+            </div>
+
+            {/* Property Indicators */}
+            <div className="flex justify-center space-x-2 mt-8">
+              {featuredProperties.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPropertyIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    index === currentPropertyIndex 
+                      ? 'bg-foreground' 
+                      : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* CTA Section */}
