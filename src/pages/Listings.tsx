@@ -33,6 +33,7 @@ const Listings = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
+  const [propertyImages, setPropertyImages] = useState<{ [key: string]: any[] }>({});
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   
@@ -46,21 +47,45 @@ const Listings = () => {
   });
   const [showFilters, setShowFilters] = useState(true);
 
-  // Fetch properties from database
+  // Fetch properties and images from database
   useEffect(() => {
-    fetchProperties();
+    fetchPropertiesAndImages();
   }, []);
 
-  const fetchProperties = async () => {
+  const fetchPropertiesAndImages = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // Fetch properties
+      const { data: propertiesData, error: propertiesError } = await supabase
         .from('properties')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setProperties(data || []);
+      if (propertiesError) throw propertiesError;
+      setProperties(propertiesData || []);
+
+      // Fetch images for all properties
+      if (propertiesData && propertiesData.length > 0) {
+        const { data: imagesData, error: imagesError } = await supabase
+          .from('property_images')
+          .select('*')
+          .in('property_id', propertiesData.map(p => p.id))
+          .order('display_order');
+
+        if (imagesError) throw imagesError;
+
+        // Group images by property_id
+        const imagesByProperty: { [key: string]: any[] } = {};
+        imagesData?.forEach(image => {
+          if (!imagesByProperty[image.property_id]) {
+            imagesByProperty[image.property_id] = [];
+          }
+          imagesByProperty[image.property_id].push(image);
+        });
+
+        setPropertyImages(imagesByProperty);
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -70,6 +95,12 @@ const Listings = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getPrimaryImage = (propertyId: string) => {
+    const images = propertyImages[propertyId] || [];
+    const primaryImage = images.find(img => img.is_primary);
+    return primaryImage?.image_url || images[0]?.image_url || null;
   };
   
   // Scroll to top when component mounts
@@ -355,13 +386,23 @@ const Listings = () => {
               {visibleProperties.map((property) => (
                 <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                   <div className="relative overflow-hidden">
-                    {/* Property Image Placeholder */}
-                    <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                      <div className="text-center text-muted-foreground">
-                        <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
-                        <p className="text-sm">Property Image</p>
+                    {/* Property Image */}
+                    {getPrimaryImage(property.id) ? (
+                      <div className="aspect-[4/3] relative">
+                        <img 
+                          src={getPrimaryImage(property.id)} 
+                          alt={property.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
                       </div>
-                    </div>
+                    ) : (
+                      <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                        <div className="text-center text-muted-foreground">
+                          <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
+                          <p className="text-sm">No Image</p>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Status Badge */}
                     <Badge 
@@ -512,12 +553,22 @@ const Listings = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Property Image */}
                 <div className="space-y-4">
-                  <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
-                    <div className="text-center text-muted-foreground">
-                      <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
-                      <p>Property Image</p>
+                  {getPrimaryImage(selectedProperty.id) ? (
+                    <div className="w-full h-64 rounded-lg overflow-hidden">
+                      <img
+                        src={getPrimaryImage(selectedProperty.id)}
+                        alt={selectedProperty.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  </div>
+                  ) : (
+                    <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
+                      <div className="text-center text-muted-foreground">
+                        <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
+                        <p>No Image Available</p>
+                      </div>
+                    </div>
+                  )}
                   
                   {/* Property Details Grid */}
                   <div className="grid grid-cols-2 gap-4 text-sm">
