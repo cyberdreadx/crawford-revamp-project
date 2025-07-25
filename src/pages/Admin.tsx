@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Upload, X, Image, Star, Home, Settings, Users, BarChart3 } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Image, Star, Home, Settings, Users, BarChart3, Shield, UserX, UserCheck, Crown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,12 +42,28 @@ interface PropertyImage {
   display_order: number;
 }
 
+interface User {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  avatar_url?: string;
+  status: 'active' | 'suspended' | 'pending';
+  last_login?: string;
+  created_at: string;
+  roles: string[];
+}
+
 const Admin = () => {
   const [properties, setProperties] = useState<Property[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [propertyImages, setPropertyImages] = useState<PropertyImage[]>([]);
   const [allPropertyImages, setAllPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [activeSection, setActiveSection] = useState('properties');
@@ -72,7 +88,10 @@ const Admin = () => {
 
   useEffect(() => {
     fetchProperties();
-  }, []);
+    if (activeSection === 'users') {
+      fetchUsers();
+    }
+  }, [activeSection]);
 
   useEffect(() => {
     if (properties.length > 0) {
@@ -200,6 +219,125 @@ const Admin = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      // Fetch profiles with auth users data
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select(`
+          user_id,
+          first_name,
+          last_name,
+          phone,
+          avatar_url,
+          status,
+          last_login,
+          created_at
+        `);
+
+      if (profilesError) throw profilesError;
+
+      // Fetch user roles
+      const { data: userRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role');
+
+      if (rolesError) throw rolesError;
+
+      // Get auth users (admin query)
+      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+      
+      if (authError) throw authError;
+
+      // Combine the data
+      const usersWithRoles = profiles?.map(profile => {
+        const authUser = authUsers.users.find((u: any) => u.id === profile.user_id);
+        const roles = userRoles?.filter(ur => ur.user_id === profile.user_id).map(ur => ur.role) || [];
+        
+        return {
+          id: profile.user_id,
+          email: authUser?.email || '',
+          first_name: profile.first_name || undefined,
+          last_name: profile.last_name || undefined,
+          phone: profile.phone || undefined,
+          avatar_url: profile.avatar_url || undefined,
+          status: (profile.status as 'active' | 'suspended' | 'pending') || 'active',
+          last_login: profile.last_login || undefined,
+          created_at: profile.created_at,
+          roles: roles as string[]
+        };
+      }) || [];
+
+      setUsers(usersWithRoles);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch users: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateUserStatus = async (userId: string, status: 'active' | 'suspended') => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ status })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `User ${status === 'active' ? 'activated' : 'suspended'} successfully!`
+      });
+
+      fetchUsers();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to update user status: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const updateUserRole = async (userId: string, role: 'admin' | 'moderator' | 'user', action: 'add' | 'remove') => {
+    try {
+      if (action === 'add') {
+        const { error } = await supabase
+          .from('user_roles')
+          .insert({ user_id: userId, role });
+        
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('user_roles')
+          .delete()
+          .eq('user_id', userId)
+          .eq('role', role);
+        
+        if (error) throw error;
+      }
+
+      toast({
+        title: "Success",
+        description: `Role ${action === 'add' ? 'added' : 'removed'} successfully!`
+      });
+
+      fetchUsers();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to update user role: " + error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -901,16 +1039,147 @@ const Admin = () => {
 
         {activeSection === 'users' && (
           <div className="space-y-6">
+            {/* User Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                    {users.length}
+                  </div>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">Total Users</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-0 shadow-sm bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/50 dark:to-green-900/50">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-green-700 dark:text-green-300">
+                    {users.filter(u => u.status === 'active').length}
+                  </div>
+                  <p className="text-sm text-green-600 dark:text-green-400">Active Users</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-0 shadow-sm bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/50 dark:to-purple-900/50">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                    {users.filter(u => u.roles.includes('admin')).length}
+                  </div>
+                  <p className="text-sm text-purple-600 dark:text-purple-400">Admins</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-0 shadow-sm bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/50 dark:to-orange-900/50">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                    {users.filter(u => u.status === 'suspended').length}
+                  </div>
+                  <p className="text-sm text-orange-600 dark:text-orange-400">Suspended</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Users Table */}
             <Card className="border-0 shadow-sm">
               <CardHeader>
                 <CardTitle>User Management</CardTitle>
-                <p className="text-sm text-muted-foreground">Manage user accounts and permissions</p>
+                <p className="text-sm text-muted-foreground">Manage user accounts, roles, and permissions</p>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
-                  <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">User Management Coming Soon</h3>
-                  <p className="text-muted-foreground">This section will allow you to manage user accounts, roles, and permissions.</p>
+                <div className="space-y-4">
+                  {users.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          {user.avatar_url ? (
+                            <img src={user.avatar_url} alt="Avatar" className="w-10 h-10 rounded-full object-cover" />
+                          ) : (
+                            <span className="text-sm font-medium text-primary">
+                              {(user.first_name?.[0] || user.email[0]).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium">
+                            {user.first_name} {user.last_name} 
+                            {(!user.first_name && !user.last_name) && user.email}
+                          </div>
+                          <div className="text-sm text-muted-foreground">{user.email}</div>
+                          <div className="flex space-x-1 mt-1">
+                            {user.roles.map(role => (
+                              <Badge 
+                                key={role} 
+                                variant={role === 'admin' ? 'default' : role === 'moderator' ? 'secondary' : 'outline'}
+                                className="text-xs"
+                              >
+                                {role === 'admin' && <Crown className="w-3 h-3 mr-1" />}
+                                {role === 'moderator' && <Shield className="w-3 h-3 mr-1" />}
+                                {role}
+                              </Badge>
+                            ))}
+                            <Badge 
+                              variant={user.status === 'active' ? 'secondary' : user.status === 'suspended' ? 'destructive' : 'outline'}
+                              className="text-xs"
+                            >
+                              {user.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        {/* Role Management */}
+                        {!user.roles.includes('admin') && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateUserRole(user.id, 'admin', 'add')}
+                          >
+                            <Crown className="w-4 h-4 mr-1" />
+                            Make Admin
+                          </Button>
+                        )}
+                        
+                        {user.roles.includes('admin') && user.roles.length > 1 && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateUserRole(user.id, 'admin', 'remove')}
+                          >
+                            Remove Admin
+                          </Button>
+                        )}
+                        
+                        {/* Status Management */}
+                        {user.status === 'active' ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateUserStatus(user.id, 'suspended')}
+                          >
+                            <UserX className="w-4 h-4 mr-1" />
+                            Suspend
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateUserStatus(user.id, 'active')}
+                          >
+                            <UserCheck className="w-4 h-4 mr-1" />
+                            Activate
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {users.length === 0 && !isLoading && (
+                    <div className="text-center py-12">
+                      <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No users found</h3>
+                      <p className="text-muted-foreground">Users will appear here when they sign up for your application.</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
