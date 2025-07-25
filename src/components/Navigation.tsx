@@ -73,23 +73,11 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="block">
-              <h1 className="text-xl lg:text-2xl font-bold text-foreground truncate">
-                {"The Crawford Team".split("").map((char, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ y: -50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      delay: index * 0.05,
-                      duration: 0.5,
-                      ease: "easeOut"
-                    }}
-                    style={{ display: char === " " ? "inline" : "inline-block" }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </motion.span>
-                ))}
-              </h1>
+              <img 
+                src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+                alt="The Crawford Team - Welcome Home" 
+                className="h-12 w-auto object-contain"
+              />
             </Link>
           </div>
 
@@ -212,9 +200,11 @@ const Navigation = () => {
                 <div className="flex flex-col h-full">
                   {/* Header */}
                   <div className="py-4 border-b border-border">
-                    <h2 className="text-lg font-semibold bg-gradient-teal bg-clip-text text-transparent">
-                      The Crawford Team
-                    </h2>
+                    <img 
+                      src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+                      alt="The Crawford Team - Welcome Home" 
+                      className="h-8 w-auto object-contain"
+                    />
                   </div>
 
                   {/* Navigation */}
