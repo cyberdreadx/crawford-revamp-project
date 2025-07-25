@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Upload, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Image, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -556,16 +557,23 @@ const Admin = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
-            <CardContent className="p-4">
-              <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
-                {properties.length}
-              </div>
-              <p className="text-sm text-blue-600 dark:text-blue-400">Total Properties</p>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="properties" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="properties">Properties</TabsTrigger>
+            <TabsTrigger value="images">Image Management</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="properties" className="space-y-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
+                <CardContent className="p-4">
+                  <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                    {properties.length}
+                  </div>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">Total Properties</p>
+                </CardContent>
+              </Card>
           
           <Card className="border-0 shadow-sm bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/50 dark:to-green-900/50">
             <CardContent className="p-4">
@@ -595,27 +603,27 @@ const Admin = () => {
           </Card>
         </div>
 
-        {/* Properties Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <Card key={property.id} className="group hover:shadow-lg transition-all duration-200 border-0 shadow-sm bg-card/50 backdrop-blur">
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold leading-tight mb-1">
-                      {property.title}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground">{property.location}</p>
-                  </div>
-                  <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => openEditDialog(property)}
-                    >
-                      <Edit className="w-3.5 h-3.5" />
-                    </Button>
+            {/* Properties Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property) => (
+                <Card key={property.id} className="group hover:shadow-lg transition-all duration-200 border-0 shadow-sm bg-card/50 backdrop-blur">
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg font-semibold leading-tight mb-1">
+                          {property.title}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">{property.location}</p>
+                      </div>
+                      <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => openEditDialog(property)}
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </Button>
                     <Button
                       variant="destructive"
                       size="sm"
@@ -668,26 +676,128 @@ const Admin = () => {
               </CardContent>
             </Card>
           ))}
-        </div>
+            </div>
 
-        {/* Empty State */}
-        {properties.length === 0 && !isLoading && (
-          <Card className="border-dashed border-2 border-muted-foreground/25">
-            <CardContent className="flex flex-col items-center justify-center py-16">
-              <div className="rounded-full bg-muted p-3 mb-4">
-                <Plus className="w-6 h-6 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">No properties yet</h3>
-              <p className="text-muted-foreground text-center mb-4 max-w-sm">
-                Get started by adding your first property listing to the system.
-              </p>
-              <Button onClick={resetForm} className="h-9 px-6">
-                <Plus className="w-4 h-4 mr-2" />
-                Add First Property
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+            {/* Empty State */}
+            {properties.length === 0 && !isLoading && (
+              <Card className="border-dashed border-2 border-muted-foreground/25">
+                <CardContent className="flex flex-col items-center justify-center py-16">
+                  <div className="rounded-full bg-muted p-3 mb-4">
+                    <Plus className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">No properties yet</h3>
+                  <p className="text-muted-foreground text-center mb-4 max-w-sm">
+                    Get started by adding your first property listing to the system.
+                  </p>
+                  <Button onClick={resetForm} className="h-9 px-6">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add First Property
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="images" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-2">Image Management</h2>
+              <p className="text-muted-foreground">Upload and manage images for all your properties</p>
+            </div>
+
+            <div className="grid gap-6">
+              {properties.map((property) => (
+                <Card key={property.id} className="border-0 shadow-sm">
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <CardTitle className="text-lg">{property.title}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{property.location}</p>
+                      </div>
+                      <Badge variant={property.is_featured ? "default" : "secondary"}>
+                        {property.is_featured ? "Featured" : "Standard"}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">Property Images</Label>
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            className="hidden"
+                            id={`upload-${property.id}`}
+                            onChange={(e) => handleImageUpload(e, property.id)}
+                            disabled={uploadingImages}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                            disabled={uploadingImages}
+                          >
+                            <label htmlFor={`upload-${property.id}`} className="cursor-pointer">
+                              <Upload className="w-4 h-4 mr-2" />
+                              {uploadingImages ? "Uploading..." : "Add Images"}
+                            </label>
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      {/* Images Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                        {(propertyImages[property.id] || []).map((image) => (
+                          <div key={image.id} className="relative group">
+                            <img
+                              src={image.image_url}
+                              alt="Property"
+                              className="w-full h-24 object-cover rounded-lg border"
+                            />
+                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center space-x-1">
+                              {!image.is_primary && (
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  className="h-6 w-6 p-0"
+                                  onClick={() => {/* Set as primary */}}
+                                >
+                                  <Star className="h-3 w-3" />
+                                </Button>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="h-6 w-6 p-0"
+                                onClick={() => handleDeleteImage(image.id, image.image_url)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                            {image.is_primary && (
+                              <Badge className="absolute top-1 left-1 text-xs py-0 px-1">
+                                Primary
+                              </Badge>
+                            )}
+                          </div>
+                        ))}
+                        
+                        {/* Empty state for no images */}
+                        {(!propertyImages[property.id] || propertyImages[property.id].length === 0) && (
+                          <div className="col-span-full flex flex-col items-center justify-center py-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
+                            <Image className="w-8 h-8 text-muted-foreground mb-2" />
+                            <p className="text-sm text-muted-foreground">No images uploaded</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* Loading State */}
         {isLoading && properties.length === 0 && (
