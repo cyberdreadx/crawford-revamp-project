@@ -74,7 +74,7 @@ const Navigation = () => {
           <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="block">
               <img 
-                src="/lovable-uploads/9e4bd85d-aca9-4d2c-bdf7-77cf33685549.png" 
+                src="/lovable-uploads/cc4cbfba-4aae-4fc4-8318-208b94a333eb.png" 
                 alt="The Crawford Team" 
                 className="h-16 md:h-20 w-auto object-contain"
               />
@@ -201,7 +201,7 @@ const Navigation = () => {
                   {/* Header */}
                   <div className="py-4 border-b border-border">
                     <img 
-                      src="/lovable-uploads/9e4bd85d-aca9-4d2c-bdf7-77cf33685549.png" 
+                      src="/lovable-uploads/cc4cbfba-4aae-4fc4-8318-208b94a333eb.png" 
                       alt="The Crawford Team" 
                       className="h-12 w-auto object-contain"
                     />
