@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 interface Property {
   id: string;
@@ -66,6 +67,9 @@ const Admin = () => {
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [totalFiles, setTotalFiles] = useState(0);
+  const [currentFile, setCurrentFile] = useState(0);
   const [activeSection, setActiveSection] = useState('properties');
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -450,8 +454,13 @@ const Admin = () => {
     if (!files || files.length === 0) return;
 
     setUploadingImages(true);
+    setTotalFiles(files.length);
+    setCurrentFile(0);
+    setUploadProgress(0);
+    
     try {
       for (let i = 0; i < files.length; i++) {
+        setCurrentFile(i + 1);
         const file = files[i];
         const fileExt = file.name.split('.').pop();
         const fileName = `${propertyId}-${Date.now()}-${i}.${fileExt}`;
@@ -476,6 +485,10 @@ const Admin = () => {
           });
 
         if (dbError) throw dbError;
+        
+        // Update progress
+        const progressPercent = ((i + 1) / files.length) * 100;
+        setUploadProgress(progressPercent);
       }
 
       toast({
@@ -493,6 +506,9 @@ const Admin = () => {
       });
     } finally {
       setUploadingImages(false);
+      setUploadProgress(0);
+      setCurrentFile(0);
+      setTotalFiles(0);
     }
   };
 
@@ -822,7 +838,15 @@ const Admin = () => {
                           onChange={(e) => handleImageUpload(e, selectedProperty.id)}
                           disabled={uploadingImages}
                         />
-                        {uploadingImages && <p className="text-sm text-muted-foreground mt-1">Uploading images...</p>}
+                        {uploadingImages && (
+                          <div className="mt-3 space-y-2">
+                            <div className="flex justify-between text-sm text-muted-foreground">
+                              <span>Uploading {currentFile} of {totalFiles} files...</span>
+                              <span>{Math.round(uploadProgress)}%</span>
+                            </div>
+                            <Progress value={uploadProgress} className="w-full" />
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -1056,6 +1080,17 @@ const Admin = () => {
                             </label>
                           </Button>
                         </div>
+                        
+                        {/* Upload Progress */}
+                        {uploadingImages && (
+                          <div className="mt-3 space-y-2">
+                            <div className="flex justify-between text-sm text-muted-foreground">
+                              <span>Uploading {currentFile} of {totalFiles} files...</span>
+                              <span>{Math.round(uploadProgress)}%</span>
+                            </div>
+                            <Progress value={uploadProgress} className="w-full" />
+                          </div>
+                        )}
                       </div>
                       
                       {/* Images Grid */}
