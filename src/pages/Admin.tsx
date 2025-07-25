@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Upload, X, Image, Star } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Image, Star, Home, Settings, Users, BarChart3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -364,13 +365,33 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Property Management</h1>
-              <p className="text-muted-foreground mt-1">Manage your property listings and details</p>
+      {/* Admin Navigation */}
+      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-8">
+              <Link to="/" className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors">
+                <Home className="w-5 h-5" />
+                <span className="font-medium">Back to Site</span>
+              </Link>
+              <div className="h-6 w-px bg-border"></div>
+              <div className="flex items-center space-x-6">
+                <span className="text-sm font-medium text-muted-foreground">Admin Panel</span>
+                <div className="flex items-center space-x-4">
+                  <Button variant="ghost" size="sm" className="text-primary bg-primary/10">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    Properties
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    <Users className="w-4 h-4 mr-2" />
+                    Users
+                  </Button>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
+                  </Button>
+                </div>
+              </div>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -379,216 +400,224 @@ const Admin = () => {
                   Add Property
                 </Button>
               </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {selectedProperty ? 'Edit Property' : 'Add New Property'}
-                </DialogTitle>
-              </DialogHeader>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="price">Price</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="bedrooms">Bedrooms</Label>
-                    <Input
-                      id="bedrooms"
-                      type="number"
-                      value={formData.bedrooms}
-                      onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="bathrooms">Bathrooms</Label>
-                    <Input
-                      id="bathrooms"
-                      type="number"
-                      step="0.5"
-                      value={formData.bathrooms}
-                      onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="sqft">Square Feet</Label>
-                    <Input
-                      id="sqft"
-                      type="number"
-                      value={formData.sqft}
-                      onChange={(e) => setFormData({ ...formData, sqft: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="year_built">Year Built</Label>
-                    <Input
-                      id="year_built"
-                      type="number"
-                      value={formData.year_built}
-                      onChange={(e) => setFormData({ ...formData, year_built: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="property_type">Property Type</Label>
-                    <Select value={formData.property_type} onValueChange={(value) => setFormData({ ...formData, property_type: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="House">House</SelectItem>
-                        <SelectItem value="Condo">Condo</SelectItem>
-                        <SelectItem value="Townhouse">Townhouse</SelectItem>
-                        <SelectItem value="Villa">Villa</SelectItem>
-                        <SelectItem value="Cabin">Cabin</SelectItem>
-                        <SelectItem value="Estate">Estate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="status">Status</Label>
-                    <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="For Sale">For Sale</SelectItem>
-                        <SelectItem value="For Rent">For Rent</SelectItem>
-                        <SelectItem value="Sold">Sold</SelectItem>
-                        <SelectItem value="Rented">Rented</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="taxes">Annual Taxes</Label>
-                    <Input
-                      id="taxes"
-                      type="number"
-                      step="0.01"
-                      value={formData.taxes}
-                      onChange={(e) => setFormData({ ...formData, taxes: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="flood_zone">Flood Zone</Label>
-                    <Input
-                      id="flood_zone"
-                      value={formData.flood_zone}
-                      onChange={(e) => setFormData({ ...formData, flood_zone: e.target.value })}
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="is_featured"
-                      checked={formData.is_featured}
-                      onCheckedChange={(checked) => setFormData({ ...formData, is_featured: checked })}
-                    />
-                    <Label htmlFor="is_featured">Featured Property</Label>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="key_features">Key Features (comma-separated)</Label>
-                  <Input
-                    id="key_features"
-                    value={formData.key_features}
-                    onChange={(e) => setFormData({ ...formData, key_features: e.target.value })}
-                    placeholder="Ocean Views, Private Pool, Gourmet Kitchen"
-                  />
-                </div>
-
-                {selectedProperty && (
-                  <div>
-                    <Label>Property Images</Label>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                      {propertyImages.map((image) => (
-                        <div key={image.id} className="relative">
-                          <img
-                            src={image.image_url}
-                            alt="Property"
-                            className="w-full h-24 object-cover rounded"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            className="absolute top-1 right-1 h-6 w-6 p-0"
-                            onClick={() => handleDeleteImage(image.id, image.image_url)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                          {image.is_primary && (
-                            <Badge className="absolute bottom-1 left-1 text-xs">Primary</Badge>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4">
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>
+                    {selectedProperty ? 'Edit Property' : 'Add New Property'}
+                  </DialogTitle>
+                </DialogHeader>
+                
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="title">Title</Label>
                       <Input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, selectedProperty.id)}
-                        disabled={uploadingImages}
+                        id="title"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        required
                       />
-                      {uploadingImages && <p className="text-sm text-muted-foreground mt-1">Uploading images...</p>}
+                    </div>
+                    <div>
+                      <Label htmlFor="location">Location</Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="price">Price</Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bedrooms">Bedrooms</Label>
+                      <Input
+                        id="bedrooms"
+                        type="number"
+                        value={formData.bedrooms}
+                        onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="bathrooms">Bathrooms</Label>
+                      <Input
+                        id="bathrooms"
+                        type="number"
+                        step="0.5"
+                        value={formData.bathrooms}
+                        onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="sqft">Square Feet</Label>
+                      <Input
+                        id="sqft"
+                        type="number"
+                        value={formData.sqft}
+                        onChange={(e) => setFormData({ ...formData, sqft: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="year_built">Year Built</Label>
+                      <Input
+                        id="year_built"
+                        type="number"
+                        value={formData.year_built}
+                        onChange={(e) => setFormData({ ...formData, year_built: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="property_type">Property Type</Label>
+                      <Select value={formData.property_type} onValueChange={(value) => setFormData({ ...formData, property_type: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="House">House</SelectItem>
+                          <SelectItem value="Condo">Condo</SelectItem>
+                          <SelectItem value="Townhouse">Townhouse</SelectItem>
+                          <SelectItem value="Villa">Villa</SelectItem>
+                          <SelectItem value="Cabin">Cabin</SelectItem>
+                          <SelectItem value="Estate">Estate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="status">Status</Label>
+                      <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="For Sale">For Sale</SelectItem>
+                          <SelectItem value="For Rent">For Rent</SelectItem>
+                          <SelectItem value="Sold">Sold</SelectItem>
+                          <SelectItem value="Rented">Rented</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="taxes">Annual Taxes</Label>
+                      <Input
+                        id="taxes"
+                        type="number"
+                        step="0.01"
+                        value={formData.taxes}
+                        onChange={(e) => setFormData({ ...formData, taxes: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="flood_zone">Flood Zone</Label>
+                      <Input
+                        id="flood_zone"
+                        value={formData.flood_zone}
+                        onChange={(e) => setFormData({ ...formData, flood_zone: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="is_featured"
+                        checked={formData.is_featured}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_featured: checked })}
+                      />
+                      <Label htmlFor="is_featured">Featured Property</Label>
                     </div>
                   </div>
-                )}
 
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Saving...' : selectedProperty ? 'Update Property' : 'Create Property'}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="key_features">Key Features (comma-separated)</Label>
+                    <Input
+                      id="key_features"
+                      value={formData.key_features}
+                      onChange={(e) => setFormData({ ...formData, key_features: e.target.value })}
+                      placeholder="Ocean Views, Private Pool, Gourmet Kitchen"
+                    />
+                  </div>
+
+                  {selectedProperty && (
+                    <div>
+                      <Label>Property Images</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                        {propertyImages.map((image) => (
+                          <div key={image.id} className="relative">
+                            <img
+                              src={image.image_url}
+                              alt="Property"
+                              className="w-full h-24 object-cover rounded"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute top-1 right-1 h-6 w-6 p-0"
+                              onClick={() => handleDeleteImage(image.id, image.image_url)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                            {image.is_primary && (
+                              <Badge className="absolute bottom-1 left-1 text-xs">Primary</Badge>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        <Input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, selectedProperty.id)}
+                          disabled={uploadingImages}
+                        />
+                        {uploadingImages && <p className="text-sm text-muted-foreground mt-1">Uploading images...</p>}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? 'Saving...' : selectedProperty ? 'Update Property' : 'Create Property'}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
+        </div>
+      </nav>
+
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-6 py-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Property Management</h1>
+          <p className="text-muted-foreground mt-1">Manage your property listings and details</p>
         </div>
       </div>
 
