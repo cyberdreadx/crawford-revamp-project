@@ -325,17 +325,22 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Property Management</h1>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={resetForm}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Property
-              </Button>
-            </DialogTrigger>
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      {/* Header */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Property Management</h1>
+              <p className="text-muted-foreground mt-1">Manage your property listings and details</p>
+            </div>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={resetForm} className="h-10 px-6">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Property
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
@@ -545,63 +550,168 @@ const Admin = () => {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                {properties.length}
+              </div>
+              <p className="text-sm text-blue-600 dark:text-blue-400">Total Properties</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-sm bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/50 dark:to-green-900/50">
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-green-700 dark:text-green-300">
+                {properties.filter(p => p.status === 'For Sale').length}
+              </div>
+              <p className="text-sm text-green-600 dark:text-green-400">For Sale</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-sm bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/50 dark:to-purple-900/50">
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                {properties.filter(p => p.is_featured).length}
+              </div>
+              <p className="text-sm text-purple-600 dark:text-purple-400">Featured</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-sm bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/50 dark:to-orange-900/50">
+            <CardContent className="p-4">
+              <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                {properties.filter(p => p.status === 'Sold').length}
+              </div>
+              <p className="text-sm text-orange-600 dark:text-orange-400">Sold</p>
+            </CardContent>
+          </Card>
         </div>
 
+        {/* Properties Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map((property) => (
-            <Card key={property.id} className="overflow-hidden">
-              <CardHeader>
+            <Card key={property.id} className="group hover:shadow-lg transition-all duration-200 border-0 shadow-sm bg-card/50 backdrop-blur">
+              <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{property.title}</CardTitle>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg font-semibold leading-tight mb-1">
+                      {property.title}
+                    </CardTitle>
                     <p className="text-sm text-muted-foreground">{property.location}</p>
                   </div>
-                  <div className="flex space-x-1">
+                  <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
                       variant="outline"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       onClick={() => openEditDialog(property)}
                     >
-                      <Edit className="w-4 h-4" />
+                      <Edit className="w-3.5 h-3.5" />
                     </Button>
                     <Button
                       variant="destructive"
                       size="sm"
+                      className="h-8 w-8 p-0"
                       onClick={() => handleDelete(property.id)}
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-primary">
+              <CardContent className="pt-0">
+                <div className="space-y-3">
+                  <p className="text-2xl font-bold text-foreground">
                     ${property.price.toLocaleString()}
                   </p>
-                  <div className="flex space-x-4 text-sm text-muted-foreground">
-                    <span>{property.bedrooms} beds</span>
-                    <span>{property.bathrooms} baths</span>
-                    <span>{property.sqft.toLocaleString()} sqft</span>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span className="flex items-center">
+                      <span className="font-medium">{property.bedrooms}</span> beds
+                    </span>
+                    <span className="flex items-center">
+                      <span className="font-medium">{property.bathrooms}</span> baths
+                    </span>
+                    <span className="flex items-center">
+                      <span className="font-medium">{property.sqft.toLocaleString()}</span> sqft
+                    </span>
                   </div>
-                  <div className="flex space-x-2">
-                    <Badge variant="secondary">{property.property_type}</Badge>
-                    <Badge variant={property.status === 'For Sale' ? 'default' : 'outline'}>
+                  <div className="flex flex-wrap gap-1.5">
+                    <Badge variant="secondary" className="text-xs px-2 py-1">
+                      {property.property_type}
+                    </Badge>
+                    <Badge 
+                      variant={property.status === 'For Sale' ? 'default' : property.status === 'Sold' ? 'destructive' : 'outline'} 
+                      className="text-xs px-2 py-1"
+                    >
                       {property.status}
                     </Badge>
                     {property.is_featured && (
-                      <Badge variant="destructive">Featured</Badge>
+                      <Badge variant="destructive" className="text-xs px-2 py-1">
+                        ⭐ Featured
+                      </Badge>
                     )}
                   </div>
+                  {property.description && (
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {property.description}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
+        {/* Empty State */}
         {properties.length === 0 && !isLoading && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No properties found. Add your first property to get started!</p>
+          <Card className="border-dashed border-2 border-muted-foreground/25">
+            <CardContent className="flex flex-col items-center justify-center py-16">
+              <div className="rounded-full bg-muted p-3 mb-4">
+                <Plus className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">No properties yet</h3>
+              <p className="text-muted-foreground text-center mb-4 max-w-sm">
+                Get started by adding your first property listing to the system.
+              </p>
+              <Button onClick={resetForm} className="h-9 px-6">
+                <Plus className="w-4 h-4 mr-2" />
+                Add First Property
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading State */}
+        {isLoading && properties.length === 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader>
+                  <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-muted rounded w-1/2"></div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-6 bg-muted rounded w-1/3 mb-3"></div>
+                  <div className="flex space-x-4 mb-3">
+                    <div className="h-3 bg-muted rounded w-12"></div>
+                    <div className="h-3 bg-muted rounded w-12"></div>
+                    <div className="h-3 bg-muted rounded w-16"></div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="h-5 bg-muted rounded w-16"></div>
+                    <div className="h-5 bg-muted rounded w-20"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
       </div>
