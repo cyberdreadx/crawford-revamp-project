@@ -4,11 +4,93 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Building, Filter, X } from "lucide-react";
+import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Building, Filter, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+// Property Image Carousel Component
+interface PropertyImageCarouselProps {
+  images: any[];
+  propertyTitle: string;
+  showControls?: boolean;
+}
+
+const PropertyImageCarousel = ({ images, propertyTitle, showControls = false }: PropertyImageCarouselProps) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  if (!images || images.length === 0) {
+    return (
+      <div className="w-full h-full bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+        <div className="text-center text-muted-foreground">
+          <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
+          <p className="text-sm">No images available</p>
+        </div>
+      </div>
+    );
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="relative w-full h-full group">
+      <img 
+        src={images[currentImageIndex]?.image_url || '/placeholder.svg'}
+        alt={`${propertyTitle} - Image ${currentImageIndex + 1}`}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+      
+      {/* Navigation Controls */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={prevImage}
+            className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity z-10 ${
+              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={nextImage}
+            className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity z-10 ${
+              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          
+          {/* Image Indicators */}
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1 z-10">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentImageIndex 
+                    ? 'bg-white' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+              />
+            ))}
+          </div>
+          
+          {/* Image Counter */}
+          <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
+            {currentImageIndex + 1} / {images.length}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 interface Property {
   id: string;
@@ -386,23 +468,13 @@ const Listings = () => {
               {visibleProperties.map((property) => (
                 <Card key={property.id} className="group overflow-hidden shadow-card hover:shadow-elegant transition-all duration-300 border-0">
                   <div className="relative overflow-hidden">
-                    {/* Property Image */}
-                    {getPrimaryImage(property.id) ? (
-                      <div className="aspect-[4/3] relative">
-                        <img 
-                          src={getPrimaryImage(property.id)} 
-                          alt={property.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    ) : (
-                      <div className="aspect-[4/3] bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                        <div className="text-center text-muted-foreground">
-                          <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
-                          <p className="text-sm">No Image</p>
-                        </div>
-                      </div>
-                    )}
+                    {/* Property Images Carousel */}
+                    <div className="aspect-[4/3] relative">
+                      <PropertyImageCarousel 
+                        images={propertyImages[property.id] || []}
+                        propertyTitle={property.title}
+                      />
+                    </div>
                     
                     {/* Status Badge */}
                     <Badge 

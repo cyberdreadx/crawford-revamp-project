@@ -8,6 +8,104 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
+// Property Image Carousel Component
+interface PropertyImageCarouselProps {
+  images: PropertyImage[];
+  propertyTitle: string;
+  status?: string;
+  showControls?: boolean;
+}
+
+const PropertyImageCarousel = ({ images, propertyTitle, status, showControls = false }: PropertyImageCarouselProps) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  if (!images || images.length === 0) {
+    return (
+      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center rounded-lg">
+        <div className="text-center text-gray-500">
+          <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
+          <p className="text-sm">No images available</p>
+        </div>
+      </div>
+    );
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="relative w-full h-full group">
+      <img 
+        src={images[currentImageIndex]?.image_url || '/placeholder.svg'}
+        alt={`${propertyTitle} - Image ${currentImageIndex + 1}`}
+        className="w-full h-full object-cover rounded-lg shadow-elegant"
+      />
+      
+      {/* Status Badge */}
+      {status && (
+        <Badge 
+          className={`absolute top-4 left-4 text-sm lg:text-base px-3 lg:px-4 py-1 lg:py-2 ${
+            status === 'Pending' 
+              ? 'bg-orange-500 hover:bg-orange-600' 
+              : 'bg-green-600 hover:bg-green-700'
+          }`}
+        >
+          {status}
+        </Badge>
+      )}
+      
+      {/* Navigation Controls */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={prevImage}
+            className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity ${
+              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextImage}
+            className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity ${
+              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+          
+          {/* Image Indicators */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentImageIndex 
+                    ? 'bg-white' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+      
+      {/* Image Counter */}
+      {images.length > 1 && (
+        <div className="absolute top-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
+          {currentImageIndex + 1} / {images.length}
+        </div>
+      )}
+    </div>
+  );
+};
+
 interface Property {
   id: string;
   title: string;
@@ -175,25 +273,14 @@ const Properties = () => {
                 transition={{ duration: 0.5 }}
                 className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-center min-h-[70vh] lg:min-h-[80vh]"
               >
-                {/* Property Image */}
+                {/* Property Images Carousel */}
                 <div className="relative order-1">
-                  <div className="aspect-[4/3] lg:aspect-square">
-                    <img 
-                      src={getPrimaryImage(currentProperty.id)}
-                      alt={currentProperty.title}
-                      className="w-full h-full object-cover rounded-lg shadow-elegant"
+                  <div className="aspect-[4/3] lg:aspect-square relative">
+                    <PropertyImageCarousel 
+                      images={propertyImages[currentProperty.id] || []}
+                      propertyTitle={currentProperty.title}
+                      status={currentProperty.status}
                     />
-                    
-                    {/* Status Badge */}
-                    <Badge 
-                      className={`absolute top-4 left-4 text-sm lg:text-base px-3 lg:px-4 py-1 lg:py-2 ${
-                        currentProperty.status === 'Pending' 
-                          ? 'bg-orange-500 hover:bg-orange-600' 
-                          : 'bg-green-600 hover:bg-green-700'
-                      }`}
-                    >
-                      {currentProperty.status}
-                    </Badge>
                   </div>
                 </div>
 
@@ -344,10 +431,10 @@ const Properties = () => {
             
             <div className="space-y-6">
               <div className="aspect-video relative overflow-hidden rounded-lg">
-                <img
-                  src={selectedProperty ? getPrimaryImage(selectedProperty.id) : '/placeholder.svg'}
-                  alt={selectedProperty?.title}
-                  className="w-full h-full object-cover"
+                <PropertyImageCarousel 
+                  images={selectedProperty ? propertyImages[selectedProperty.id] || [] : []}
+                  propertyTitle={selectedProperty?.title || ''}
+                  showControls={true}
                 />
               </div>
 
