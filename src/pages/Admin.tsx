@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Upload, X, Image, Star, Home, Settings, Users, BarChart3, Shield, UserX, UserCheck, Crown } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Image, Star, Home, Settings, Users, BarChart3, Shield, UserX, UserCheck, Crown, Globe, Database, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -1277,19 +1277,152 @@ const Admin = () => {
 
         {activeSection === 'settings' && (
           <div className="space-y-6">
-            <Card className="border-0 shadow-sm">
-              <CardHeader>
-                <CardTitle>Application Settings</CardTitle>
-                <p className="text-sm text-muted-foreground">Configure your application settings</p>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Settings Panel Coming Soon</h3>
-                  <p className="text-muted-foreground">This section will allow you to configure application settings, integrations, and preferences.</p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Site Configuration */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Globe className="w-5 h-5 mr-2" />
+                    Site Configuration
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">General site settings and information</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Site Name</label>
+                    <Input 
+                      defaultValue="Premier Real Estate" 
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Site Description</label>
+                    <Input 
+                      defaultValue="Your trusted partner in real estate"
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Contact Email</label>
+                    <Input 
+                      type="email"
+                      defaultValue="info@premierrealestate.com"
+                      className="mt-1"
+                    />
+                  </div>
+                  <Button className="w-full">Save Changes</Button>
+                </CardContent>
+              </Card>
+
+              {/* Authentication Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Shield className="w-5 h-5 mr-2" />
+                    Authentication
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">Manage authentication and security settings</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Allow User Registration</p>
+                      <p className="text-sm text-muted-foreground">Let users create new accounts</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Email Verification</p>
+                      <p className="text-sm text-muted-foreground">Require email verification for new accounts</p>
+                    </div>
+                    <Switch />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Two-Factor Authentication</p>
+                      <p className="text-sm text-muted-foreground">Enable 2FA for enhanced security</p>
+                    </div>
+                    <Switch />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Property Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Home className="w-5 h-5 mr-2" />
+                    Property Settings
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">Configure property listing options</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Default Property Type</label>
+                    <select className="w-full mt-1 p-2 border rounded-md">
+                      <option>House</option>
+                      <option>Apartment</option>
+                      <option>Condo</option>
+                      <option>Townhouse</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Max Images per Property</label>
+                    <Input 
+                      type="number"
+                      defaultValue="10"
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Auto-approve Listings</p>
+                      <p className="text-sm text-muted-foreground">Automatically approve new property listings</p>
+                    </div>
+                    <Switch />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* System Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Database className="w-5 h-5 mr-2" />
+                    System Information
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">System status and information</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Database Status</p>
+                      <div className="flex items-center mt-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        <span className="text-green-600">Connected</span>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Storage Usage</p>
+                      <p className="font-medium mt-1">2.4 GB / 10 GB</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Total Properties</p>
+                      <p className="font-medium mt-1">{properties.length}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Total Users</p>
+                      <p className="font-medium mt-1">{users.length}</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full">
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Clear Cache
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
 
