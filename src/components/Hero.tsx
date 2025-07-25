@@ -2,23 +2,93 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+interface HeroImage {
+  id: string;
+  title: string;
+  description: string | null;
+  image_url: string;
+  display_order: number;
+  is_active: boolean;
+}
 
 const Hero = () => {
+  const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const scrollToProperties = () => {
     document.querySelector("#properties")?.scrollIntoView({
       behavior: "smooth"
     });
   };
 
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('hero_images')
+          .select('*')
+          .eq('is_active', true)
+          .order('display_order', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching hero images:', error);
+        } else {
+          setHeroImages(data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching hero images:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
+
+  // Use uploaded hero images if available, otherwise fallback to static image
+  const currentImages = heroImages.length > 0 ? heroImages : [{ image_url: heroImage }];
+
   return (
     <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image Carousel */}
       <div className="absolute inset-0 w-full h-full">
-        <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
-          backgroundImage: `url(${heroImage})`
-        }}>
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
-        </div>
+        {currentImages.length === 1 ? (
+          <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
+            backgroundImage: `url(${currentImages[0].image_url})`
+          }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
+          </div>
+        ) : (
+          <Carousel className="w-full h-full" opts={{ loop: true }}>
+            <CarouselContent className="w-full h-full -ml-0">
+              {currentImages.map((image, index) => (
+                <CarouselItem key={image.id || index} className="w-full h-full pl-0">
+                  <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
+                    backgroundImage: `url(${image.image_url})`
+                  }}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            {currentImages.length > 1 && (
+              <>
+                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
+                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
+              </>
+            )}
+          </Carousel>
+        )}
       </div>
 
       {/* Content */}
