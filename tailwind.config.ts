@@ -90,7 +90,9 @@ export default {
 			fontFamily: {
 				display: 'var(--font-display)',
 				body: 'var(--font-body)',
-				sans: ['Inter', 'system-ui', 'sans-serif']
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+				cursive: ['Great Vibes', 'Dancing Script', 'cursive'],
+				elegant: ['Dancing Script', 'Great Vibes', 'cursive']
 			},
 			transitionTimingFunction: {
 				smooth: 'var(--transition-smooth)',

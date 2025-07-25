@@ -770,22 +770,23 @@ const Admin = () => {
 
     setUploadingHeroImages(true);
     try {
-      const file = files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('hero-images')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase.storage
-        .from('hero-images')
-        .getPublicUrl(filePath);
-
+      // If updating an existing hero image (single file)
       if (heroId) {
+        const file = files[0];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('hero-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabase.storage
+          .from('hero-images')
+          .getPublicUrl(filePath);
+
         // Update existing hero image
         const { error: updateError } = await supabase
           .from('hero_images')
@@ -793,19 +794,73 @@ const Admin = () => {
           .eq('id', heroId);
 
         if (updateError) throw updateError;
-      } else {
-        // Create new hero image with uploaded image
-        const { error: insertError } = await supabase
-          .from('hero_images')
-          .insert({
-            title: heroFormData.title || 'New Hero Image',
-            description: heroFormData.description,
-            image_url: publicUrlData.publicUrl,
-            display_order: parseInt(heroFormData.display_order),
-            is_active: heroFormData.is_active
-          });
 
-        if (insertError) throw insertError;
+        toast({
+          title: "Success",
+          description: "Hero image updated successfully!"
+        });
+      } else {
+        // Batch upload multiple files
+        // Get current max display order
+        const { data: existingImages } = await supabase
+          .from('hero_images')
+          .select('display_order')
+          .order('display_order', { ascending: false })
+          .limit(1);
+        
+        let nextOrder = existingImages && existingImages.length > 0 ? existingImages[0].display_order + 1 : 0;
+
+        // Upload all files
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = fileName;
+
+          const { error: uploadError } = await supabase.storage
+            .from('hero-images')
+            .upload(filePath, file);
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            toast({
+              title: "Upload failed",
+              description: `Failed to upload ${file.name}`,
+              variant: "destructive"
+            });
+            continue;
+          }
+
+          const { data: urlData } = supabase.storage
+            .from('hero-images')
+            .getPublicUrl(filePath);
+
+          // Insert hero image record with auto-incremented order
+          const { error: insertError } = await supabase
+            .from('hero_images')
+            .insert({
+              title: heroFormData.title || `Hero Image ${nextOrder + 1}`,
+              description: heroFormData.description || '',
+              image_url: urlData.publicUrl,
+              display_order: nextOrder,
+              is_active: heroFormData.is_active
+            });
+
+          if (insertError) {
+            console.error('Insert error:', insertError);
+            toast({
+              title: "Database error",
+              description: `Failed to save ${file.name} to database`,
+              variant: "destructive"
+            });
+          } else {
+            toast({
+              title: "Image uploaded", 
+              description: `${file.name} uploaded successfully`
+            });
+            nextOrder++; // Increment for next image
+          }
+        }
       }
 
       toast({
@@ -814,7 +869,9 @@ const Admin = () => {
       });
 
       fetchHeroImages();
-      resetHeroForm();
+      if (!heroId) {
+        resetHeroForm();
+      }
     } catch (error: any) {
       toast({
         title: "Error",

@@ -107,7 +107,7 @@ const Hero = () => {
         </motion.div>
 
         {/* Main Headline */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-elegant text-white mb-6 drop-shadow-lg">
           {"Top 5% of Pinellas County".split("").map((char, index) => (
             <motion.span
               key={index}
