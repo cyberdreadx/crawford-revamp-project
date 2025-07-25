@@ -4,13 +4,6 @@ import heroImage from "@/assets/hero-image.jpg";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 interface HeroImage {
   id: string;
@@ -24,6 +17,7 @@ interface HeroImage {
 const Hero = () => {
   const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const scrollToProperties = () => {
     document.querySelector("#properties")?.scrollIntoView({
@@ -55,40 +49,39 @@ const Hero = () => {
     fetchHeroImages();
   }, []);
 
+  // Auto-advance carousel for multiple images
+  useEffect(() => {
+    const currentImages = heroImages.length > 0 ? heroImages : [{ image_url: heroImage }];
+    
+    if (currentImages.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % currentImages.length);
+      }, 5000); // Change image every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [heroImages]);
+
   // Use uploaded hero images if available, otherwise fallback to static image
   const currentImages = heroImages.length > 0 ? heroImages : [{ image_url: heroImage }];
 
   return (
     <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Background Image Carousel */}
+      {/* Background Image Carousel with Fade */}
       <div className="absolute inset-0 w-full h-full">
-        {currentImages.length === 1 ? (
-          <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
-            backgroundImage: `url(${currentImages[0].image_url})`
-          }}>
+        {currentImages.map((image, index) => (
+          <div
+            key={image.id || index}
+            className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: `url(${image.image_url})`
+            }}
+          >
             <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
           </div>
-        ) : (
-          <Carousel className="w-full h-full" opts={{ loop: true }}>
-            <CarouselContent className="w-full h-full -ml-0">
-              {currentImages.map((image, index) => (
-                <CarouselItem key={image.id || index} className="w-full h-full pl-0">
-                  <div className="w-full h-full bg-cover bg-center bg-no-repeat" style={{
-                    backgroundImage: `url(${image.image_url})`
-                  }}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/90 to-navy-deep/70"></div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            {currentImages.length > 1 && (
-              <>
-                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-              </>
-            )}
-          </Carousel>
-        )}
+        ))}
       </div>
 
       {/* Content */}
