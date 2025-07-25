@@ -43,6 +43,7 @@ const Navigation = () => {
     { name: "Home", href: "/", section: "#home" },
     { name: "About", href: "/", section: "#about" },
     { name: "Properties", href: "/listings", section: "#properties" },
+    { name: "Luxury", href: "/luxury", section: null },
     { name: "Services", href: "/", section: "#services" },
     { name: "Contact", href: "/", section: "#contact" },
   ];
@@ -96,7 +97,7 @@ const Navigation = () => {
           <div className="hidden md:flex flex-1 justify-center max-w-lg mx-4">
             <div className="flex items-baseline justify-center space-x-6 w-full">
               {navItems.map((item) => (
-                item.href === "/listings" ? (
+                (item.href === "/listings" || item.href === "/luxury") ? (
                   <Link
                     key={item.name}
                     to={item.href}
@@ -219,7 +220,7 @@ const Navigation = () => {
                   {/* Navigation */}
                   <nav className="flex flex-col space-y-1 py-4 flex-1">
                     {navItems.map((item) => (
-                      item.href === "/listings" ? (
+                      (item.href === "/listings" || item.href === "/luxury") ? (
                         <Link
                           key={item.name}
                           to={item.href}
