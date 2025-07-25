@@ -45,6 +45,7 @@ const Admin = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [propertyImages, setPropertyImages] = useState<PropertyImage[]>([]);
+  const [allPropertyImages, setAllPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
@@ -70,6 +71,12 @@ const Admin = () => {
   useEffect(() => {
     fetchProperties();
   }, []);
+
+  useEffect(() => {
+    if (properties.length > 0) {
+      fetchAllPropertyImages();
+    }
+  }, [properties]);
 
   const fetchProperties = async () => {
     setIsLoading(true);
@@ -106,6 +113,34 @@ const Admin = () => {
       toast({
         title: "Error",
         description: "Failed to fetch property images: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchAllPropertyImages = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('property_images')
+        .select('*')
+        .order('display_order');
+
+      if (error) throw error;
+      
+      // Group images by property_id
+      const imagesByProperty = (data || []).reduce((acc: { [key: string]: PropertyImage[] }, image) => {
+        if (!acc[image.property_id]) {
+          acc[image.property_id] = [];
+        }
+        acc[image.property_id].push(image);
+        return acc;
+      }, {});
+      
+      setAllPropertyImages(imagesByProperty);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch all property images: " + error.message,
         variant: "destructive"
       });
     }
@@ -234,6 +269,7 @@ const Admin = () => {
       });
 
       fetchPropertyImages(propertyId);
+      fetchAllPropertyImages();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -273,6 +309,7 @@ const Admin = () => {
       if (selectedProperty) {
         fetchPropertyImages(selectedProperty.id);
       }
+      fetchAllPropertyImages();
     } catch (error: any) {
       toast({
         title: "Error",
@@ -729,7 +766,11 @@ const Admin = () => {
                             accept="image/*"
                             className="hidden"
                             id={`upload-${property.id}`}
-                            onChange={(e) => handleImageUpload(e, property.id)}
+                            onChange={async (e) => {
+                              await handleImageUpload(e, property.id);
+                              // Clear the input to allow re-uploading the same file
+                              e.target.value = '';
+                            }}
                             disabled={uploadingImages}
                           />
                           <Button
@@ -748,7 +789,7 @@ const Admin = () => {
                       
                       {/* Images Grid */}
                       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                        {(propertyImages[property.id] || []).map((image) => (
+                        {(allPropertyImages[property.id] || []).map((image) => (
                           <div key={image.id} className="relative group">
                             <img
                               src={image.image_url}
@@ -784,7 +825,7 @@ const Admin = () => {
                         ))}
                         
                         {/* Empty state for no images */}
-                        {(!propertyImages[property.id] || propertyImages[property.id].length === 0) && (
+                        {(!allPropertyImages[property.id] || allPropertyImages[property.id].length === 0) && (
                           <div className="col-span-full flex flex-col items-center justify-center py-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
                             <Image className="w-8 h-8 text-muted-foreground mb-2" />
                             <p className="text-sm text-muted-foreground">No images uploaded</p>
