@@ -550,6 +550,42 @@ const Admin = () => {
     }
   };
 
+  const handleSetPrimaryImage = async (imageId: string, propertyId: string) => {
+    try {
+      // First, set all images for this property to not primary
+      const { error: clearError } = await supabase
+        .from('property_images')
+        .update({ is_primary: false })
+        .eq('property_id', propertyId);
+
+      if (clearError) throw clearError;
+
+      // Then set the selected image as primary
+      const { error: setPrimaryError } = await supabase
+        .from('property_images')
+        .update({ is_primary: true })
+        .eq('id', imageId);
+
+      if (setPrimaryError) throw setPrimaryError;
+
+      toast({
+        title: "Success",
+        description: "Primary image updated successfully!"
+      });
+
+      if (selectedProperty) {
+        fetchPropertyImages(selectedProperty.id);
+      }
+      fetchAllPropertyImages();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to set primary image: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   const openEditDialog = (property: Property) => {
     setSelectedProperty(property);
     setFormData({
@@ -1108,7 +1144,7 @@ const Admin = () => {
                                   size="sm"
                                   variant="secondary"
                                   className="h-6 w-6 p-0"
-                                  onClick={() => {/* Set as primary */}}
+                                  onClick={() => handleSetPrimaryImage(image.id, property.id)}
                                 >
                                   <Star className="h-3 w-3" />
                                 </Button>
