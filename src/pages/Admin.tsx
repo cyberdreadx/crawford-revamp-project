@@ -67,6 +67,8 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [activeSection, setActiveSection] = useState('properties');
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -87,11 +89,62 @@ const Admin = () => {
   });
 
   useEffect(() => {
-    fetchProperties();
-    if (activeSection === 'users') {
-      fetchUsers();
+    checkUserAuth();
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchProperties();
+      if (activeSection === 'users' && isAdmin) {
+        fetchUsers();
+      }
     }
-  }, [activeSection]);
+  }, [activeSection, currentUser, isAdmin]);
+
+  const checkUserAuth = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to access the admin panel",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setCurrentUser(session.user);
+
+      // Check if user has admin role
+      const { data: userRoles, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+
+      if (error) {
+        console.error('Error fetching user roles:', error);
+        return;
+      }
+
+      const hasAdminRole = userRoles?.some(role => role.role === 'admin') || false;
+      setIsAdmin(hasAdminRole);
+
+      if (!hasAdminRole) {
+        toast({
+          title: "Access Denied",
+          description: "You need admin privileges to access user management",
+          variant: "destructive"
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to check authentication: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
 
   useEffect(() => {
     if (properties.length > 0) {
@@ -223,9 +276,18 @@ const Admin = () => {
   };
 
   const fetchUsers = async () => {
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "Admin privileges required to view users",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Fetch profiles with auth users data
+      // Fetch profiles data only (without auth.users since we can't access that from client)
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select(`
@@ -248,19 +310,14 @@ const Admin = () => {
 
       if (rolesError) throw rolesError;
 
-      // Get auth users (admin query)
-      const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-      
-      if (authError) throw authError;
-
-      // Combine the data
+      // Since we can't access auth.users from client, we'll work with what we have
+      // For email, we'll need to implement a different approach or use the current user's session
       const usersWithRoles = profiles?.map(profile => {
-        const authUser = authUsers.users.find((u: any) => u.id === profile.user_id);
         const roles = userRoles?.filter(ur => ur.user_id === profile.user_id).map(ur => ur.role) || [];
         
         return {
           id: profile.user_id,
-          email: authUser?.email || '',
+          email: profile.user_id, // We'll show user ID instead of email since we can't access auth.users
           first_name: profile.first_name || undefined,
           last_name: profile.last_name || undefined,
           phone: profile.phone || undefined,
@@ -285,6 +342,15 @@ const Admin = () => {
   };
 
   const updateUserStatus = async (userId: string, status: 'active' | 'suspended') => {
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "Admin privileges required to update user status",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('profiles')
@@ -309,6 +375,15 @@ const Admin = () => {
   };
 
   const updateUserRole = async (userId: string, role: 'admin' | 'moderator' | 'user', action: 'add' | 'remove') => {
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "Admin privileges required to update user roles",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       if (action === 'add') {
         const { error } = await supabase
@@ -1039,8 +1114,20 @@ const Admin = () => {
 
         {activeSection === 'users' && (
           <div className="space-y-6">
-            {/* User Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {!isAdmin ? (
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-8">
+                  <div className="text-center">
+                    <Shield className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">Admin Access Required</h3>
+                    <p className="text-muted-foreground">You need admin privileges to access user management features.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                {/* User Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950/50 dark:to-blue-900/50">
                 <CardContent className="p-4">
                   <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
@@ -1101,9 +1188,9 @@ const Admin = () => {
                         <div>
                           <div className="font-medium">
                             {user.first_name} {user.last_name} 
-                            {(!user.first_name && !user.last_name) && user.email}
+                            {(!user.first_name && !user.last_name) && 'User Profile'}
                           </div>
-                          <div className="text-sm text-muted-foreground">{user.email}</div>
+                          <div className="text-sm text-muted-foreground">ID: {user.email}</div>
                           <div className="flex space-x-1 mt-1">
                             {user.roles.map(role => (
                               <Badge 
@@ -1183,6 +1270,8 @@ const Admin = () => {
                 </div>
               </CardContent>
             </Card>
+              </>
+            )}
           </div>
         )}
 
