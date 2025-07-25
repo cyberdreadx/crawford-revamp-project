@@ -28,25 +28,30 @@ const Hero = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        {/* Small headline */}
-        <motion.p 
-          className="text-white/90 text-sm md:text-base mb-4 tracking-wide uppercase"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+
+        {/* Logo */}
+        <motion.div 
+          className="mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
         >
-          Top 5% of Pinellas County
-        </motion.p>
+          <img 
+            src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+            alt="The Crawford Team - Welcome Home" 
+            className="h-32 md:h-40 lg:h-48 w-auto object-contain mx-auto"
+          />
+        </motion.div>
 
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6">
-          {"The Crawford Team".split("").map((char, index) => (
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6">
+          {"Top 5% of Pinellas County".split("").map((char, index) => (
             <motion.span
               key={index}
-              initial={{ y: -100, opacity: 0 }}
+              initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
-                delay: 0.5 + index * 0.08,
+                delay: 0.5 + index * 0.03,
                 duration: 0.6,
                 ease: "easeOut"
               }}
