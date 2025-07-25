@@ -50,6 +50,7 @@ const Admin = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [activeSection, setActiveSection] = useState('properties');
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -378,15 +379,30 @@ const Admin = () => {
               <div className="flex items-center space-x-6">
                 <span className="text-sm font-medium text-muted-foreground">Admin Panel</span>
                 <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="sm" className="text-primary bg-primary/10">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={activeSection === 'properties' ? "text-primary bg-primary/10" : "text-muted-foreground"}
+                    onClick={() => setActiveSection('properties')}
+                  >
                     <BarChart3 className="w-4 h-4 mr-2" />
                     Properties
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={activeSection === 'users' ? "text-primary bg-primary/10" : "text-muted-foreground"}
+                    onClick={() => setActiveSection('users')}
+                  >
                     <Users className="w-4 h-4 mr-2" />
                     Users
                   </Button>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={activeSection === 'settings' ? "text-primary bg-primary/10" : "text-muted-foreground"}
+                    onClick={() => setActiveSection('settings')}
+                  >
                     <Settings className="w-4 h-4 mr-2" />
                     Settings
                   </Button>
@@ -395,7 +411,11 @@ const Admin = () => {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button onClick={resetForm} className="h-10 px-6">
+                <Button 
+                  onClick={resetForm} 
+                  className="h-10 px-6"
+                  style={{ display: activeSection === 'properties' ? 'flex' : 'none' }}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Property
                 </Button>
@@ -616,18 +636,27 @@ const Admin = () => {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Property Management</h1>
-          <p className="text-muted-foreground mt-1">Manage your property listings and details</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {activeSection === 'properties' && 'Property Management'}
+            {activeSection === 'users' && 'User Management'}
+            {activeSection === 'settings' && 'Admin Settings'}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            {activeSection === 'properties' && 'Manage your property listings and details'}
+            {activeSection === 'users' && 'Manage user accounts and permissions'}
+            {activeSection === 'settings' && 'Configure application settings'}
+          </p>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <Tabs defaultValue="properties" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="properties">Properties</TabsTrigger>
-            <TabsTrigger value="images">Image Management</TabsTrigger>
-          </TabsList>
+      <div className="max-w-7xl mx-auto px-6 pb-8">
+        {activeSection === 'properties' && (
+          <Tabs defaultValue="properties" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="properties">Properties</TabsTrigger>
+              <TabsTrigger value="images">Image Management</TabsTrigger>
+            </TabsList>
 
           <TabsContent value="properties" className="space-y-8">
             {/* Stats Cards */}
@@ -868,30 +897,69 @@ const Admin = () => {
             </div>
           </TabsContent>
         </Tabs>
+        )}
+
+        {activeSection === 'users' && (
+          <div className="space-y-6">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle>User Management</CardTitle>
+                <p className="text-sm text-muted-foreground">Manage user accounts and permissions</p>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">User Management Coming Soon</h3>
+                  <p className="text-muted-foreground">This section will allow you to manage user accounts, roles, and permissions.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeSection === 'settings' && (
+          <div className="space-y-6">
+            <Card className="border-0 shadow-sm">
+              <CardHeader>
+                <CardTitle>Application Settings</CardTitle>
+                <p className="text-sm text-muted-foreground">Configure your application settings</p>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Settings className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Settings Panel Coming Soon</h3>
+                  <p className="text-muted-foreground">This section will allow you to configure application settings, integrations, and preferences.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Loading State */}
         {isLoading && properties.length === 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader>
-                  <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-muted rounded w-1/2"></div>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-6 bg-muted rounded w-1/3 mb-3"></div>
-                  <div className="flex space-x-4 mb-3">
-                    <div className="h-3 bg-muted rounded w-12"></div>
-                    <div className="h-3 bg-muted rounded w-12"></div>
-                    <div className="h-3 bg-muted rounded w-16"></div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <div className="h-5 bg-muted rounded w-16"></div>
-                    <div className="h-5 bg-muted rounded w-20"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <CardHeader>
+                    <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-muted rounded w-1/2"></div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-6 bg-muted rounded w-1/3 mb-3"></div>
+                    <div className="flex space-x-4 mb-3">
+                      <div className="h-3 bg-muted rounded w-12"></div>
+                      <div className="h-3 bg-muted rounded w-12"></div>
+                      <div className="h-3 bg-muted rounded w-16"></div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <div className="h-5 bg-muted rounded w-16"></div>
+                      <div className="h-5 bg-muted rounded w-20"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
       </div>
