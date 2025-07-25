@@ -623,24 +623,15 @@ const Listings = () => {
               </DialogHeader>
               
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Property Image */}
+                {/* Property Images Carousel */}
                 <div className="space-y-4">
-                  {getPrimaryImage(selectedProperty.id) ? (
-                    <div className="w-full h-64 rounded-lg overflow-hidden">
-                      <img
-                        src={getPrimaryImage(selectedProperty.id)}
-                        alt={selectedProperty.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full h-64 bg-gradient-subtle flex items-center justify-center rounded-lg">
-                      <div className="text-center text-muted-foreground">
-                        <Home className="w-16 h-16 mx-auto mb-2 opacity-60" />
-                        <p>No Image Available</p>
-                      </div>
-                    </div>
-                  )}
+                  <div className="w-full h-64 rounded-lg overflow-hidden">
+                    <PropertyImageCarousel 
+                      images={propertyImages[selectedProperty.id] || []}
+                      propertyTitle={selectedProperty.title}
+                      showControls={true}
+                    />
+                  </div>
                   
                   {/* Property Details Grid */}
                   <div className="grid grid-cols-2 gap-4 text-sm">
