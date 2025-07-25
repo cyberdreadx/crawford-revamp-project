@@ -11,9 +11,11 @@ const Footer = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Company Info */}
             <div className="lg:col-span-2">
-              <h3 className="text-2xl font-bold mb-4 text-white">
-                The Crawford Team
-              </h3>
+              <img 
+                src="/lovable-uploads/4be61148-f344-4248-a724-1f4c0aad30d2.png" 
+                alt="The Crawford Team" 
+                className="h-16 mb-4"
+              />
               <p className="text-white/80 mb-6 max-w-md leading-relaxed">
                 Your trusted real estate partners in St. Petersburg, Florida. 
                 We bring expertise, dedication, and personalized service to every transaction.
