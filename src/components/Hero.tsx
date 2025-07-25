@@ -39,7 +39,7 @@ const Hero = () => {
           <img 
             src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
             alt="The Crawford Team - Welcome Home" 
-            className="h-32 md:h-40 lg:h-48 w-auto object-contain mx-auto"
+            className="h-48 md:h-56 lg:h-64 w-auto object-contain mx-auto"
           />
         </motion.div>
 

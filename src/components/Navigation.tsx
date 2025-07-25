@@ -76,7 +76,7 @@ const Navigation = () => {
               <img 
                 src="/lovable-uploads/a11b8795-200a-4ac4-8734-71b218bc5525.png" 
                 alt="The Crawford Team" 
-                className="h-12 w-auto object-contain"
+                className="h-16 md:h-20 w-auto object-contain"
               />
             </Link>
           </div>
@@ -203,7 +203,7 @@ const Navigation = () => {
                     <img 
                       src="/lovable-uploads/a11b8795-200a-4ac4-8734-71b218bc5525.png" 
                       alt="The Crawford Team" 
-                      className="h-8 w-auto object-contain"
+                      className="h-12 w-auto object-contain"
                     />
                   </div>
 
