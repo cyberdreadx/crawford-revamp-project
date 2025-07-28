@@ -100,7 +100,7 @@ const Hero = () => {
           transition={{ delay: 0.3, duration: 0.8 }}
         >
           <img 
-            src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+            src="/lovable-uploads/7199c7df-85f7-4652-b06a-50fa1258b504.png" 
             alt="The Crawford Team - Welcome Home" 
             className="h-56 md:h-64 lg:h-72 w-auto object-contain mx-auto filter drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
           />
