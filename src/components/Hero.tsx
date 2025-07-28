@@ -99,11 +99,14 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <img 
-            src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
-            alt="The Crawford Team - Welcome Home" 
-            className="h-48 md:h-56 lg:h-64 w-auto object-contain mx-auto"
-          />
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/60 to-navy-deep/40 rounded-lg blur-xl"></div>
+            <img 
+              src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+              alt="The Crawford Team - Welcome Home" 
+              className="relative h-48 md:h-56 lg:h-64 w-auto object-contain mx-auto drop-shadow-2xl"
+            />
+          </div>
         </motion.div>
 
         {/* Main Headline */}
