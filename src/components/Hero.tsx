@@ -92,18 +92,21 @@ const Hero = () => {
         transition={{ duration: 1 }}
       >
 
-        {/* Logo */}
+        {/* Team Name */}
         <motion.div 
           className="mb-12"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <img 
-            src="/lovable-uploads/7199c7df-85f7-4652-b06a-50fa1258b504.png" 
-            alt="The Crawford Team - Welcome Home" 
-            className="h-56 md:h-64 lg:h-72 w-auto object-contain mx-auto filter drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-          />
+          <h1 
+            className="text-7xl md:text-8xl lg:text-9xl font-cursive text-white leading-tight"
+            style={{
+              textShadow: '0 2px 10px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.2)'
+            }}
+          >
+            The Crawford Team
+          </h1>
         </motion.div>
 
         {/* Main Headline */}
