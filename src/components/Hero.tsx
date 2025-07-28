@@ -94,39 +94,30 @@ const Hero = () => {
 
         {/* Logo */}
         <motion.div 
-          className="mb-8"
+          className="mb-12"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/60 to-navy-deep/40 rounded-lg blur-xl"></div>
-            <img 
-              src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
-              alt="The Crawford Team - Welcome Home" 
-              className="relative h-48 md:h-56 lg:h-64 w-auto object-contain mx-auto drop-shadow-2xl"
-            />
-          </div>
+          <img 
+            src="/lovable-uploads/ffac55df-b3b0-408c-b5b1-cac69e26b624.png" 
+            alt="The Crawford Team - Welcome Home" 
+            className="h-56 md:h-64 lg:h-72 w-auto object-contain mx-auto filter drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+          />
         </motion.div>
 
         {/* Main Headline */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-elegant text-white mb-6 drop-shadow-lg">
-          {"Top 5% of Pinellas County".split("").map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                delay: 0.5 + index * 0.03,
-                duration: 0.6,
-                ease: "easeOut"
-              }}
-              style={{ display: char === " " ? "inline" : "inline-block" }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </motion.span>
-          ))}
-        </h1>
+        <motion.h1 
+          className="text-5xl md:text-6xl lg:text-7xl font-elegant text-white mb-8 leading-tight"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 1 }}
+          style={{
+            textShadow: '0 2px 10px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.15)'
+          }}
+        >
+          Top 5% of Pinellas County
+        </motion.h1>
 
         {/* Subheadline */}
         <motion.p 
@@ -151,10 +142,10 @@ const Hero = () => {
             <Button 
               size="lg" 
               onClick={scrollToProperties}
-              className="bg-gradient-teal hover:shadow-elegant text-white font-medium px-8 py-4 text-base transition-all duration-300 border border-white/20"
+              className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold px-10 py-5 text-lg transition-all duration-300 border border-white/30 hover:border-white/50 rounded-full shadow-2xl hover:shadow-white/20"
             >
               Search All Homes
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight className="ml-3 w-5 h-5" />
             </Button>
           </motion.div>
         </motion.div>
