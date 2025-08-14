@@ -1,96 +1,29 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bed, Bath, Square, MapPin, ArrowRight, Home, Calendar, Building, Filter, X, ChevronLeft, ChevronRight, Crown } from "lucide-react";
+import { 
+  Bed, 
+  Bath, 
+  Square, 
+  MapPin, 
+  Home, 
+  Calendar, 
+  Building, 
+  ChevronLeft, 
+  ChevronRight, 
+  Crown,
+  Star,
+  ArrowLeft,
+  ArrowRight,
+  Play,
+  Pause
+} from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
-// Property Image Carousel Component
-interface PropertyImageCarouselProps {
-  images: any[];
-  propertyTitle: string;
-  showControls?: boolean;
-}
-
-const PropertyImageCarousel = ({ images, propertyTitle, showControls = false }: PropertyImageCarouselProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  if (!images || images.length === 0) {
-    return (
-      <div className="w-full h-full bg-gradient-subtle flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-        <div className="text-center text-muted-foreground">
-          <Home className="w-12 h-12 mx-auto mb-2 opacity-60" />
-          <p className="text-sm">No images available</p>
-        </div>
-      </div>
-    );
-  }
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  return (
-    <div className="relative w-full h-full group">
-      <img 
-        src={images[currentImageIndex]?.image_url || '/placeholder.svg'}
-        alt={`${propertyTitle} - Image ${currentImageIndex + 1}`}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-      />
-      
-      {/* Navigation Controls */}
-      {images.length > 1 && (
-        <>
-          <button
-            onClick={prevImage}
-            className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity z-10 ${
-              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-            }`}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={nextImage}
-            className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-opacity z-10 ${
-              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-            }`}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-          
-          {/* Image Indicators */}
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1 z-10">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentImageIndex 
-                    ? 'bg-white' 
-                    : 'bg-white/50 hover:bg-white/75'
-                }`}
-              />
-            ))}
-          </div>
-          
-          {/* Image Counter */}
-          <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs z-10">
-            {currentImageIndex + 1} / {images.length}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Property {
   id: string;
@@ -110,29 +43,40 @@ interface Property {
   is_featured: boolean;
 }
 
+interface PropertyImage {
+  id: string;
+  property_id: string;
+  image_url: string;
+  is_primary: boolean;
+  display_order: number;
+}
+
 const LuxuryProperties = () => {
-  const [visibleCount, setVisibleCount] = useState(6);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [properties, setProperties] = useState<Property[]>([]);
-  const [propertyImages, setPropertyImages] = useState<{ [key: string]: any[] }>({});
+  const [propertyImages, setPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
   const [loading, setLoading] = useState(true);
+  const [showDetails, setShowDetails] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
   const { toast } = useToast();
-  
-  // Filter states for luxury properties
-  const [filters, setFilters] = useState({
-    priceRange: "all",
-    bedrooms: "all",
-    bathrooms: "all",
-    status: "all",
-    propertyType: "all"
-  });
-  const [showFilters, setShowFilters] = useState(true);
 
   // Fetch luxury properties (price > $600k) and images from database
   useEffect(() => {
     fetchLuxuryPropertiesAndImages();
   }, []);
+
+  // Auto-advance properties when autoplay is enabled
+  useEffect(() => {
+    if (!autoPlay || properties.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
+      setCurrentImageIndex(0);
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, [autoPlay, properties.length]);
 
   const fetchLuxuryPropertiesAndImages = async () => {
     try {
@@ -159,7 +103,7 @@ const LuxuryProperties = () => {
         if (imagesError) throw imagesError;
 
         // Group images by property_id
-        const imagesByProperty: { [key: string]: any[] } = {};
+        const imagesByProperty: { [key: string]: PropertyImage[] } = {};
         imagesData?.forEach(image => {
           if (!imagesByProperty[image.property_id]) {
             imagesByProperty[image.property_id] = [];
@@ -180,542 +124,405 @@ const LuxuryProperties = () => {
     }
   };
 
-  const getPrimaryImage = (propertyId: string) => {
-    const images = propertyImages[propertyId] || [];
-    const primaryImage = images.find(img => img.is_primary);
-    return primaryImage?.image_url || images[0]?.image_url || null;
+  const currentProperty = properties[currentPropertyIndex];
+  const currentPropertyImages = currentProperty ? propertyImages[currentProperty.id] || [] : [];
+
+  const nextProperty = () => {
+    setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
+    setCurrentImageIndex(0);
   };
-  
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
-  // Filter luxury properties based on selected filters
-  const filteredProperties = properties.filter(property => {
-    // Price filter for luxury properties
-    if (filters.priceRange !== "all") {
-      const price = property.price;
-      switch (filters.priceRange) {
-        case "600k-1m":
-          if (price < 600000 || price > 1000000) return false;
-          break;
-        case "1m-2m":
-          if (price < 1000000 || price > 2000000) return false;
-          break;
-        case "over2m":
-          if (price < 2000000) return false;
-          break;
-      }
+  const prevProperty = () => {
+    setCurrentPropertyIndex((prev) => (prev - 1 + properties.length) % properties.length);
+    setCurrentImageIndex(0);
+  };
+
+  const nextImage = () => {
+    if (currentPropertyImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev + 1) % currentPropertyImages.length);
     }
+  };
 
-    // Bedrooms filter
-    if (filters.bedrooms !== "all") {
-      const bedroomCount = parseInt(filters.bedrooms);
-      if (filters.bedrooms === "4" && property.bedrooms < 4) return false;
-      if (filters.bedrooms !== "4" && property.bedrooms !== bedroomCount) return false;
+  const prevImage = () => {
+    if (currentPropertyImages.length > 0) {
+      setCurrentImageIndex((prev) => (prev - 1 + currentPropertyImages.length) % currentPropertyImages.length);
     }
+  };
 
-    // Bathrooms filter
-    if (filters.bathrooms !== "all") {
-      const bathroomCount = parseFloat(filters.bathrooms);
-      if (filters.bathrooms === "3" && property.bathrooms < 3) return false;
-      if (filters.bathrooms !== "3" && property.bathrooms !== bathroomCount) return false;
-    }
-
-    // Status filter
-    if (filters.status !== "all") {
-      if (filters.status === "sale" && property.status === "For Rent") return false;
-      if (filters.status === "rent" && property.status !== "For Rent") return false;
-    }
-
-    // Property type filter
-    if (filters.propertyType !== "all") {
-      const propertyType = property.property_type.toLowerCase();
-      if (propertyType !== filters.propertyType) return false;
-    }
-
-    return true;
-  });
-
-  // Handle infinite scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 1000) {
-        if (visibleCount < filteredProperties.length && !isLoading) {
-          setIsLoading(true);
-          setTimeout(() => {
-            setVisibleCount(prev => Math.min(prev + 6, filteredProperties.length));
-            setIsLoading(false);
-          }, 800);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [visibleCount, filteredProperties.length, isLoading]);
-
-  // Reset visible count when filters change
-  useEffect(() => {
-    setVisibleCount(6);
-  }, [filters]);
-
-  const visibleProperties = filteredProperties.slice(0, visibleCount);
-
-  const clearFilters = () => {
-    setFilters({
-      priceRange: "all",
-      bedrooms: "all",
-      bathrooms: "all",
-      status: "all",
-      propertyType: "all"
-    });
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-subtle">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading luxury properties...</p>
+          <motion.div 
+            className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto mb-4"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.p 
+            className="text-lg text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Loading luxury collection...
+          </motion.p>
         </div>
       </div>
     );
   }
 
+  if (properties.length === 0) {
+    return (
+      <div className="min-h-screen">
+        <Navigation />
+        <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-subtle">
+          <div className="text-center">
+            <Crown className="w-24 h-24 mx-auto mb-6 text-muted-foreground" />
+            <h2 className="text-3xl font-bold mb-4">No Luxury Properties Available</h2>
+            <p className="text-lg text-muted-foreground max-w-md mx-auto">
+              We're currently updating our luxury collection. Please check back soon for exclusive properties.
+            </p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-black">
       <Navigation />
       
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-subtle">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge variant="secondary" className="mb-4 px-4 py-2 bg-amber-100 text-amber-800 border-amber-200">
-              <Crown className="w-4 h-4 mr-2" />
-              Luxury Collection
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Exclusive Luxury Properties
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Discover our curated collection of premium properties featuring exceptional 
-              quality, prime locations, and luxury amenities. Each property represents 
-              the pinnacle of sophisticated living.
-            </p>
-            
-            {/* Filter Toggle */}
-            <div className="mt-8 flex justify-center">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowFilters(!showFilters)}
-                className="gap-2"
+      {/* Full-Screen Property Showcase */}
+      <div className="relative h-screen overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPropertyIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="absolute inset-0"
+          >
+            {/* Background Image */}
+            {currentPropertyImages.length > 0 && (
+              <div className="absolute inset-0">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={`${currentPropertyIndex}-${currentImageIndex}`}
+                    src={currentPropertyImages[currentImageIndex]?.image_url || '/placeholder.svg'}
+                    alt={currentProperty?.title}
+                    className="w-full h-full object-cover"
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    transition={{ duration: 1.2 }}
+                  />
+                </AnimatePresence>
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
+              </div>
+            )}
+
+            {/* Content Overlay */}
+            <div className="relative z-10 h-full flex items-center">
+              <div className="container mx-auto px-6 lg:px-8">
+                <div className="max-w-4xl">
+                  {/* Property Badge */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
+                    className="mb-6"
+                  >
+                    <Badge className="bg-amber-500/90 text-black font-semibold px-4 py-2 text-sm">
+                      <Crown className="w-4 h-4 mr-2" />
+                      Luxury Collection
+                    </Badge>
+                  </motion.div>
+
+                  {/* Property Title */}
+                  <motion.h1
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight"
+                  >
+                    {currentProperty?.title}
+                  </motion.h1>
+
+                  {/* Location */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                    className="flex items-center text-white/90 text-xl mb-6"
+                  >
+                    <MapPin className="w-6 h-6 mr-3" />
+                    {currentProperty?.location}
+                  </motion.div>
+
+                  {/* Price */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                    className="text-4xl md:text-5xl font-bold text-amber-400 mb-8"
+                  >
+                    {formatPrice(currentProperty?.price || 0)}
+                  </motion.div>
+
+                  {/* Quick Stats */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.8 }}
+                    className="flex items-center gap-8 text-white/90 text-lg mb-8"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Bed className="w-5 h-5" />
+                      <span>{currentProperty?.bedrooms} Beds</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Bath className="w-5 h-5" />
+                      <span>{currentProperty?.bathrooms} Baths</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Square className="w-5 h-5" />
+                      <span>{currentProperty?.sqft?.toLocaleString()} sq ft</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Action Buttons */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.8 }}
+                    className="flex items-center gap-4"
+                  >
+                    <Button 
+                      size="lg" 
+                      className="bg-white text-black hover:bg-white/90 font-semibold px-8 py-3 text-lg"
+                      onClick={() => setShowDetails(true)}
+                    >
+                      View Details
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      className="border-white text-white hover:bg-white hover:text-black font-semibold px-8 py-3 text-lg"
+                      onClick={() => setAutoPlay(!autoPlay)}
+                    >
+                      {autoPlay ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
+                      {autoPlay ? 'Pause' : 'Auto Play'}
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation Controls */}
+        <div className="absolute inset-y-0 left-0 flex items-center z-20">
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={prevProperty}
+            className="ml-6 h-16 w-16 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/20"
+          >
+            <ArrowLeft className="w-8 h-8" />
+          </Button>
+        </div>
+
+        <div className="absolute inset-y-0 right-0 flex items-center z-20">
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={nextProperty}
+            className="mr-6 h-16 w-16 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/20"
+          >
+            <ArrowRight className="w-8 h-8" />
+          </Button>
+        </div>
+
+        {/* Image Navigation */}
+        {currentPropertyImages.length > 1 && (
+          <>
+            <div className="absolute top-1/2 left-8 transform -translate-y-1/2 z-20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={prevImage}
+                className="h-12 w-12 rounded-full bg-black/40 hover:bg-black/60 text-white"
               >
-                <Filter className="w-4 h-4" />
-                Filters
-                {Object.values(filters).some(filter => filter !== "all") && (
-                  <Badge variant="secondary" className="ml-2">{Object.values(filters).filter(filter => filter !== "all").length}</Badge>
-                )}
+                <ChevronLeft className="w-6 h-6" />
               </Button>
             </div>
 
-            {/* Filters Panel */}
-            {showFilters && (
-              <div className="mt-6 p-6 bg-card rounded-lg border max-w-4xl mx-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Filter Luxury Properties</h3>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={clearFilters}>
-                      Clear All
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setShowFilters(false)}>
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {/* Status Filter */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Status</label>
-                    <Select value={filters.status} onValueChange={(value) => setFilters({...filters, status: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="sale">For Sale</SelectItem>
-                        <SelectItem value="rent">For Rent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <div className="absolute top-1/2 right-8 transform -translate-y-1/2 z-20">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={nextImage}
+                className="h-12 w-12 rounded-full bg-black/40 hover:bg-black/60 text-white"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </Button>
+            </div>
 
-                  {/* Price Range Filter */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Price Range</label>
-                    <Select value={filters.priceRange} onValueChange={(value) => setFilters({...filters, priceRange: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Luxury Prices</SelectItem>
-                        <SelectItem value="600k-1m">$600K-$1M</SelectItem>
-                        <SelectItem value="1m-2m">$1M-$2M</SelectItem>
-                        <SelectItem value="over2m">Over $2M</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            {/* Image Indicators */}
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+              {currentPropertyImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === currentImageIndex 
+                      ? 'bg-white' 
+                      : 'bg-white/40 hover:bg-white/60'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
-                  {/* Bedrooms Filter */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Bedrooms</label>
-                    <Select value={filters.bedrooms} onValueChange={(value) => setFilters({...filters, bedrooms: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any</SelectItem>
-                        <SelectItem value="2">2 Beds</SelectItem>
-                        <SelectItem value="3">3 Beds</SelectItem>
-                        <SelectItem value="4">4+ Beds</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+        {/* Property Counter */}
+        <div className="absolute top-6 right-6 z-20">
+          <div className="bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm">
+            <span className="text-lg font-semibold">
+              {currentPropertyIndex + 1} / {properties.length}
+            </span>
+          </div>
+        </div>
 
-                  {/* Bathrooms Filter */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Bathrooms</label>
-                    <Select value={filters.bathrooms} onValueChange={(value) => setFilters({...filters, bathrooms: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any</SelectItem>
-                        <SelectItem value="2">2 Baths</SelectItem>
-                        <SelectItem value="2.5">2.5 Baths</SelectItem>
-                        <SelectItem value="3">3+ Baths</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+        {/* Property Navigation Dots */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+          {properties.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setCurrentPropertyIndex(index);
+                setCurrentImageIndex(0);
+              }}
+              className={`w-4 h-4 rounded-full transition-all ${
+                index === currentPropertyIndex 
+                  ? 'bg-amber-400' 
+                  : 'bg-white/40 hover:bg-white/60'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
 
-                  {/* Property Type Filter */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Property Type</label>
-                    <Select value={filters.propertyType} onValueChange={(value) => setFilters({...filters, propertyType: value})}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="house">House</SelectItem>
-                        <SelectItem value="condo">Condo</SelectItem>
-                        <SelectItem value="estate">Estate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+      {/* Property Details Modal */}
+      <Dialog open={showDetails} onOpenChange={setShowDetails}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">{currentProperty?.title}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Property Info Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <Bed className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <div className="font-semibold">{currentProperty?.bedrooms}</div>
+                <div className="text-sm text-muted-foreground">Bedrooms</div>
+              </div>
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <Bath className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <div className="font-semibold">{currentProperty?.bathrooms}</div>
+                <div className="text-sm text-muted-foreground">Bathrooms</div>
+              </div>
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <Square className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <div className="font-semibold">{currentProperty?.sqft?.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">Square Feet</div>
+              </div>
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <Calendar className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <div className="font-semibold">{currentProperty?.year_built || 'N/A'}</div>
+                <div className="text-sm text-muted-foreground">Year Built</div>
+              </div>
+            </div>
 
-                {/* Results Count */}
-                <div className="mt-4 pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {filteredProperties.length} luxury properties
-                  </p>
+            {/* Description */}
+            {currentProperty?.description && (
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Description</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {currentProperty.description}
+                </p>
+              </div>
+            )}
+
+            {/* Key Features */}
+            {currentProperty?.key_features && currentProperty.key_features.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Key Features</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {currentProperty.key_features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Star className="w-4 h-4 text-amber-500" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </section>
 
-      {/* Properties Grid */}
-      <section className="py-16">
-        <div className="container mx-auto px-6 lg:px-8">
-          {filteredProperties.length === 0 ? (
-            <div className="text-center py-16">
-              <Crown className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-2xl font-semibold mb-4">No Luxury Properties Available</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                We're currently updating our luxury collection. Please check back soon or contact us for exclusive off-market opportunities.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {visibleProperties.map((property) => (
-                  <Card 
-                    key={property.id}
-                    className="group overflow-hidden hover:shadow-elegant transition-all duration-300 cursor-pointer"
-                    onClick={() => setSelectedProperty(property)}
-                  >
-                    <div className="aspect-[4/3] overflow-hidden relative">
-                      <PropertyImageCarousel 
-                        images={propertyImages[property.id] || []}
-                        propertyTitle={property.title}
-                      />
-                      
-                      {/* Property Status Badge */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <Badge 
-                          variant={property.status === "For Sale" ? "default" : "secondary"}
-                          className="bg-white/90 text-primary border-0"
-                        >
-                          {property.status}
-                        </Badge>
-                      </div>
-
-                      {/* Luxury Badge */}
-                      <div className="absolute top-4 right-4 z-10">
-                        <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                          <Crown className="w-3 h-3 mr-1" />
-                          Luxury
-                        </Badge>
-                      </div>
+            {/* Additional Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Property Details</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Property Type:</span>
+                    <span className="font-medium">{currentProperty?.property_type}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Status:</span>
+                    <Badge variant={currentProperty?.status === 'For Sale' ? 'default' : 'secondary'}>
+                      {currentProperty?.status}
+                    </Badge>
+                  </div>
+                  {currentProperty?.taxes && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Annual Taxes:</span>
+                      <span className="font-medium">{formatPrice(currentProperty.taxes)}</span>
                     </div>
-
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        {/* Price */}
-                        <div className="flex items-center justify-between">
-                          <span className="text-2xl font-bold text-primary">
-                            ${property.price.toLocaleString()}
-                            {property.status === "For Rent" && <span className="text-sm text-muted-foreground">/mo</span>}
-                          </span>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <ArrowRight className="w-4 h-4" />
-                          </Button>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
-                          {property.title}
-                        </h3>
-
-                        {/* Location */}
-                        <div className="flex items-center text-muted-foreground">
-                          <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                          <span className="text-sm truncate">{property.location}</span>
-                        </div>
-
-                        {/* Property Details */}
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Bed className="w-4 h-4" />
-                            <span>{property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Bath className="w-4 h-4" />
-                            <span>{property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Square className="w-4 h-4" />
-                            <span>{property.sqft.toLocaleString()} sqft</span>
-                          </div>
-                        </div>
-
-                        {/* Property Type */}
-                        <div className="flex items-center gap-2">
-                          <Building className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm font-medium">{property.property_type}</span>
-                          {property.year_built && (
-                            <>
-                              <span className="text-muted-foreground">•</span>
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4 text-muted-foreground" />
-                                <span className="text-sm text-muted-foreground">{property.year_built}</span>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Load More / Loading */}
-              {filteredProperties.length > visibleCount && (
-                <div className="text-center mt-12">
-                  {isLoading ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                      <span className="text-muted-foreground">Loading more luxury properties...</span>
+                  )}
+                  {currentProperty?.flood_zone && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Flood Zone:</span>
+                      <span className="font-medium">{currentProperty.flood_zone}</span>
                     </div>
-                  ) : (
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setVisibleCount(prev => Math.min(prev + 6, filteredProperties.length))}
-                      className="px-8"
-                    >
-                      Load More Properties
-                    </Button>
                   )}
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
+              </div>
 
-      {/* Property Detail Modal */}
-      <Dialog open={!!selectedProperty} onOpenChange={() => setSelectedProperty(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          {selectedProperty && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-2xl">{selectedProperty.title}</DialogTitle>
-              </DialogHeader>
-              
-              <div className="space-y-6">
-                {/* Image Carousel */}
-                <div className="aspect-[16/9] overflow-hidden rounded-lg">
-                  <PropertyImageCarousel 
-                    images={propertyImages[selectedProperty.id] || []}
-                    propertyTitle={selectedProperty.title}
-                    showControls={true}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Property Details */}
-                  <div className="space-y-6">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-3xl font-bold text-primary">
-                          ${selectedProperty.price.toLocaleString()}
-                          {selectedProperty.status === "For Rent" && <span className="text-lg text-muted-foreground">/mo</span>}
-                        </span>
-                        <div className="flex gap-2">
-                          <Badge 
-                            variant={selectedProperty.status === "For Sale" ? "default" : "secondary"}
-                          >
-                            {selectedProperty.status}
-                          </Badge>
-                          <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                            <Crown className="w-3 h-3 mr-1" />
-                            Luxury
-                          </Badge>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center text-muted-foreground mb-4">
-                        <MapPin className="w-5 h-5 mr-2" />
-                        <span>{selectedProperty.location}</span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-2 text-2xl font-bold mb-1">
-                            <Bed className="w-6 h-6" />
-                            {selectedProperty.bedrooms}
-                          </div>
-                          <p className="text-sm text-muted-foreground">Bedroom{selectedProperty.bedrooms !== 1 ? 's' : ''}</p>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-2 text-2xl font-bold mb-1">
-                            <Bath className="w-6 h-6" />
-                            {selectedProperty.bathrooms}
-                          </div>
-                          <p className="text-sm text-muted-foreground">Bathroom{selectedProperty.bathrooms !== 1 ? 's' : ''}</p>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-2 text-2xl font-bold mb-1">
-                            <Square className="w-6 h-6" />
-                            {selectedProperty.sqft.toLocaleString()}
-                          </div>
-                          <p className="text-sm text-muted-foreground">Square Feet</p>
-                        </div>
-                        <div className="text-center">
-                          <div className="flex items-center justify-center gap-2 text-2xl font-bold mb-1">
-                            <Building className="w-6 h-6" />
-                          </div>
-                          <p className="text-sm text-muted-foreground">{selectedProperty.property_type}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    {selectedProperty.description && (
-                      <div>
-                        <h3 className="text-lg font-semibold mb-2">Description</h3>
-                        <p className="text-muted-foreground leading-relaxed">{selectedProperty.description}</p>
-                      </div>
-                    )}
-
-                    {/* Key Features */}
-                    {selectedProperty.key_features && selectedProperty.key_features.length > 0 && (
-                      <div>
-                        <h3 className="text-lg font-semibold mb-3">Key Features</h3>
-                        <div className="grid grid-cols-1 gap-2">
-                          {selectedProperty.key_features.map((feature, index) => (
-                            <div key={index} className="flex items-center gap-2">
-                              <div className="w-2 h-2 bg-primary rounded-full"></div>
-                              <span className="text-sm">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Additional Information */}
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Property Information</h3>
-                      
-                      <div className="space-y-3">
-                        {selectedProperty.year_built && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Year Built</span>
-                            <span className="font-medium">{selectedProperty.year_built}</span>
-                          </div>
-                        )}
-                        
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Property Type</span>
-                          <span className="font-medium">{selectedProperty.property_type}</span>
-                        </div>
-                        
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Status</span>
-                          <span className="font-medium">{selectedProperty.status}</span>
-                        </div>
-
-                        {selectedProperty.taxes && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Annual Taxes</span>
-                            <span className="font-medium">${selectedProperty.taxes.toLocaleString()}</span>
-                          </div>
-                        )}
-
-                        {selectedProperty.flood_zone && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Flood Zone</span>
-                            <span className="font-medium">{selectedProperty.flood_zone}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Contact CTA */}
-                    <div className="p-6 bg-gradient-subtle rounded-lg text-center">
-                      <h4 className="text-lg font-semibold mb-2">Interested in this luxury property?</h4>
-                      <p className="text-muted-foreground mb-4">
-                        Contact our luxury specialists for a private showing and detailed information.
-                      </p>
-                      <Button className="w-full">
-                        Contact Our Team
-                      </Button>
-                    </div>
-                  </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Location</h3>
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
+                  <span>{currentProperty?.location}</span>
                 </div>
               </div>
-            </>
-          )}
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
