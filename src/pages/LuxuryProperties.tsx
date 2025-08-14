@@ -257,7 +257,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.8 }}
-                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight"
+                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-warm-brown mb-4 leading-tight"
                   >
                     {currentProperty?.title}
                   </motion.h1>
@@ -267,7 +267,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
-                    className="flex items-center text-white/90 text-xl mb-6"
+                    className="flex items-center text-warm-taupe text-xl mb-6"
                   >
                     <MapPin className="w-6 h-6 mr-3" />
                     {currentProperty?.location}
@@ -278,7 +278,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="text-4xl md:text-5xl font-bold text-amber-400 mb-8"
+                    className="text-4xl md:text-5xl font-bold text-warm-brown mb-8"
                   >
                     {formatPrice(currentProperty?.price || 0)}
                   </motion.div>
@@ -288,7 +288,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.7, duration: 0.8 }}
-                    className="flex items-center gap-8 text-white/90 text-lg mb-8"
+                    className="flex items-center gap-8 text-warm-taupe text-lg mb-8"
                   >
                     <div className="flex items-center gap-2">
                       <Bed className="w-5 h-5" />
@@ -313,7 +313,7 @@ const LuxuryProperties = () => {
                   >
                     <Button 
                       size="lg" 
-                      className="bg-white text-black hover:bg-white/90 font-semibold px-8 py-3 text-lg"
+                      className="bg-warm-brown text-cream-light hover:bg-warm-brown/90 font-semibold px-8 py-3 text-lg"
                       onClick={() => setShowDetails(true)}
                     >
                       View Details
@@ -321,7 +321,7 @@ const LuxuryProperties = () => {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="border-white text-white hover:bg-white hover:text-black font-semibold px-8 py-3 text-lg"
+                      className="border-warm-brown text-warm-brown hover:bg-warm-brown hover:text-cream-light font-semibold px-8 py-3 text-lg"
                       onClick={() => setAutoPlay(!autoPlay)}
                     >
                       {autoPlay ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
@@ -340,7 +340,7 @@ const LuxuryProperties = () => {
             variant="ghost"
             size="lg"
             onClick={prevProperty}
-            className="ml-6 h-16 w-16 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/20"
+            className="ml-6 h-16 w-16 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light border border-warm-brown"
           >
             <ArrowLeft className="w-8 h-8" />
           </Button>
@@ -351,7 +351,7 @@ const LuxuryProperties = () => {
             variant="ghost"
             size="lg"
             onClick={nextProperty}
-            className="mr-6 h-16 w-16 rounded-full bg-black/30 hover:bg-black/50 text-white border border-white/20"
+            className="mr-6 h-16 w-16 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light border border-warm-brown"
           >
             <ArrowRight className="w-8 h-8" />
           </Button>
@@ -365,7 +365,7 @@ const LuxuryProperties = () => {
                 variant="ghost"
                 size="sm"
                 onClick={prevImage}
-                className="h-12 w-12 rounded-full bg-black/40 hover:bg-black/60 text-white"
+                 className="h-12 w-12 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light"
               >
                 <ChevronLeft className="w-6 h-6" />
               </Button>
@@ -376,7 +376,7 @@ const LuxuryProperties = () => {
                 variant="ghost"
                 size="sm"
                 onClick={nextImage}
-                className="h-12 w-12 rounded-full bg-black/40 hover:bg-black/60 text-white"
+                className="h-12 w-12 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light"
               >
                 <ChevronRight className="w-6 h-6" />
               </Button>
@@ -390,8 +390,8 @@ const LuxuryProperties = () => {
                   onClick={() => setCurrentImageIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     index === currentImageIndex 
-                      ? 'bg-cream-light' 
-                      : 'bg-cream-light/40 hover:bg-cream-light/60'
+                      ? 'bg-warm-brown' 
+                      : 'bg-warm-brown/40 hover:bg-warm-brown/60'
                   }`}
                 />
               ))}
@@ -401,7 +401,7 @@ const LuxuryProperties = () => {
 
         {/* Property Counter */}
         <div className="absolute top-6 right-6 z-20">
-          <div className="bg-warm-brown/50 text-cream-light px-4 py-2 rounded-full backdrop-blur-sm">
+          <div className="bg-warm-brown/90 text-cream-light px-4 py-2 rounded-full backdrop-blur-sm">
             <span className="text-lg font-semibold">
               {currentPropertyIndex + 1} / {properties.length}
             </span>
@@ -419,8 +419,8 @@ const LuxuryProperties = () => {
               }}
               className={`w-4 h-4 rounded-full transition-all ${
                 index === currentPropertyIndex 
-                  ? 'bg-gold-accent' 
-                  : 'bg-cream-light/40 hover:bg-cream-light/60'
+                  ? 'bg-warm-brown' 
+                  : 'bg-warm-brown/40 hover:bg-warm-brown/60'
               }`}
             />
           ))}
