@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-navy-deep text-white py-16">
+    <footer className="bg-warm-brown text-cream-light py-16">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -16,26 +16,26 @@ const Footer = () => {
                 alt="The Crawford Team" 
                 className="h-16 mb-4"
               />
-              <p className="text-white/80 mb-6 max-w-md leading-relaxed">
+              <p className="text-cream-light/80 mb-6 max-w-md leading-relaxed">
                 Your trusted real estate partners in St. Petersburg, Florida. 
                 We bring expertise, dedication, and personalized service to every transaction.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <Phone className="w-5 h-5 text-gold-warm" />
-                  <a href="tel:727-599-1944" className="text-white/90 hover:text-gold-warm transition-colors">
+                  <Phone className="w-5 h-5 text-gold-accent" />
+                  <a href="tel:727-599-1944" className="text-cream-light/90 hover:text-gold-accent transition-colors">
                     (727) 599-1944
                   </a>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-gold-warm" />
-                  <a href="mailto:hello@yourcrawfordteam.com" className="text-white/90 hover:text-gold-warm transition-colors">
+                  <Mail className="w-5 h-5 text-gold-accent" />
+                  <a href="mailto:hello@yourcrawfordteam.com" className="text-cream-light/90 hover:text-gold-accent transition-colors">
                     hello@yourcrawfordteam.com
                   </a>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <MapPin className="w-5 h-5 text-gold-warm" />
-                  <span className="text-white/90">St. Petersburg, FL</span>
+                  <MapPin className="w-5 h-5 text-gold-accent" />
+                  <span className="text-cream-light/90">St. Petersburg, FL</span>
                 </div>
               </div>
             </div>
@@ -45,27 +45,27 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/" className="text-white/80 hover:text-gold-warm transition-colors">
+                  <Link to="/" className="text-cream-light/80 hover:text-gold-accent transition-colors">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <a href="/#about" className="text-white/80 hover:text-gold-warm transition-colors">
+                  <a href="/#about" className="text-cream-light/80 hover:text-gold-accent transition-colors">
                     About Us
                   </a>
                 </li>
                 <li>
-                  <Link to="/listings" className="text-white/80 hover:text-gold-warm transition-colors">
+                  <Link to="/listings" className="text-cream-light/80 hover:text-gold-accent transition-colors">
                     Properties
                   </Link>
                 </li>
                 <li>
-                  <a href="/#services" className="text-white/80 hover:text-gold-warm transition-colors">
+                  <a href="/#services" className="text-cream-light/80 hover:text-gold-accent transition-colors">
                     Services
                   </a>
                 </li>
                 <li>
-                  <a href="/#contact" className="text-white/80 hover:text-gold-warm transition-colors">
+                  <a href="/#contact" className="text-cream-light/80 hover:text-gold-accent transition-colors">
                     Contact
                   </a>
                 </li>
@@ -77,33 +77,33 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Our Services</h4>
               <ul className="space-y-2">
                 <li>
-                  <span className="text-white/80">Home Buying</span>
+                  <span className="text-cream-light/80">Home Buying</span>
                 </li>
                 <li>
-                  <span className="text-white/80">Home Selling</span>
+                  <span className="text-cream-light/80">Home Selling</span>
                 </li>
                 <li>
-                  <span className="text-white/80">Investment Properties</span>
+                  <span className="text-cream-light/80">Investment Properties</span>
                 </li>
                 <li>
-                  <span className="text-white/80">Market Analysis</span>
+                  <span className="text-cream-light/80">Market Analysis</span>
                 </li>
                 <li>
-                  <span className="text-white/80">Property Management</span>
+                  <span className="text-cream-light/80">Property Management</span>
                 </li>
               </ul>
             </div>
           </div>
 
           {/* Social Media & Bottom */}
-          <div className="pt-8 border-t border-white/20">
+          <div className="pt-8 border-t border-cream-light/20">
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="flex space-x-6 mb-4 md:mb-0">
                 <a 
                   href="https://www.facebook.com/yourcrawfordteam" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 hover:text-gold-warm transition-colors"
+                  className="text-cream-light/60 hover:text-gold-accent transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-6 h-6" />
@@ -112,7 +112,7 @@ const Footer = () => {
                   href="https://www.instagram.com/yourcrawfordteam/" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 hover:text-gold-warm transition-colors"
+                  className="text-cream-light/60 hover:text-gold-accent transition-colors"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-6 h-6" />
@@ -121,7 +121,7 @@ const Footer = () => {
                   href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/60 hover:text-gold-warm transition-colors"
+                  className="text-cream-light/60 hover:text-gold-accent transition-colors"
                   aria-label="YouTube"
                 >
                   <Youtube className="w-6 h-6" />
@@ -129,10 +129,10 @@ const Footer = () => {
               </div>
               
               <div className="text-center md:text-right">
-                <p className="text-white/60 text-sm mb-1">
+                <p className="text-cream-light/60 text-sm mb-1">
                   © {currentYear} The Crawford Team. All rights reserved.
                 </p>
-                <p className="text-white/40 text-xs">
+                <p className="text-cream-light/40 text-xs">
                   Licensed Real Estate Professionals | Keller Williams St Pete Realty
                 </p>
               </div>
