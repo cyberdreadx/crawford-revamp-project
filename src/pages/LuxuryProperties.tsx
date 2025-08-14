@@ -338,47 +338,47 @@ const LuxuryProperties = () => {
         <div className="absolute inset-y-0 left-0 flex items-center z-20">
           <Button
             variant="ghost"
-            size="lg"
+            size="sm"
             onClick={prevProperty}
-            className="ml-6 h-16 w-16 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light border border-warm-brown"
+            className="ml-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all"
           >
-            <ArrowLeft className="w-8 h-8" />
+            <ArrowLeft className="w-4 h-4" />
           </Button>
         </div>
 
         <div className="absolute inset-y-0 right-0 flex items-center z-20">
           <Button
             variant="ghost"
-            size="lg"
+            size="sm"
             onClick={nextProperty}
-            className="mr-6 h-16 w-16 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light border border-warm-brown"
+            className="mr-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all"
           >
-            <ArrowRight className="w-8 h-8" />
+            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Image Navigation */}
         {currentPropertyImages.length > 1 && (
           <>
-            <div className="absolute top-1/2 left-8 transform -translate-y-1/2 z-20">
+            <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={prevImage}
-                 className="h-12 w-12 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light"
+                className="h-8 w-8 rounded-full bg-warm-brown/30 hover:bg-warm-brown/50 text-cream-light opacity-50 hover:opacity-100 transition-all"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-4 h-4" />
               </Button>
             </div>
 
-            <div className="absolute top-1/2 right-8 transform -translate-y-1/2 z-20">
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={nextImage}
-                className="h-12 w-12 rounded-full bg-warm-brown/80 hover:bg-warm-brown text-cream-light"
+                className="h-8 w-8 rounded-full bg-warm-brown/30 hover:bg-warm-brown/50 text-cream-light opacity-50 hover:opacity-100 transition-all"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
 
