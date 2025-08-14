@@ -429,66 +429,168 @@ const LuxuryProperties = () => {
 
       {/* Property Details Modal */}
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{currentProperty?.title}</DialogTitle>
+            <DialogTitle className="text-3xl font-bold text-center mb-2">{currentProperty?.title}</DialogTitle>
+            <div className="text-center text-lg text-muted-foreground flex items-center justify-center gap-2">
+              <MapPin className="w-5 h-5" />
+              {currentProperty?.location}
+            </div>
+            <div className="text-center text-2xl font-bold text-primary mt-2">
+              {formatPrice(currentProperty?.price || 0)}
+            </div>
           </DialogHeader>
           
-          <div className="space-y-6">
-            {/* Property Info Grid */}
+          <div className="space-y-8">
+            {/* Property Gallery Preview */}
+            {currentPropertyImages.length > 0 && (
+              <div className="grid grid-cols-3 gap-2 max-h-40">
+                {currentPropertyImages.slice(0, 3).map((image, index) => (
+                  <img
+                    key={index}
+                    src={image.image_url}
+                    alt={`${currentProperty?.title} - ${index + 1}`}
+                    className="w-full h-32 object-cover rounded-lg"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Main Info Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-muted rounded-lg">
-                <Bed className="w-8 h-8 mx-auto mb-2 text-primary" />
-                <div className="font-semibold">{currentProperty?.bedrooms}</div>
-                <div className="text-sm text-muted-foreground">Bedrooms</div>
+              <div className="text-center p-6 bg-gradient-subtle rounded-lg border">
+                <Bed className="w-10 h-10 mx-auto mb-3 text-primary" />
+                <div className="text-2xl font-bold">{currentProperty?.bedrooms}</div>
+                <div className="text-sm text-muted-foreground uppercase tracking-wide">Bedrooms</div>
               </div>
-              <div className="text-center p-4 bg-muted rounded-lg">
-                <Bath className="w-8 h-8 mx-auto mb-2 text-primary" />
-                <div className="font-semibold">{currentProperty?.bathrooms}</div>
-                <div className="text-sm text-muted-foreground">Bathrooms</div>
+              <div className="text-center p-6 bg-gradient-subtle rounded-lg border">
+                <Bath className="w-10 h-10 mx-auto mb-3 text-primary" />
+                <div className="text-2xl font-bold">{currentProperty?.bathrooms}</div>
+                <div className="text-sm text-muted-foreground uppercase tracking-wide">Bathrooms</div>
               </div>
-              <div className="text-center p-4 bg-muted rounded-lg">
-                <Square className="w-8 h-8 mx-auto mb-2 text-primary" />
-                <div className="font-semibold">{currentProperty?.sqft?.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">Square Feet</div>
+              <div className="text-center p-6 bg-gradient-subtle rounded-lg border">
+                <Square className="w-10 h-10 mx-auto mb-3 text-primary" />
+                <div className="text-2xl font-bold">{currentProperty?.sqft?.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground uppercase tracking-wide">Square Feet</div>
               </div>
-              <div className="text-center p-4 bg-muted rounded-lg">
-                <Calendar className="w-8 h-8 mx-auto mb-2 text-primary" />
-                <div className="font-semibold">{currentProperty?.year_built || 'N/A'}</div>
-                <div className="text-sm text-muted-foreground">Year Built</div>
+              <div className="text-center p-6 bg-gradient-subtle rounded-lg border">
+                <Calendar className="w-10 h-10 mx-auto mb-3 text-primary" />
+                <div className="text-2xl font-bold">{currentProperty?.year_built || 'N/A'}</div>
+                <div className="text-sm text-muted-foreground uppercase tracking-wide">Year Built</div>
               </div>
             </div>
 
-            {/* Description */}
-            {currentProperty?.description && (
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Description</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {currentProperty.description}
-                </p>
-              </div>
-            )}
-
-            {/* Key Features */}
-            {currentProperty?.key_features && currentProperty.key_features.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Key Features</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {currentProperty.key_features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-500" />
-                      <span>{feature}</span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Unit Features */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Unit Features</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Luxury {currentProperty?.sqft?.toLocaleString()} square feet of refined living space</span>
                     </div>
-                  ))}
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Premium finishes throughout with designer selections</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Floor-to-ceiling windows with panoramic views</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Gourmet kitchen with top-of-the-line appliances</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Master suite with spa-like bathroom amenities</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Private outdoor spaces for relaxation and entertainment</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Features */}
+                {currentProperty?.key_features && currentProperty.key_features.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-semibold mb-3">Additional Features</h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      {currentProperty.key_features.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Star className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Amenities */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Amenities</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Resort-Style Pool:</strong> spa, cabanas, lounging areas, and fire pit</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Fitness Center:</strong> state-of-the-art equipment for residents</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Social Spaces:</strong> lounge spaces for socializing and events</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Concierge Services:</strong> 24/7 front desk staff, controlled building access</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Valet Services:</strong> professional valet parking available</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span><strong>Private Spaces:</strong> convenient on-site areas for pet owners</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lifestyle */}
+                <div>
+                  <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Lifestyle</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Situated in an exclusive neighborhood with premium dining and shopping</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Minutes from cultural attractions and entertainment venues</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Access to world-class recreational facilities and parks</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                      <span>Prestigious location with convenient transportation access</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Additional Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Property Details</h3>
-                <div className="space-y-2">
+            {/* Property Details */}
+            <div className="border-t pt-6">
+              <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Property Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Property Type:</span>
                     <span className="font-medium">{currentProperty?.property_type}</span>
@@ -499,6 +601,8 @@ const LuxuryProperties = () => {
                       {currentProperty?.status}
                     </Badge>
                   </div>
+                </div>
+                <div className="space-y-3">
                   {currentProperty?.taxes && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Annual Taxes:</span>
@@ -512,16 +616,26 @@ const LuxuryProperties = () => {
                     </div>
                   )}
                 </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Location</h3>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <span>{currentProperty?.location}</span>
+                <div className="space-y-3">
+                  <div className="text-center p-4 bg-gradient-subtle rounded-lg border">
+                    <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Contact Agent</div>
+                    <div className="font-semibold">The Crawford Team</div>
+                    <div className="text-sm text-muted-foreground">Luxury Property Specialists</div>
+                    <div className="text-sm text-primary mt-2">Contact for Private Showing</div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Description */}
+            {currentProperty?.description && (
+              <div className="border-t pt-6">
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Description</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {currentProperty.description}
+                </p>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
