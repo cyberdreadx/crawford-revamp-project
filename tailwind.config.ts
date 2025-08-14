@@ -62,18 +62,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Elegant Cream Custom Colors
-				cream: {
+				// Tropical Luxury Custom Colors
+				ocean: {
 					primary: 'hsl(var(--cream-primary))',
 					light: 'hsl(var(--cream-light))'
 				},
-				gold: {
+				coral: {
 					accent: 'hsl(var(--gold-accent))',
 					light: 'hsl(var(--gold-light))'
 				},
-				warm: {
-					brown: 'hsl(var(--warm-brown))',
-					taupe: 'hsl(var(--warm-taupe))'
+				tropical: {
+					navy: 'hsl(var(--warm-brown))',
+					blue: 'hsl(var(--warm-taupe))'
 				}
 			},
 			backgroundImage: {

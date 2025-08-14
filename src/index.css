@@ -6,55 +6,55 @@
 
 @layer base {
   :root {
-    /* Elegant Cream Color Palette */
-    --background: 48 100% 98%;
-    --foreground: 25 25% 15%;
+    /* Tropical Luxury Color Palette */
+    --background: 195 100% 98%;
+    --foreground: 210 35% 15%;
 
-    --card: 45 100% 96%;
-    --card-foreground: 25 25% 15%;
+    --card: 195 100% 96%;
+    --card-foreground: 210 35% 15%;
 
-    --popover: 45 100% 96%;
-    --popover-foreground: 25 25% 15%;
+    --popover: 195 100% 96%;
+    --popover-foreground: 210 35% 15%;
 
-    --primary: 35 60% 75%;
-    --primary-foreground: 25 50% 20%;
+    --primary: 195 85% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 20% 88%;
-    --secondary-foreground: 25 40% 25%;
+    --secondary: 45 65% 85%;
+    --secondary-foreground: 210 35% 25%;
 
-    --muted: 40 15% 92%;
-    --muted-foreground: 25 15% 45%;
+    --muted: 195 30% 92%;
+    --muted-foreground: 210 20% 45%;
 
-    --accent: 42 65% 70%;
-    --accent-foreground: 25 50% 20%;
+    --accent: 15 85% 75%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 48 100% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 40 25% 85%;
-    --input: 40 25% 85%;
-    --ring: 35 60% 75%;
+    --border: 195 25% 85%;
+    --input: 195 25% 85%;
+    --ring: 195 85% 65%;
 
     --radius: 0.75rem;
 
-    /* Elegant Cream Tokens */
-    --cream-primary: 45 60% 90%;
-    --cream-light: 48 80% 95%;
-    --gold-accent: 42 85% 75%;
-    --gold-light: 45 100% 85%;
-    --warm-brown: 25 35% 35%;
-    --warm-taupe: 30 25% 55%;
+    /* Tropical Luxury Tokens */
+    --cream-primary: 45 65% 90%;
+    --cream-light: 45 80% 95%;
+    --gold-accent: 15 85% 75%;
+    --gold-light: 15 100% 85%;
+    --warm-brown: 210 35% 35%;
+    --warm-taupe: 210 25% 55%;
     
-    /* Elegant Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(48 100% 98%) 0%, hsl(45 60% 90%) 100%);
-    --gradient-cream: linear-gradient(135deg, hsl(45 60% 90%) 0%, hsl(48 80% 95%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(42 85% 75%) 0%, hsl(45 100% 85%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(48 100% 98%) 0%, hsl(45 100% 96%) 100%);
+    /* Tropical Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(195 100% 98%) 0%, hsl(195 85% 85%) 100%);
+    --gradient-cream: linear-gradient(135deg, hsl(45 65% 90%) 0%, hsl(45 80% 95%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(15 85% 75%) 0%, hsl(15 100% 85%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(195 100% 98%) 0%, hsl(195 100% 96%) 100%);
     
-    /* Elegant Shadows */
-    --shadow-elegant: 0 10px 40px -10px hsl(42 85% 75% / 0.15);
-    --shadow-card: 0 4px 24px -2px hsl(25 25% 15% / 0.08);
-    --shadow-button: 0 2px 8px -1px hsl(42 85% 75% / 0.2);
+    /* Tropical Shadows */
+    --shadow-elegant: 0 10px 40px -10px hsl(195 85% 65% / 0.15);
+    --shadow-card: 0 4px 24px -2px hsl(210 35% 15% / 0.08);
+    --shadow-button: 0 2px 8px -1px hsl(195 85% 65% / 0.2);
     
     /* Typography Scale */
     --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
