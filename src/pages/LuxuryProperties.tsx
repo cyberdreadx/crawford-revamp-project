@@ -199,7 +199,7 @@ const LuxuryProperties = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-cream-light">
       <Navigation />
       
       {/* Full-Screen Property Showcase */}
@@ -230,8 +230,8 @@ const LuxuryProperties = () => {
                 </AnimatePresence>
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-warm-brown/60 via-warm-brown/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-warm-brown/30 via-transparent to-warm-brown/30" />
               </div>
             )}
 
@@ -246,7 +246,7 @@ const LuxuryProperties = () => {
                     transition={{ delay: 0.3, duration: 0.8 }}
                     className="mb-6"
                   >
-                    <Badge className="bg-amber-500/90 text-black font-semibold px-4 py-2 text-sm">
+                    <Badge className="bg-gold-accent/90 text-warm-brown font-semibold px-4 py-2 text-sm">
                       <Crown className="w-4 h-4 mr-2" />
                       Luxury Collection
                     </Badge>
@@ -390,8 +390,8 @@ const LuxuryProperties = () => {
                   onClick={() => setCurrentImageIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     index === currentImageIndex 
-                      ? 'bg-white' 
-                      : 'bg-white/40 hover:bg-white/60'
+                      ? 'bg-cream-light' 
+                      : 'bg-cream-light/40 hover:bg-cream-light/60'
                   }`}
                 />
               ))}
@@ -401,7 +401,7 @@ const LuxuryProperties = () => {
 
         {/* Property Counter */}
         <div className="absolute top-6 right-6 z-20">
-          <div className="bg-black/50 text-white px-4 py-2 rounded-full backdrop-blur-sm">
+          <div className="bg-warm-brown/50 text-cream-light px-4 py-2 rounded-full backdrop-blur-sm">
             <span className="text-lg font-semibold">
               {currentPropertyIndex + 1} / {properties.length}
             </span>
@@ -419,8 +419,8 @@ const LuxuryProperties = () => {
               }}
               className={`w-4 h-4 rounded-full transition-all ${
                 index === currentPropertyIndex 
-                  ? 'bg-amber-400' 
-                  : 'bg-white/40 hover:bg-white/60'
+                  ? 'bg-gold-accent' 
+                  : 'bg-cream-light/40 hover:bg-cream-light/60'
               }`}
             />
           ))}

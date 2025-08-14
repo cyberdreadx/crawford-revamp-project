@@ -62,24 +62,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Crawford Team Custom Colors
-				navy: {
-					deep: 'hsl(var(--navy-deep))',
-					medium: 'hsl(var(--navy-medium))'
+				// Elegant Cream Custom Colors
+				cream: {
+					primary: 'hsl(var(--cream-primary))',
+					light: 'hsl(var(--cream-light))'
 				},
-				teal: {
-					primary: 'hsl(var(--teal-primary))',
-					light: 'hsl(var(--teal-light))'
+				gold: {
+					accent: 'hsl(var(--gold-accent))',
+					light: 'hsl(var(--gold-light))'
 				},
-				sage: {
-					green: 'hsl(var(--sage-green))',
-					light: 'hsl(var(--sage-light))'
+				warm: {
+					brown: 'hsl(var(--warm-brown))',
+					taupe: 'hsl(var(--warm-taupe))'
 				}
 			},
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-teal': 'var(--gradient-teal)',
-				'gradient-sage': 'var(--gradient-sage)',
+				'gradient-cream': 'var(--gradient-cream)',
+				'gradient-gold': 'var(--gradient-gold)',
 				'gradient-subtle': 'var(--gradient-subtle)'
 			},
 			boxShadow: {
