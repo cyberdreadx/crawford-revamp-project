@@ -51,14 +51,27 @@ interface PropertyImage {
   display_order: number;
 }
 
+interface PropertyVideo {
+  id: string;
+  property_id: string;
+  video_url: string;
+  video_type: 'tour' | 'walkthrough' | 'aerial';
+  title?: string;
+  duration?: number;
+  is_featured: boolean;
+  display_order: number;
+}
+
 const LuxuryProperties = () => {
   const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [properties, setProperties] = useState<Property[]>([]);
   const [propertyImages, setPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
+  const [propertyVideos, setPropertyVideos] = useState<{ [key: string]: PropertyVideo[] }>({});
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const { toast } = useToast();
 
   // Fetch luxury properties (price > $600k) and images from database
@@ -72,7 +85,8 @@ const LuxuryProperties = () => {
     
     const interval = setInterval(() => {
       setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
-      setCurrentImageIndex(0);
+      setCurrentMediaIndex(0);
+      setShowVideo(false);
     }, 8000);
 
     return () => clearInterval(interval);
@@ -112,6 +126,26 @@ const LuxuryProperties = () => {
         });
 
         setPropertyImages(imagesByProperty);
+
+        // For now, let's add a sample video for demonstration
+        // This will be replaced with actual database integration later
+        const sampleVideos: { [key: string]: PropertyVideo[] } = {};
+        
+        // Add sample video for the first property (Broadwater Waterfront Estate)
+        if (propertiesData && propertiesData.length > 0) {
+          const firstPropertyId = propertiesData[0].id;
+          sampleVideos[firstPropertyId] = [{
+            id: 'sample-1',
+            property_id: firstPropertyId,
+            video_url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4', // Placeholder URL
+            video_type: 'tour',
+            title: 'Broadwater Waterfront Estate Virtual Tour',
+            is_featured: true,
+            display_order: 1
+          }];
+        }
+        
+        setPropertyVideos(sampleVideos);
       }
     } catch (error: any) {
       toast({
@@ -126,28 +160,57 @@ const LuxuryProperties = () => {
 
   const currentProperty = properties[currentPropertyIndex];
   const currentPropertyImages = currentProperty ? propertyImages[currentProperty.id] || [] : [];
+  const currentPropertyVideos = currentProperty ? propertyVideos[currentProperty.id] || [] : [];
+  const totalMedia = currentPropertyImages.length + currentPropertyVideos.length;
 
   const nextProperty = () => {
     setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
-    setCurrentImageIndex(0);
+    setCurrentMediaIndex(0);
+    setShowVideo(false);
   };
 
   const prevProperty = () => {
     setCurrentPropertyIndex((prev) => (prev - 1 + properties.length) % properties.length);
-    setCurrentImageIndex(0);
+    setCurrentMediaIndex(0);
+    setShowVideo(false);
   };
 
-  const nextImage = () => {
-    if (currentPropertyImages.length > 0) {
-      setCurrentImageIndex((prev) => (prev + 1) % currentPropertyImages.length);
+  const nextMedia = () => {
+    if (totalMedia > 0) {
+      const nextIndex = (currentMediaIndex + 1) % totalMedia;
+      setCurrentMediaIndex(nextIndex);
+      setShowVideo(nextIndex >= currentPropertyImages.length);
     }
   };
 
-  const prevImage = () => {
-    if (currentPropertyImages.length > 0) {
-      setCurrentImageIndex((prev) => (prev - 1 + currentPropertyImages.length) % currentPropertyImages.length);
+  const prevMedia = () => {
+    if (totalMedia > 0) {
+      const prevIndex = (currentMediaIndex - 1 + totalMedia) % totalMedia;
+      setCurrentMediaIndex(prevIndex);
+      setShowVideo(prevIndex >= currentPropertyImages.length);
     }
   };
+
+  const getCurrentMedia = () => {
+    if (currentMediaIndex < currentPropertyImages.length) {
+      return {
+        type: 'image',
+        url: currentPropertyImages[currentMediaIndex]?.image_url,
+        alt: currentProperty?.title
+      };
+    } else {
+      const videoIndex = currentMediaIndex - currentPropertyImages.length;
+      const video = currentPropertyVideos[videoIndex];
+      return {
+        type: 'video',
+        url: video?.video_url,
+        title: video?.title || `${currentProperty?.title} Tour`,
+        videoType: video?.video_type
+      };
+    }
+  };
+
+  const currentMedia = getCurrentMedia();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -213,25 +276,45 @@ const LuxuryProperties = () => {
             transition={{ duration: 1 }}
             className="absolute inset-0"
           >
-            {/* Background Image */}
-            {currentPropertyImages.length > 0 && (
+            {/* Background Media */}
+            {totalMedia > 0 && (
               <div className="absolute inset-0">
                 <AnimatePresence mode="wait">
-                  <motion.img
-                    key={`${currentPropertyIndex}-${currentImageIndex}`}
-                    src={currentPropertyImages[currentImageIndex]?.image_url || '/placeholder.svg'}
-                    alt={currentProperty?.title}
-                    className="w-full h-full object-cover"
-                    initial={{ scale: 1.1, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    transition={{ duration: 1.2 }}
-                  />
+                  {currentMedia.type === 'image' ? (
+                    <motion.img
+                      key={`${currentPropertyIndex}-${currentMediaIndex}`}
+                      src={currentMedia.url || '/placeholder.svg'}
+                      alt={currentMedia.alt}
+                      className="w-full h-full object-cover"
+                      initial={{ scale: 1.1, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      transition={{ duration: 1.2 }}
+                    />
+                  ) : (
+                    <motion.div
+                      key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
+                      className="w-full h-full"
+                      initial={{ scale: 1.1, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      transition={{ duration: 1.2 }}
+                    >
+                      <video
+                        src={currentMedia.url}
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                      />
+                    </motion.div>
+                  )}
                 </AnimatePresence>
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-warm-brown/60 via-warm-brown/20 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-warm-brown/30 via-transparent to-warm-brown/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-tropical-navy/60 via-tropical-navy/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-tropical-navy/30 via-transparent to-tropical-navy/30" />
               </div>
             )}
 
@@ -257,7 +340,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.8 }}
-                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-warm-brown mb-4 leading-tight"
+                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight drop-shadow-lg"
                   >
                     {currentProperty?.title}
                   </motion.h1>
@@ -267,7 +350,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
-                    className="flex items-center text-warm-taupe text-xl mb-6"
+                    className="flex items-center text-white/90 text-xl mb-6 drop-shadow-lg"
                   >
                     <MapPin className="w-6 h-6 mr-3" />
                     {currentProperty?.location}
@@ -278,7 +361,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.6, duration: 0.8 }}
-                    className="text-4xl md:text-5xl font-bold text-warm-brown mb-8"
+                    className="text-4xl md:text-5xl font-bold text-white mb-8 drop-shadow-lg"
                   >
                     {formatPrice(currentProperty?.price || 0)}
                   </motion.div>
@@ -288,7 +371,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.7, duration: 0.8 }}
-                    className="flex items-center gap-8 text-warm-taupe text-lg mb-8"
+                    className="flex items-center gap-8 text-white/90 text-lg mb-8 drop-shadow-lg"
                   >
                     <div className="flex items-center gap-2">
                       <Bed className="w-5 h-5" />
@@ -311,9 +394,9 @@ const LuxuryProperties = () => {
                     transition={{ delay: 0.8, duration: 0.8 }}
                     className="flex items-center gap-4"
                   >
-                    <Button 
+                     <Button 
                       size="lg" 
-                      className="bg-warm-brown text-cream-light hover:bg-warm-brown/90 font-semibold px-8 py-3 text-lg"
+                      className="bg-white text-tropical-navy hover:bg-white/90 font-semibold px-8 py-3 text-lg shadow-xl"
                       onClick={() => setShowDetails(true)}
                     >
                       View Details
@@ -321,12 +404,27 @@ const LuxuryProperties = () => {
                     <Button 
                       variant="outline" 
                       size="lg"
-                      className="border-warm-brown text-warm-brown hover:bg-warm-brown hover:text-cream-light font-semibold px-8 py-3 text-lg"
+                      className="border-white text-white hover:bg-white hover:text-tropical-navy font-semibold px-8 py-3 text-lg backdrop-blur-sm"
                       onClick={() => setAutoPlay(!autoPlay)}
                     >
                       {autoPlay ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
                       {autoPlay ? 'Pause' : 'Auto Play'}
                     </Button>
+                    {currentPropertyVideos.length > 0 && (
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="border-coral-accent text-coral-accent hover:bg-coral-accent hover:text-white font-semibold px-8 py-3 text-lg backdrop-blur-sm"
+                        onClick={() => {
+                          const firstVideoIndex = currentPropertyImages.length;
+                          setCurrentMediaIndex(firstVideoIndex);
+                          setShowVideo(true);
+                        }}
+                      >
+                        <Play className="w-5 h-5 mr-2" />
+                        Tour Video
+                      </Button>
+                    )}
                   </motion.div>
                 </div>
               </div>
@@ -357,15 +455,15 @@ const LuxuryProperties = () => {
           </Button>
         </div>
 
-        {/* Image Navigation */}
-        {currentPropertyImages.length > 1 && (
+        {/* Media Navigation */}
+        {totalMedia > 1 && (
           <>
             <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={prevImage}
-                className="h-8 w-8 rounded-full bg-warm-brown/30 hover:bg-warm-brown/50 text-cream-light opacity-50 hover:opacity-100 transition-all"
+                onClick={prevMedia}
+                className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm"
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
@@ -375,37 +473,53 @@ const LuxuryProperties = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={nextImage}
-                className="h-8 w-8 rounded-full bg-warm-brown/30 hover:bg-warm-brown/50 text-cream-light opacity-50 hover:opacity-100 transition-all"
+                onClick={nextMedia}
+                className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm"
               >
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
 
-            {/* Image Indicators */}
+            {/* Media Indicators */}
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-              {currentPropertyImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentImageIndex 
-                      ? 'bg-warm-brown' 
-                      : 'bg-warm-brown/40 hover:bg-warm-brown/60'
-                  }`}
-                />
-              ))}
+              {Array.from({ length: totalMedia }).map((_, index) => {
+                const isVideo = index >= currentPropertyImages.length;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setCurrentMediaIndex(index);
+                      setShowVideo(isVideo);
+                    }}
+                    className={`w-3 h-3 rounded-full transition-all relative ${
+                      index === currentMediaIndex 
+                        ? 'bg-white' 
+                        : 'bg-white/40 hover:bg-white/60'
+                    }`}
+                  >
+                    {isVideo && (
+                      <Play className="w-2 h-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-current" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </>
         )}
 
         {/* Property Counter */}
-        <div className="absolute top-6 right-6 z-20">
-          <div className="bg-warm-brown/90 text-cream-light px-4 py-2 rounded-full backdrop-blur-sm">
+        <div className="absolute top-6 right-6 z-20 flex flex-col gap-2">
+          <div className="bg-white/90 text-tropical-navy px-4 py-2 rounded-full backdrop-blur-sm">
             <span className="text-lg font-semibold">
               {currentPropertyIndex + 1} / {properties.length}
             </span>
           </div>
+          {currentMedia.type === 'video' && (
+            <div className="bg-coral-accent/90 text-white px-3 py-1 rounded-full backdrop-blur-sm text-sm font-medium">
+              <Play className="w-3 h-3 inline mr-1" />
+              {currentMedia.videoType?.toUpperCase()} VIDEO
+            </div>
+          )}
         </div>
 
         {/* Property Navigation Dots */}
@@ -415,12 +529,13 @@ const LuxuryProperties = () => {
               key={index}
               onClick={() => {
                 setCurrentPropertyIndex(index);
-                setCurrentImageIndex(0);
+                setCurrentMediaIndex(0);
+                setShowVideo(false);
               }}
               className={`w-4 h-4 rounded-full transition-all ${
                 index === currentPropertyIndex 
-                  ? 'bg-warm-brown' 
-                  : 'bg-warm-brown/40 hover:bg-warm-brown/60'
+                  ? 'bg-white' 
+                  : 'bg-white/40 hover:bg-white/60'
               }`}
             />
           ))}
