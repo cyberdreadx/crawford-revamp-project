@@ -107,21 +107,28 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
       setProgress(90);
 
       if (data?.success) {
-        setExtractedData(data.extractedData);
-        setProcessingComplete(true);
-        setProgress(100);
-        
-        toast.success(
-          propertyId && propertyId !== 'new' 
-            ? 'Property updated successfully!' 
-            : 'Property created successfully!'
-        );
+        // Handle test response vs real response
+        if (data.extractedData) {
+          setExtractedData(data.extractedData);
+          setProcessingComplete(true);
+          setProgress(100);
+          
+          toast.success(
+            propertyId && propertyId !== 'new' 
+              ? 'Property updated successfully!' 
+              : 'Property created successfully!'
+          );
 
-        // Call the appropriate callback
-        if (propertyId && propertyId !== 'new' && onPropertyUpdated) {
-          onPropertyUpdated(data.property);
-        } else if (onPropertyCreated) {
-          onPropertyCreated(data.property);
+          // Call the appropriate callback
+          if (propertyId && propertyId !== 'new' && onPropertyUpdated && data.property) {
+            onPropertyUpdated(data.property);
+          } else if (onPropertyCreated && data.property) {
+            onPropertyCreated(data.property);
+          }
+        } else {
+          // Test response - just show success
+          setProgress(100);
+          toast.success('Function test successful! Ready for AI processing.');
         }
       } else {
         console.error('Unexpected response format:', data);
