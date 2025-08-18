@@ -264,7 +264,7 @@ const LuxuryProperties = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black relative">
       <Navigation />
       
       {/* Luxury Property Showcase */}
@@ -334,10 +334,10 @@ const LuxuryProperties = () => {
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-                    className="mb-8"
+                    className="mb-6 md:mb-8"
                   >
-                    <Badge className="bg-gradient-to-r from-gold-accent to-yellow-400 text-black font-bold px-6 py-3 text-base border border-gold-accent/30 shadow-2xl">
-                      <Crown className="w-5 h-5 mr-2" />
+                    <Badge className="bg-gradient-to-r from-gold-accent to-yellow-400 text-black font-bold px-4 md:px-6 py-2 md:py-3 text-sm md:text-base border border-gold-accent/30 shadow-2xl backdrop-blur-sm">
+                      <Crown className="w-4 md:w-5 h-4 md:h-5 mr-2" />
                       EXCLUSIVE LUXURY COLLECTION
                     </Badge>
                   </motion.div>
@@ -347,7 +347,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
-                    className="text-6xl md:text-7xl lg:text-8xl font-light text-white mb-6 leading-tight tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-4 md:mb-6 leading-tight tracking-tight"
                     style={{ fontFamily: 'Playfair Display, serif' }}
                   >
                     {currentProperty?.title}
@@ -358,10 +358,10 @@ const LuxuryProperties = () => {
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
-                    className="flex items-center text-white/90 text-2xl mb-8 font-light tracking-wide"
+                    className="flex items-center text-white/90 text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 font-light tracking-wide"
                   >
-                    <MapPin className="w-7 h-7 mr-4 text-gold-accent" />
-                    {currentProperty?.location}
+                    <MapPin className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7 mr-3 md:mr-4 text-gold-accent flex-shrink-0" />
+                    <span className="truncate">{currentProperty?.location}</span>
                   </motion.div>
 
                   {/* Price */}
@@ -380,18 +380,18 @@ const LuxuryProperties = () => {
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 1.1, duration: 1, ease: "easeOut" }}
-                    className="flex items-center gap-12 text-white/90 text-xl mb-12 font-light"
+                    className="flex flex-wrap items-center gap-6 md:gap-8 lg:gap-12 text-white/90 text-lg md:text-xl mb-8 md:mb-12 font-light"
                   >
-                    <div className="flex items-center gap-3">
-                      <Bed className="w-6 h-6 text-gold-accent" />
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Bed className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
                       <span>{currentProperty?.bedrooms} Beds</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Bath className="w-6 h-6 text-gold-accent" />
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Bath className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
                       <span>{currentProperty?.bathrooms} Baths</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Square className="w-6 h-6 text-gold-accent" />
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Square className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
                       <span>{currentProperty?.sqft?.toLocaleString()} sq ft</span>
                     </div>
                   </motion.div>
@@ -401,7 +401,7 @@ const LuxuryProperties = () => {
                     initial={{ y: 40, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 1.3, duration: 1, ease: "easeOut" }}
-                    className="flex items-center gap-6 flex-wrap"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6"
                   >
                     <Button
                       size="lg"
