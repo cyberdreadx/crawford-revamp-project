@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
     const heroImages = files.map((file, index) => ({
       title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
       description: `Image from Google Drive: ${file.name}`,
-      image_url: `https://drive.google.com/uc?export=view&id=${file.id}`,
+      image_url: `https://drive.google.com/uc?id=${file.id}`,
       display_order: index + 1,
       is_active: true
     }))
