@@ -414,8 +414,8 @@ const LuxuryProperties = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Clean Property Dots */}
-        <div className="absolute bottom-32 md:bottom-40 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
+        {/* Clean Property Dots - Moved higher to avoid button overlap */}
+        <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
           {properties.map((_, index) => (
             <button
               key={index}
