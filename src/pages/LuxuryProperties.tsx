@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -145,7 +145,11 @@ const LuxuryProperties = () => {
   const currentProperty = properties[currentPropertyIndex];
   const currentPropertyImages = currentProperty ? propertyImages[currentProperty.id] || [] : [];
   const currentPropertyVideos = currentProperty ? propertyVideos[currentProperty.id] || [] : [];
-  const totalMedia = currentPropertyImages.length + currentPropertyVideos.length;
+  
+  // Use useMemo to properly calculate totalMedia
+  const totalMedia = useMemo(() => {
+    return currentPropertyImages.length + currentPropertyVideos.length;
+  }, [currentPropertyImages.length, currentPropertyVideos.length]);
 
   // Auto-advance media when autoplay is enabled
   useEffect(() => {
