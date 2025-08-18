@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { PropertyForm } from './PropertyForm';
 import { PropertyCard } from './PropertyCard';
 import DossierUpload from './DossierUpload';
+import APIKeyStatus from './APIKeyStatus';
 
 interface Property {
   id: string;
@@ -214,6 +215,9 @@ const PropertyManagement = () => {
           </Button>
         </div>
       </div>
+
+      {/* API Key Status */}
+      <APIKeyStatus />
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
