@@ -266,22 +266,30 @@ const LuxuryProperties = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background relative">
-      <Navigation />
+    <div className="min-h-screen bg-background">
+      {/* Mobile Navigation - Hidden on Desktop */}
+      <div className="md:hidden">
+        <Navigation />
+      </div>
       
-      {/* Bright Mobile-First Luxury Property Showcase */}
-      <div className="relative min-h-screen overflow-hidden">
+      {/* Desktop Navigation - Hidden on Mobile */}
+      <div className="hidden md:block">
+        <Navigation />
+      </div>
+      
+      {/* Mobile App-Like Experience */}
+      <div className="md:hidden relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPropertyIndex}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 flex flex-col"
+            transition={{ duration: 0.5 }}
+            className="min-h-screen bg-background"
           >
-            {/* Property Image Section - Top Half */}
-            <div className="relative h-1/2 md:h-3/5 overflow-hidden">
+            {/* Mobile: Full Screen Image with Overlay Info */}
+            <div className="relative h-screen overflow-hidden">
               {totalMedia > 0 && (
                 <div className="absolute inset-0">
                   <AnimatePresence mode="wait">
@@ -291,19 +299,19 @@ const LuxuryProperties = () => {
                         src={currentMedia.url || '/placeholder.svg'}
                         alt={currentMedia.alt}
                         className="w-full h-full object-cover"
-                        initial={{ scale: 1.02, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.98, opacity: 0 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        initial={{ scale: 1.05 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0.95 }}
+                        transition={{ duration: 0.6 }}
                       />
                     ) : (
                       <motion.div
                         key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
                         className="w-full h-full"
-                        initial={{ scale: 1.02, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.98, opacity: 0 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
+                        initial={{ scale: 1.05 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0.95 }}
+                        transition={{ duration: 0.6 }}
                       >
                         <video
                           src={currentMedia.url}
@@ -319,125 +327,302 @@ const LuxuryProperties = () => {
                 </div>
               )}
               
-              {/* Image Navigation Touch Areas */}
-              <div className="absolute inset-0 z-10 flex">
-                <div 
-                  className="w-1/3 h-full cursor-pointer"
+              {/* Dark gradient overlay for better text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+              
+              {/* Mobile Touch Navigation Areas */}
+              <div className="absolute inset-0 z-20 flex">
+                <button 
+                  className="w-1/3 h-full active:bg-white/10 transition-colors"
                   onClick={prevProperty}
                 />
                 <div className="w-1/3 h-full" />
-                <div 
-                  className="w-1/3 h-full cursor-pointer"
+                <button 
+                  className="w-1/3 h-full active:bg-white/10 transition-colors"
                   onClick={nextProperty}
                 />
               </div>
-            </div>
 
-            {/* Property Details Section - Bottom Half */}
-            <div className="relative h-1/2 md:h-2/5 bg-background border-t border-border">
-              <div className="h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 space-y-4 md:space-y-6">
-                {/* Property Title */}
-                <motion.h1
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-foreground leading-tight tracking-tight"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
-                >
-                  {currentProperty?.title}
-                </motion.h1>
+              {/* Top Status Bar - Zillow Style */}
+              <div className="absolute top-4 left-4 right-4 z-30 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-gold-accent" />
+                  <span className="text-white text-sm font-medium">LUXURY</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button className="p-2 bg-black/40 rounded-full backdrop-blur-sm">
+                    <Heart className="w-5 h-5 text-white" />
+                  </button>
+                  <button className="p-2 bg-black/40 rounded-full backdrop-blur-sm">
+                    <Share2 className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+              </div>
 
-                {/* Location */}
-                <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                  className="flex items-center text-muted-foreground text-sm md:text-base font-light"
-                >
-                  <MapPin className="w-4 md:w-5 h-4 md:h-5 mr-2 text-gold-accent flex-shrink-0" />
-                  <span className="truncate">{currentProperty?.location}</span>
-                </motion.div>
+              {/* Property Counter */}
+              <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
+                <div className="bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">
+                  <span className="text-white text-sm font-medium">
+                    {currentPropertyIndex + 1} / {properties.length}
+                  </span>
+                </div>
+              </div>
 
-                {/* Price */}
-                <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                  className="text-2xl md:text-3xl lg:text-4xl font-light text-gold-accent tracking-wide"
-                  style={{ fontFamily: 'Playfair Display, serif' }}
-                >
-                  {formatPrice(currentProperty?.price || 0)}
-                </motion.div>
-
-                {/* Property Stats */}
-                <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                  className="flex items-center gap-4 md:gap-6 text-muted-foreground text-sm md:text-base font-light"
-                >
-                  <div className="flex items-center gap-2">
-                    <Bed className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
-                    <span>{currentProperty?.bedrooms}</span>
+              {/* Media Counter */}
+              {totalMedia > 1 && (
+                <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-30">
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalMedia }, (_, index) => (
+                      <div
+                        key={index}
+                        className={`w-1 h-1 rounded-full transition-all ${
+                          index === currentMediaIndex ? 'bg-white' : 'bg-white/40'
+                        }`}
+                      />
+                    ))}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Bath className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
-                    <span>{currentProperty?.bathrooms}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Square className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
-                    <span>{currentProperty?.sqft?.toLocaleString()}</span>
-                  </div>
-                </motion.div>
+                </div>
+              )}
 
-                {/* Action Buttons */}
+              {/* Bottom Info Card - App Style */}
+              <div className="absolute bottom-0 left-0 right-0 z-30">
                 <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                  className="flex flex-col sm:flex-row gap-3 pt-2"
+                  initial={{ y: 100 }}
+                  animate={{ y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  className="bg-white rounded-t-3xl p-6 shadow-2xl"
                 >
-                  <Button
-                    size="lg"
-                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-3 text-sm md:text-base shadow-lg transition-all duration-300"
-                    onClick={() => setShowDetails(true)}
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    View Estate Details
-                  </Button>
+                  <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4" />
                   
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => setAutoPlay(!autoPlay)}
-                    className="flex-1 font-medium py-3 text-sm md:text-base transition-all duration-300"
-                  >
-                    {autoPlay ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
-                    {autoPlay ? 'Pause Tour' : 'Auto Tour'}
-                  </Button>
+                  {/* Price */}
+                  <div className="text-3xl font-bold text-gray-900 mb-2">
+                    {formatPrice(currentProperty?.price || 0)}
+                  </div>
+                  
+                  {/* Property Title */}
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2 leading-tight">
+                    {currentProperty?.title}
+                  </h2>
+                  
+                  {/* Location */}
+                  <div className="flex items-center text-gray-600 mb-4">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    <span className="text-sm">{currentProperty?.location}</span>
+                  </div>
+                  
+                  {/* Property Stats */}
+                  <div className="flex items-center gap-6 mb-6">
+                    <div className="flex items-center gap-1">
+                      <Bed className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium text-gray-700">{currentProperty?.bedrooms}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Bath className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium text-gray-700">{currentProperty?.bathrooms}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Square className="w-4 h-4 text-gray-500" />
+                      <span className="text-sm font-medium text-gray-700">{currentProperty?.sqft?.toLocaleString()} sqft</span>
+                    </div>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <Button
+                      size="lg"
+                      className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-12 rounded-xl"
+                      onClick={() => setShowDetails(true)}
+                    >
+                      View Details
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => setAutoPlay(!autoPlay)}
+                      className="px-6 h-12 rounded-xl border-2"
+                    >
+                      {autoPlay ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                    </Button>
+                  </div>
                 </motion.div>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
+      </div>
 
-        {/* Clean Property Dots - Moved higher to avoid button overlap */}
-        <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
-          {properties.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentPropertyIndex(index);
-                setCurrentMediaIndex(0);
-                setShowVideo(false);
-              }}
-              className={`transition-all duration-300 rounded-full ${
-                index === currentPropertyIndex 
-                  ? 'w-3 h-3 md:w-4 md:h-4 bg-primary' 
-                  : 'w-2 h-2 md:w-3 md:h-3 bg-white/50'
-              }`}
-            />
-          ))}
+      {/* Desktop Experience - Unchanged */}
+      <div className="hidden md:block">
+        <div className="relative min-h-screen overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPropertyIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="absolute inset-0 flex flex-col"
+            >
+              {/* Property Image Section - Top Half */}
+              <div className="relative h-3/5 overflow-hidden">
+                {totalMedia > 0 && (
+                  <div className="absolute inset-0">
+                    <AnimatePresence mode="wait">
+                      {currentMedia.type === 'image' ? (
+                        <motion.img
+                          key={`${currentPropertyIndex}-${currentMediaIndex}`}
+                          src={currentMedia.url || '/placeholder.svg'}
+                          alt={currentMedia.alt}
+                          className="w-full h-full object-cover"
+                          initial={{ scale: 1.02, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0.98, opacity: 0 }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                        />
+                      ) : (
+                        <motion.div
+                          key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
+                          className="w-full h-full"
+                          initial={{ scale: 1.02, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0.98, opacity: 0 }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                        >
+                          <video
+                            src={currentMedia.url}
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )}
+                
+                {/* Image Navigation Touch Areas */}
+                <div className="absolute inset-0 z-10 flex">
+                  <div 
+                    className="w-1/3 h-full cursor-pointer"
+                    onClick={prevProperty}
+                  />
+                  <div className="w-1/3 h-full" />
+                  <div 
+                    className="w-1/3 h-full cursor-pointer"
+                    onClick={nextProperty}
+                  />
+                </div>
+              </div>
+
+              {/* Property Details Section - Bottom Half */}
+              <div className="relative h-2/5 bg-background border-t border-border">
+                <div className="h-full flex flex-col justify-center px-8 lg:px-12 space-y-6">
+                  {/* Property Title */}
+                  <motion.h1
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+                    className="text-4xl lg:text-5xl font-light text-foreground leading-tight tracking-tight"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  >
+                    {currentProperty?.title}
+                  </motion.h1>
+
+                  {/* Location */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+                    className="flex items-center text-muted-foreground text-base font-light"
+                  >
+                    <MapPin className="w-5 h-5 mr-2 text-gold-accent flex-shrink-0" />
+                    <span className="truncate">{currentProperty?.location}</span>
+                  </motion.div>
+
+                  {/* Price */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                    className="text-3xl lg:text-4xl font-light text-gold-accent tracking-wide"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  >
+                    {formatPrice(currentProperty?.price || 0)}
+                  </motion.div>
+
+                  {/* Property Stats */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                    className="flex items-center gap-6 text-muted-foreground text-base font-light"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Bed className="w-5 h-5 text-gold-accent flex-shrink-0" />
+                      <span>{currentProperty?.bedrooms}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Bath className="w-5 h-5 text-gold-accent flex-shrink-0" />
+                      <span>{currentProperty?.bathrooms}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Square className="w-5 h-5 text-gold-accent flex-shrink-0" />
+                      <span>{currentProperty?.sqft?.toLocaleString()}</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Action Buttons */}
+                  <motion.div
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                    className="flex gap-3 pt-2"
+                  >
+                    <Button
+                      size="lg"
+                      className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-3 text-base shadow-lg transition-all duration-300"
+                      onClick={() => setShowDetails(true)}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Estate Details
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => setAutoPlay(!autoPlay)}
+                      className="flex-1 font-medium py-3 text-base transition-all duration-300"
+                    >
+                      {autoPlay ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                      {autoPlay ? 'Pause Tour' : 'Auto Tour'}
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Desktop Property Dots */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+            {properties.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setCurrentPropertyIndex(index);
+                  setCurrentMediaIndex(0);
+                  setShowVideo(false);
+                }}
+                className={`transition-all duration-300 rounded-full ${
+                  index === currentPropertyIndex 
+                    ? 'w-4 h-4 bg-primary' 
+                    : 'w-3 h-3 bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
