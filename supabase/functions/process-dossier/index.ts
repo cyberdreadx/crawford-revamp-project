@@ -52,9 +52,19 @@ serve(async (req) => {
       throw new Error('File too large. Please use a file smaller than 10MB.');
     }
 
-    // Convert file to base64
+    // Convert file to base64 using chunk-based approach to avoid stack overflow
     const arrayBuffer = await file.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    const uint8Array = new Uint8Array(arrayBuffer);
+    
+    // Convert to base64 in chunks to avoid call stack issues
+    let binary = '';
+    const chunkSize = 8192; // Process 8KB at a time
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.slice(i, i + chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+    
+    const base64 = btoa(binary);
     const dataURL = `data:${file.type};base64,${base64}`;
 
     console.log('Sending to OpenAI Vision...');
