@@ -56,10 +56,15 @@ const Hero = () => {
     if (currentImages.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % currentImages.length);
-      }, 5000); // Change image every 5 seconds
+      }, 4000); // Change image every 4 seconds
 
       return () => clearInterval(interval);
     }
+  }, [heroImages]);
+
+  // Reset to first image when hero images change
+  useEffect(() => {
+    setCurrentImageIndex(0);
   }, [heroImages]);
 
   // Use uploaded hero images if available, otherwise fallback to static image
