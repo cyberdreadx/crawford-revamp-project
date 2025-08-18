@@ -79,7 +79,7 @@ const Hero = () => {
               backgroundImage: `url(${image.image_url})`
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-navy-deep/15 to-navy-deep/10"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
           </div>
         ))}
       </div>
@@ -102,8 +102,8 @@ const Hero = () => {
           <h1 
             className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-cursive text-white leading-[0.9] tracking-tight"
             style={{
-              textShadow: '0 4px 20px rgba(0,0,0,0.6), 0 8px 40px rgba(0,0,0,0.3)',
-              filter: 'drop-shadow(0 0 30px rgba(255,255,255,0.1))'
+              textShadow: '0 6px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.8), 0 0 50px rgba(0,0,0,0.5)',
+              filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.4))'
             }}
           >
             The Crawford Team
@@ -128,7 +128,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
           style={{
-            textShadow: '0 2px 15px rgba(0,0,0,0.4)'
+            textShadow: '0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)'
           }}
         >
           Luxury Real Estate Experts
