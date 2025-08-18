@@ -46,15 +46,15 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      // Accept PDF, PNG, JPG, JPEG files
-      const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+      // Accept PNG, JPG, JPEG files (PDF support coming soon)
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (allowedTypes.includes(selectedFile.type)) {
         setFile(selectedFile);
         setExtractedData(null);
         setProcessingComplete(false);
         setProgress(0);
       } else {
-        toast.error('Please select a PDF or image file (PNG, JPG, JPEG)');
+        toast.error('Please select an image file (PNG, JPG, JPEG). PDF support coming soon!');
       }
     }
   };
@@ -83,7 +83,13 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
 
       if (error) {
         console.error('Error processing dossier:', error);
-        toast.error('Failed to process dossier');
+        toast.error(`Failed to process dossier: ${error.message || 'Unknown error'}`);
+        return;
+      }
+
+      if (data?.error) {
+        console.error('Server error:', data.error);
+        toast.error(`Server error: ${data.error}`);
         return;
       }
 
@@ -146,7 +152,7 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
                   type="file"
                   id="dossier-upload"
                   className="hidden"
-                  accept=".pdf,image/*"
+                  accept="image/*"
                   onChange={handleFileSelect}
                   disabled={uploading}
                 />
@@ -159,7 +165,7 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
                     <span className="font-medium">Click to upload</span> or drag and drop
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    PDF, PNG, JPG or JPEG files supported
+                    PNG, JPG or JPEG images only (PDF support coming soon!)
                   </div>
                 </label>
               </div>
