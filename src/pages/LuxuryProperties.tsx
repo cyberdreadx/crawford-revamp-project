@@ -271,87 +271,98 @@ const LuxuryProperties = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0"
+            className="absolute inset-0 flex flex-col"
           >
-            {/* Background Media */}
-            {totalMedia > 0 && (
-              <div className="absolute inset-0">
-                <AnimatePresence mode="wait">
-                  {currentMedia.type === 'image' ? (
-                    <motion.img
-                      key={`${currentPropertyIndex}-${currentMediaIndex}`}
-                      src={currentMedia.url || '/placeholder.svg'}
-                      alt={currentMedia.alt}
-                      className="w-full h-full object-cover"
-                      initial={{ scale: 1.02, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.98, opacity: 0 }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                    />
-                  ) : (
-                    <motion.div
-                      key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
-                      className="w-full h-full"
-                      initial={{ scale: 1.02, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.98, opacity: 0 }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                    >
-                      <video
-                        src={currentMedia.url}
+            {/* Property Image Section - Top Half */}
+            <div className="relative h-1/2 md:h-3/5 overflow-hidden">
+              {totalMedia > 0 && (
+                <div className="absolute inset-0">
+                  <AnimatePresence mode="wait">
+                    {currentMedia.type === 'image' ? (
+                      <motion.img
+                        key={`${currentPropertyIndex}-${currentMediaIndex}`}
+                        src={currentMedia.url || '/placeholder.svg'}
+                        alt={currentMedia.alt}
                         className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
+                        initial={{ scale: 1.02, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.98, opacity: 0 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
                       />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                
-                {/* Mobile-Optimized Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                <div className="absolute inset-0 bg-black/20" />
+                    ) : (
+                      <motion.div
+                        key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
+                        className="w-full h-full"
+                        initial={{ scale: 1.02, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.98, opacity: 0 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                      >
+                        <video
+                          src={currentMedia.url}
+                          className="w-full h-full object-cover"
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+              
+              {/* Image Navigation Touch Areas */}
+              <div className="absolute inset-0 z-10 flex">
+                <div 
+                  className="w-1/3 h-full cursor-pointer"
+                  onClick={prevProperty}
+                />
+                <div className="w-1/3 h-full" />
+                <div 
+                  className="w-1/3 h-full cursor-pointer"
+                  onClick={nextProperty}
+                />
               </div>
-            )}
+            </div>
 
-            {/* Mobile-First Content Layout */}
-            <div className="relative z-10 h-full flex flex-col justify-end pb-20 md:pb-32">
-              <div className="px-6 md:px-8 lg:px-12 space-y-4 md:space-y-6">
-                {/* Mobile Property Title */}
+            {/* Property Details Section - Bottom Half */}
+            <div className="relative h-1/2 md:h-2/5 bg-black">
+              <div className="h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 space-y-4 md:space-y-6">
+                {/* Property Title */}
                 <motion.h1
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight"
                   style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   {currentProperty?.title}
                 </motion.h1>
 
-                {/* Mobile Location */}
+                {/* Location */}
                 <motion.div
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                  className="flex items-center text-white/90 text-base md:text-lg font-light"
+                  className="flex items-center text-white/90 text-sm md:text-base font-light"
                 >
                   <MapPin className="w-4 md:w-5 h-4 md:h-5 mr-2 text-gold-accent flex-shrink-0" />
                   <span className="truncate">{currentProperty?.location}</span>
                 </motion.div>
 
-                {/* Mobile Price */}
+                {/* Price */}
                 <motion.div
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                  className="text-3xl md:text-4xl lg:text-5xl font-light text-gold-accent tracking-wide"
+                  className="text-2xl md:text-3xl lg:text-4xl font-light text-gold-accent tracking-wide"
                   style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   {formatPrice(currentProperty?.price || 0)}
                 </motion.div>
 
-                {/* Mobile Property Stats */}
+                {/* Property Stats */}
                 <motion.div
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -372,19 +383,19 @@ const LuxuryProperties = () => {
                   </div>
                 </motion.div>
 
-                {/* Mobile Action Buttons */}
+                {/* Action Buttons */}
                 <motion.div
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-                  className="flex flex-col gap-3 pt-4"
+                  className="flex flex-col sm:flex-row gap-3 pt-2"
                 >
                   <Button
                     size="lg"
-                    className="w-full bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 font-semibold py-4 text-base shadow-lg transition-all duration-300"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 font-semibold py-3 text-sm md:text-base shadow-lg transition-all duration-300"
                     onClick={() => setShowDetails(true)}
                   >
-                    <Eye className="w-5 h-5 mr-3" />
+                    <Eye className="w-4 h-4 mr-2" />
                     View Estate Details
                   </Button>
                   
@@ -392,9 +403,9 @@ const LuxuryProperties = () => {
                     variant="outline"
                     size="lg"
                     onClick={() => setAutoPlay(!autoPlay)}
-                    className="w-full border border-white/40 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium py-4 text-base transition-all duration-300"
+                    className="flex-1 border border-white/40 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium py-3 text-sm md:text-base transition-all duration-300"
                   >
-                    {autoPlay ? <Pause className="w-5 h-5 mr-3" /> : <Play className="w-5 h-5 mr-3" />}
+                    {autoPlay ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
                     {autoPlay ? 'Pause Tour' : 'Auto Tour'}
                   </Button>
                 </motion.div>
@@ -402,19 +413,6 @@ const LuxuryProperties = () => {
             </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Simple Navigation - Touch Areas */}
-        <div className="absolute inset-0 z-10 flex">
-          <div 
-            className="w-1/3 h-full cursor-pointer"
-            onClick={prevProperty}
-          />
-          <div className="w-1/3 h-full" />
-          <div 
-            className="w-1/3 h-full cursor-pointer"
-            onClick={nextProperty}
-          />
-        </div>
 
         {/* Clean Property Dots */}
         <div className="absolute bottom-32 md:bottom-40 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
