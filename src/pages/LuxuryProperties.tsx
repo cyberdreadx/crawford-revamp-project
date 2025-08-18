@@ -2,29 +2,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  Bed, 
-  Bath, 
-  Square, 
-  MapPin, 
-  Home, 
-  Calendar, 
-  Building, 
-  ChevronLeft, 
-  ChevronRight, 
-  Crown,
-  Star,
-  ArrowLeft,
-  ArrowRight,
-  Play,
-  Pause
-} from "lucide-react";
+import { Bed, Bath, Square, MapPin, Home, Calendar, Building, ChevronLeft, ChevronRight, Crown, Star, ArrowLeft, ArrowRight, Play, Pause } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-
 interface Property {
   id: string;
   title: string;
@@ -42,7 +25,6 @@ interface Property {
   flood_zone?: string;
   is_featured: boolean;
 }
-
 interface PropertyImage {
   id: string;
   property_id: string;
@@ -50,7 +32,6 @@ interface PropertyImage {
   is_primary: boolean;
   display_order: number;
 }
-
 interface PropertyVideo {
   id: string;
   property_id: string;
@@ -61,18 +42,23 @@ interface PropertyVideo {
   is_featured: boolean;
   display_order: number;
 }
-
 const LuxuryProperties = () => {
   const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [properties, setProperties] = useState<Property[]>([]);
-  const [propertyImages, setPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
-  const [propertyVideos, setPropertyVideos] = useState<{ [key: string]: PropertyVideo[] }>({});
+  const [propertyImages, setPropertyImages] = useState<{
+    [key: string]: PropertyImage[];
+  }>({});
+  const [propertyVideos, setPropertyVideos] = useState<{
+    [key: string]: PropertyVideo[];
+  }>({});
   const [loading, setLoading] = useState(true);
   const [showDetails, setShowDetails] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
 
   // Fetch luxury properties (price > $600k) and images from database
   useEffect(() => {
@@ -82,69 +68,67 @@ const LuxuryProperties = () => {
   // Auto-advance properties when autoplay is enabled
   useEffect(() => {
     if (!autoPlay || properties.length === 0) return;
-    
     const interval = setInterval(() => {
-      setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
+      setCurrentPropertyIndex(prev => (prev + 1) % properties.length);
       setCurrentMediaIndex(0);
       setShowVideo(false);
     }, 8000);
-
     return () => clearInterval(interval);
   }, [autoPlay, properties.length]);
-
   const fetchLuxuryPropertiesAndImages = async () => {
     try {
       setLoading(true);
-      
-      // Fetch luxury properties (price > $600,000)
-      const { data: propertiesData, error: propertiesError } = await supabase
-        .from('properties')
-        .select('*')
-        .gt('price', 600000)
-        .order('price', { ascending: false });
 
+      // Fetch luxury properties (price > $600,000)
+      const {
+        data: propertiesData,
+        error: propertiesError
+      } = await supabase.from('properties').select('*').gt('price', 600000).order('price', {
+        ascending: false
+      });
       if (propertiesError) throw propertiesError;
       setProperties(propertiesData || []);
 
       // Fetch images for all properties
       if (propertiesData && propertiesData.length > 0) {
-        const { data: imagesData, error: imagesError } = await supabase
-          .from('property_images')
-          .select('*')
-          .in('property_id', propertiesData.map(p => p.id))
-          .order('display_order');
-
+        const {
+          data: imagesData,
+          error: imagesError
+        } = await supabase.from('property_images').select('*').in('property_id', propertiesData.map(p => p.id)).order('display_order');
         if (imagesError) throw imagesError;
 
         // Group images by property_id
-        const imagesByProperty: { [key: string]: PropertyImage[] } = {};
+        const imagesByProperty: {
+          [key: string]: PropertyImage[];
+        } = {};
         imagesData?.forEach(image => {
           if (!imagesByProperty[image.property_id]) {
             imagesByProperty[image.property_id] = [];
           }
           imagesByProperty[image.property_id].push(image);
         });
-
         setPropertyImages(imagesByProperty);
 
         // For now, let's add a sample video for demonstration
         // This will be replaced with actual database integration later
-        const sampleVideos: { [key: string]: PropertyVideo[] } = {};
-        
+        const sampleVideos: {
+          [key: string]: PropertyVideo[];
+        } = {};
+
         // Add sample video for the first property (Broadwater Waterfront Estate)
         if (propertiesData && propertiesData.length > 0) {
           const firstPropertyId = propertiesData[0].id;
           sampleVideos[firstPropertyId] = [{
             id: 'sample-1',
             property_id: firstPropertyId,
-            video_url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4', // Placeholder URL
+            video_url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+            // Placeholder URL
             video_type: 'tour',
             title: 'Broadwater Waterfront Estate Virtual Tour',
             is_featured: true,
             display_order: 1
           }];
         }
-        
         setPropertyVideos(sampleVideos);
       }
     } catch (error: any) {
@@ -157,24 +141,20 @@ const LuxuryProperties = () => {
       setLoading(false);
     }
   };
-
   const currentProperty = properties[currentPropertyIndex];
   const currentPropertyImages = currentProperty ? propertyImages[currentProperty.id] || [] : [];
   const currentPropertyVideos = currentProperty ? propertyVideos[currentProperty.id] || [] : [];
   const totalMedia = currentPropertyImages.length + currentPropertyVideos.length;
-
   const nextProperty = () => {
-    setCurrentPropertyIndex((prev) => (prev + 1) % properties.length);
+    setCurrentPropertyIndex(prev => (prev + 1) % properties.length);
     setCurrentMediaIndex(0);
     setShowVideo(false);
   };
-
   const prevProperty = () => {
-    setCurrentPropertyIndex((prev) => (prev - 1 + properties.length) % properties.length);
+    setCurrentPropertyIndex(prev => (prev - 1 + properties.length) % properties.length);
     setCurrentMediaIndex(0);
     setShowVideo(false);
   };
-
   const nextMedia = () => {
     if (totalMedia > 0) {
       const nextIndex = (currentMediaIndex + 1) % totalMedia;
@@ -182,7 +162,6 @@ const LuxuryProperties = () => {
       setShowVideo(nextIndex >= currentPropertyImages.length);
     }
   };
-
   const prevMedia = () => {
     if (totalMedia > 0) {
       const prevIndex = (currentMediaIndex - 1 + totalMedia) % totalMedia;
@@ -190,7 +169,6 @@ const LuxuryProperties = () => {
       setShowVideo(prevIndex >= currentPropertyImages.length);
     }
   };
-
   const getCurrentMedia = () => {
     if (currentMediaIndex < currentPropertyImages.length) {
       return {
@@ -209,43 +187,39 @@ const LuxuryProperties = () => {
       };
     }
   };
-
   const currentMedia = getCurrentMedia();
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(price);
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-subtle">
+    return <div className="min-h-screen flex items-center justify-center bg-gradient-subtle">
         <div className="text-center">
-          <motion.div 
-            className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto mb-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.p 
-            className="text-lg text-muted-foreground"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
+          <motion.div className="animate-spin rounded-full h-16 w-16 border-4 border-primary border-t-transparent mx-auto mb-4" animate={{
+          rotate: 360
+        }} transition={{
+          duration: 1,
+          repeat: Infinity,
+          ease: "linear"
+        }} />
+          <motion.p className="text-lg text-muted-foreground" initial={{
+          opacity: 0
+        }} animate={{
+          opacity: 1
+        }} transition={{
+          delay: 0.5
+        }}>
             Loading luxury collection...
           </motion.p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (properties.length === 0) {
-    return (
-      <div className="min-h-screen">
+    return <div className="min-h-screen">
         <Navigation />
         <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-gradient-subtle">
           <div className="text-center">
@@ -257,78 +231,73 @@ const LuxuryProperties = () => {
           </div>
         </div>
         <Footer />
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-cream-light">
+  return <div className="min-h-screen bg-cream-light">
       <Navigation />
       
       {/* Full-Screen Property Showcase */}
       <div className="relative h-screen overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentPropertyIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0"
-          >
+          <motion.div key={currentPropertyIndex} initial={{
+          opacity: 0
+        }} animate={{
+          opacity: 1
+        }} exit={{
+          opacity: 0
+        }} transition={{
+          duration: 1
+        }} className="absolute inset-0">
             {/* Background Media */}
-            {totalMedia > 0 && (
-              <div className="absolute inset-0">
+            {totalMedia > 0 && <div className="absolute inset-0">
                 <AnimatePresence mode="wait">
-                  {currentMedia.type === 'image' ? (
-                    <motion.img
-                      key={`${currentPropertyIndex}-${currentMediaIndex}`}
-                      src={currentMedia.url || '/placeholder.svg'}
-                      alt={currentMedia.alt}
-                      className="w-full h-full object-cover"
-                      initial={{ scale: 1.1, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.9, opacity: 0 }}
-                      transition={{ duration: 1.2 }}
-                    />
-                  ) : (
-                    <motion.div
-                      key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
-                      className="w-full h-full"
-                      initial={{ scale: 1.1, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.9, opacity: 0 }}
-                      transition={{ duration: 1.2 }}
-                    >
-                      <video
-                        src={currentMedia.url}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                      />
-                    </motion.div>
-                  )}
+                  {currentMedia.type === 'image' ? <motion.img key={`${currentPropertyIndex}-${currentMediaIndex}`} src={currentMedia.url || '/placeholder.svg'} alt={currentMedia.alt} className="w-full h-full object-cover" initial={{
+                scale: 1.1,
+                opacity: 0
+              }} animate={{
+                scale: 1,
+                opacity: 1
+              }} exit={{
+                scale: 0.9,
+                opacity: 0
+              }} transition={{
+                duration: 1.2
+              }} /> : <motion.div key={`${currentPropertyIndex}-${currentMediaIndex}-video`} className="w-full h-full" initial={{
+                scale: 1.1,
+                opacity: 0
+              }} animate={{
+                scale: 1,
+                opacity: 1
+              }} exit={{
+                scale: 0.9,
+                opacity: 0
+              }} transition={{
+                duration: 1.2
+              }}>
+                      <video src={currentMedia.url} className="w-full h-full object-cover" autoPlay muted loop playsInline />
+                    </motion.div>}
                 </AnimatePresence>
                 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-tropical-navy/60 via-tropical-navy/20 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-r from-tropical-navy/30 via-transparent to-tropical-navy/30" />
-              </div>
-            )}
+              </div>}
 
             {/* Content Overlay */}
             <div className="relative z-10 h-full flex items-center">
               <div className="container mx-auto px-6 lg:px-8">
                 <div className="max-w-4xl">
                   {/* Property Badge */}
-                  <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.8 }}
-                    className="mb-6"
-                  >
+                  <motion.div initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.3,
+                  duration: 0.8
+                }} className="mb-6">
                     <Badge className="bg-gold-accent/90 text-warm-brown font-semibold px-4 py-2 text-sm">
                       <Crown className="w-4 h-4 mr-2" />
                       Luxury Collection
@@ -336,43 +305,59 @@ const LuxuryProperties = () => {
                   </motion.div>
 
                   {/* Property Title */}
-                  <motion.h1
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4, duration: 0.8 }}
-                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight drop-shadow-lg"
-                  >
+                  <motion.h1 initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.4,
+                  duration: 0.8
+                }} className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
                     {currentProperty?.title}
                   </motion.h1>
 
                   {/* Location */}
-                  <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                    className="flex items-center text-white/90 text-xl mb-6 drop-shadow-lg"
-                  >
+                  <motion.div initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.5,
+                  duration: 0.8
+                }} className="flex items-center text-white/90 text-xl mb-6 drop-shadow-lg">
                     <MapPin className="w-6 h-6 mr-3" />
                     {currentProperty?.location}
                   </motion.div>
 
                   {/* Price */}
-                  <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    className="text-4xl md:text-5xl font-bold text-white mb-8 drop-shadow-lg"
-                  >
+                  <motion.div initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.6,
+                  duration: 0.8
+                }} className="text-4xl md:text-5xl font-bold text-white mb-8 drop-shadow-lg">
                     {formatPrice(currentProperty?.price || 0)}
                   </motion.div>
 
                   {/* Quick Stats */}
-                  <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.7, duration: 0.8 }}
-                    className="flex items-center gap-8 text-white/90 text-lg mb-8 drop-shadow-lg"
-                  >
+                  <motion.div initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.7,
+                  duration: 0.8
+                }} className="flex items-center gap-8 text-white/90 text-lg mb-8 drop-shadow-lg">
                     <div className="flex items-center gap-2">
                       <Bed className="w-5 h-5" />
                       <span>{currentProperty?.bedrooms} Beds</span>
@@ -388,43 +373,31 @@ const LuxuryProperties = () => {
                   </motion.div>
 
                   {/* Action Buttons */}
-                  <motion.div
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.8, duration: 0.8 }}
-                    className="flex items-center gap-4"
-                  >
-                     <Button 
-                      size="lg" 
-                      className="bg-white text-tropical-navy hover:bg-white/90 font-semibold px-8 py-3 text-lg shadow-xl"
-                      onClick={() => setShowDetails(true)}
-                    >
+                  <motion.div initial={{
+                  y: 30,
+                  opacity: 0
+                }} animate={{
+                  y: 0,
+                  opacity: 1
+                }} transition={{
+                  delay: 0.8,
+                  duration: 0.8
+                }} className="flex items-center gap-4">
+                     <Button size="lg" className="bg-white text-tropical-navy hover:bg-white/90 font-semibold px-8 py-3 text-lg shadow-xl" onClick={() => setShowDetails(true)}>
                       View Details
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="lg"
-                      className="border-white text-white hover:bg-white hover:text-tropical-navy font-semibold px-8 py-3 text-lg backdrop-blur-sm"
-                      onClick={() => setAutoPlay(!autoPlay)}
-                    >
+                    <Button variant="outline" size="lg" onClick={() => setAutoPlay(!autoPlay)} className="border-white hover:bg-white font-semibold px-8 py-3 text-lg backdrop-blur-sm text-slate-950">
                       {autoPlay ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
                       {autoPlay ? 'Pause' : 'Auto Play'}
                     </Button>
-                    {currentPropertyVideos.length > 0 && (
-                      <Button 
-                        variant="outline" 
-                        size="lg"
-                        className="border-coral-accent text-coral-accent hover:bg-coral-accent hover:text-white font-semibold px-8 py-3 text-lg backdrop-blur-sm"
-                        onClick={() => {
-                          const firstVideoIndex = currentPropertyImages.length;
-                          setCurrentMediaIndex(firstVideoIndex);
-                          setShowVideo(true);
-                        }}
-                      >
+                    {currentPropertyVideos.length > 0 && <Button variant="outline" size="lg" className="border-coral-accent text-coral-accent hover:bg-coral-accent hover:text-white font-semibold px-8 py-3 text-lg backdrop-blur-sm" onClick={() => {
+                    const firstVideoIndex = currentPropertyImages.length;
+                    setCurrentMediaIndex(firstVideoIndex);
+                    setShowVideo(true);
+                  }}>
                         <Play className="w-5 h-5 mr-2" />
                         Tour Video
-                      </Button>
-                    )}
+                      </Button>}
                   </motion.div>
                 </div>
               </div>
@@ -434,78 +407,46 @@ const LuxuryProperties = () => {
 
         {/* Navigation Controls */}
         <div className="absolute inset-y-0 left-0 flex items-center z-20">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={prevProperty}
-            className="ml-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all"
-          >
+          <Button variant="ghost" size="sm" onClick={prevProperty} className="ml-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all">
             <ArrowLeft className="w-4 h-4" />
           </Button>
         </div>
 
         <div className="absolute inset-y-0 right-0 flex items-center z-20">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={nextProperty}
-            className="mr-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all"
-          >
+          <Button variant="ghost" size="sm" onClick={nextProperty} className="mr-4 h-10 w-10 rounded-full bg-warm-brown/20 hover:bg-warm-brown/40 text-warm-brown border border-warm-brown/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-all">
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
 
         {/* Media Navigation */}
-        {totalMedia > 1 && (
-          <>
+        {totalMedia > 1 && <>
             <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={prevMedia}
-                className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm"
-              >
+              <Button variant="ghost" size="sm" onClick={prevMedia} className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm">
                 <ChevronLeft className="w-4 h-4" />
               </Button>
             </div>
 
             <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={nextMedia}
-                className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm"
-              >
+              <Button variant="ghost" size="sm" onClick={nextMedia} className="h-8 w-8 rounded-full bg-white/30 hover:bg-white/50 text-white opacity-50 hover:opacity-100 transition-all backdrop-blur-sm">
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
 
             {/* Media Indicators */}
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-              {Array.from({ length: totalMedia }).map((_, index) => {
-                const isVideo = index >= currentPropertyImages.length;
-                return (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setCurrentMediaIndex(index);
-                      setShowVideo(isVideo);
-                    }}
-                    className={`w-3 h-3 rounded-full transition-all relative ${
-                      index === currentMediaIndex 
-                        ? 'bg-white' 
-                        : 'bg-white/40 hover:bg-white/60'
-                    }`}
-                  >
-                    {isVideo && (
-                      <Play className="w-2 h-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-current" />
-                    )}
-                  </button>
-                );
-              })}
+              {Array.from({
+            length: totalMedia
+          }).map((_, index) => {
+            const isVideo = index >= currentPropertyImages.length;
+            return <button key={index} onClick={() => {
+              setCurrentMediaIndex(index);
+              setShowVideo(isVideo);
+            }} className={`w-3 h-3 rounded-full transition-all relative ${index === currentMediaIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`}>
+                    {isVideo && <Play className="w-2 h-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-current" />}
+                  </button>;
+          })}
             </div>
-          </>
-        )}
+          </>}
 
         {/* Property Counter */}
         <div className="absolute top-6 right-6 z-20 flex flex-col gap-2">
@@ -514,31 +455,19 @@ const LuxuryProperties = () => {
               {currentPropertyIndex + 1} / {properties.length}
             </span>
           </div>
-          {currentMedia.type === 'video' && (
-            <div className="bg-coral-accent/90 text-white px-3 py-1 rounded-full backdrop-blur-sm text-sm font-medium">
+          {currentMedia.type === 'video' && <div className="bg-coral-accent/90 text-white px-3 py-1 rounded-full backdrop-blur-sm text-sm font-medium">
               <Play className="w-3 h-3 inline mr-1" />
               {currentMedia.videoType?.toUpperCase()} VIDEO
-            </div>
-          )}
+            </div>}
         </div>
 
         {/* Property Navigation Dots */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
-          {properties.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                setCurrentPropertyIndex(index);
-                setCurrentMediaIndex(0);
-                setShowVideo(false);
-              }}
-              className={`w-4 h-4 rounded-full transition-all ${
-                index === currentPropertyIndex 
-                  ? 'bg-white' 
-                  : 'bg-white/40 hover:bg-white/60'
-              }`}
-            />
-          ))}
+          {properties.map((_, index) => <button key={index} onClick={() => {
+          setCurrentPropertyIndex(index);
+          setCurrentMediaIndex(0);
+          setShowVideo(false);
+        }} className={`w-4 h-4 rounded-full transition-all ${index === currentPropertyIndex ? 'bg-white' : 'bg-white/40 hover:bg-white/60'}`} />)}
         </div>
       </div>
 
@@ -558,18 +487,9 @@ const LuxuryProperties = () => {
           
           <div className="space-y-8">
             {/* Property Gallery Preview */}
-            {currentPropertyImages.length > 0 && (
-              <div className="grid grid-cols-3 gap-2 max-h-40">
-                {currentPropertyImages.slice(0, 3).map((image, index) => (
-                  <img
-                    key={index}
-                    src={image.image_url}
-                    alt={`${currentProperty?.title} - ${index + 1}`}
-                    className="w-full h-32 object-cover rounded-lg"
-                  />
-                ))}
-              </div>
-            )}
+            {currentPropertyImages.length > 0 && <div className="grid grid-cols-3 gap-2 max-h-40">
+                {currentPropertyImages.slice(0, 3).map((image, index) => <img key={index} src={image.image_url} alt={`${currentProperty?.title} - ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />)}
+              </div>}
 
             {/* Main Info Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -629,19 +549,15 @@ const LuxuryProperties = () => {
                 </div>
 
                 {/* Key Features */}
-                {currentProperty?.key_features && currentProperty.key_features.length > 0 && (
-                  <div>
+                {currentProperty?.key_features && currentProperty.key_features.length > 0 && <div>
                     <h4 className="text-lg font-semibold mb-3">Additional Features</h4>
                     <div className="grid grid-cols-1 gap-2">
-                      {currentProperty.key_features.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                      {currentProperty.key_features.map((feature, index) => <div key={index} className="flex items-center gap-2">
                           <Star className="w-4 h-4 text-amber-500 flex-shrink-0" />
                           <span className="text-sm">{feature}</span>
-                        </div>
-                      ))}
+                        </div>)}
                     </div>
-                  </div>
-                )}
+                  </div>}
               </div>
 
               {/* Amenities */}
@@ -718,18 +634,14 @@ const LuxuryProperties = () => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {currentProperty?.taxes && (
-                    <div className="flex justify-between">
+                  {currentProperty?.taxes && <div className="flex justify-between">
                       <span className="text-muted-foreground">Annual Taxes:</span>
                       <span className="font-medium">{formatPrice(currentProperty.taxes)}</span>
-                    </div>
-                  )}
-                  {currentProperty?.flood_zone && (
-                    <div className="flex justify-between">
+                    </div>}
+                  {currentProperty?.flood_zone && <div className="flex justify-between">
                       <span className="text-muted-foreground">Flood Zone:</span>
                       <span className="font-medium">{currentProperty.flood_zone}</span>
-                    </div>
-                  )}
+                    </div>}
                 </div>
                 <div className="space-y-3">
                   <div className="text-center p-4 bg-gradient-subtle rounded-lg border">
@@ -743,21 +655,17 @@ const LuxuryProperties = () => {
             </div>
 
             {/* Description */}
-            {currentProperty?.description && (
-              <div className="border-t pt-6">
+            {currentProperty?.description && <div className="border-t pt-6">
                 <h3 className="text-xl font-bold mb-4 uppercase tracking-wide">Description</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {currentProperty.description}
                 </p>
-              </div>
-            )}
+              </div>}
           </div>
         </DialogContent>
       </Dialog>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default LuxuryProperties;
