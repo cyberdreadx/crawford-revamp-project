@@ -217,15 +217,15 @@ const LuxuryProperties = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <motion.div
-            className="w-20 h-20 border-4 border-gold-accent border-t-transparent rounded-full mx-auto mb-6"
+            className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full mx-auto mb-6"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
           <motion.p
-            className="text-xl text-gold-accent font-light tracking-wide"
+            className="text-xl text-foreground font-light tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -239,15 +239,15 @@ const LuxuryProperties = () => {
 
   if (properties.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+      <div className="min-h-screen bg-background">
         <Navigation />
         <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
           <div className="text-center max-w-lg mx-auto px-6">
             <Crown className="w-32 h-32 mx-auto mb-8 text-gold-accent" />
-            <h2 className="text-4xl font-light text-white mb-6 tracking-wide">
+            <h2 className="text-4xl font-light text-foreground mb-6 tracking-wide">
               Luxury Collection
             </h2>
-            <p className="text-lg text-white/70 leading-relaxed">
+            <p className="text-lg text-muted-foreground leading-relaxed">
               We're carefully curating our exclusive luxury portfolio. 
               Please return soon to discover extraordinary properties.
             </p>
@@ -259,10 +259,10 @@ const LuxuryProperties = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-background relative">
       <Navigation />
       
-      {/* Mobile-First Luxury Property Showcase */}
+      {/* Bright Mobile-First Luxury Property Showcase */}
       <div className="relative min-h-screen overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -327,14 +327,14 @@ const LuxuryProperties = () => {
             </div>
 
             {/* Property Details Section - Bottom Half */}
-            <div className="relative h-1/2 md:h-2/5 bg-black">
+            <div className="relative h-1/2 md:h-2/5 bg-background border-t border-border">
               <div className="h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 space-y-4 md:space-y-6">
                 {/* Property Title */}
                 <motion.h1
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-foreground leading-tight tracking-tight"
                   style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   {currentProperty?.title}
@@ -345,7 +345,7 @@ const LuxuryProperties = () => {
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                  className="flex items-center text-white/90 text-sm md:text-base font-light"
+                  className="flex items-center text-muted-foreground text-sm md:text-base font-light"
                 >
                   <MapPin className="w-4 md:w-5 h-4 md:h-5 mr-2 text-gold-accent flex-shrink-0" />
                   <span className="truncate">{currentProperty?.location}</span>
@@ -367,7 +367,7 @@ const LuxuryProperties = () => {
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-                  className="flex items-center gap-4 md:gap-6 text-white/90 text-sm md:text-base font-light"
+                  className="flex items-center gap-4 md:gap-6 text-muted-foreground text-sm md:text-base font-light"
                 >
                   <div className="flex items-center gap-2">
                     <Bed className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
@@ -392,7 +392,7 @@ const LuxuryProperties = () => {
                 >
                   <Button
                     size="lg"
-                    className="flex-1 bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 font-semibold py-3 text-sm md:text-base shadow-lg transition-all duration-300"
+                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-3 text-sm md:text-base shadow-lg transition-all duration-300"
                     onClick={() => setShowDetails(true)}
                   >
                     <Eye className="w-4 h-4 mr-2" />
@@ -403,7 +403,7 @@ const LuxuryProperties = () => {
                     variant="outline"
                     size="lg"
                     onClick={() => setAutoPlay(!autoPlay)}
-                    className="flex-1 border border-white/40 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium py-3 text-sm md:text-base transition-all duration-300"
+                    className="flex-1 font-medium py-3 text-sm md:text-base transition-all duration-300"
                   >
                     {autoPlay ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
                     {autoPlay ? 'Pause Tour' : 'Auto Tour'}
