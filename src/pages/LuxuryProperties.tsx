@@ -80,16 +80,6 @@ const LuxuryProperties = () => {
     fetchLuxuryPropertiesAndImages();
   }, []);
 
-  // Auto-advance properties when autoplay is enabled
-  useEffect(() => {
-    if (!autoPlay || properties.length === 0) return;
-    const interval = setInterval(() => {
-      setCurrentPropertyIndex(prev => (prev + 1) % properties.length);
-      setCurrentMediaIndex(0);
-      setShowVideo(false);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, [autoPlay, properties.length]);
 
   const fetchLuxuryPropertiesAndImages = async () => {
     try {
@@ -156,6 +146,19 @@ const LuxuryProperties = () => {
   const currentPropertyImages = currentProperty ? propertyImages[currentProperty.id] || [] : [];
   const currentPropertyVideos = currentProperty ? propertyVideos[currentProperty.id] || [] : [];
   const totalMedia = currentPropertyImages.length + currentPropertyVideos.length;
+
+  // Auto-advance media when autoplay is enabled
+  useEffect(() => {
+    if (!autoPlay || totalMedia === 0) return;
+    const interval = setInterval(() => {
+      setCurrentMediaIndex(prev => {
+        const nextIndex = (prev + 1) % totalMedia;
+        setShowVideo(nextIndex >= currentPropertyImages.length);
+        return nextIndex;
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [autoPlay, totalMedia, currentPropertyImages.length]);
 
   const nextProperty = () => {
     setCurrentPropertyIndex(prev => (prev + 1) % properties.length);
