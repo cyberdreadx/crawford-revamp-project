@@ -14,7 +14,7 @@ const Footer = () => {
               <img 
                 src="/lovable-uploads/4be61148-f344-4248-a724-1f4c0aad30d2.png" 
                 alt="The Crawford Team" 
-                className="h-16 mb-4"
+                className="h-16 mb-4 mx-auto md:mx-0"
               />
               <p className="text-cream-light/80 mb-6 max-w-md leading-relaxed">
                 Your trusted real estate partners in St. Petersburg, Florida. 
