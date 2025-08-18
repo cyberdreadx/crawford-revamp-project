@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import PropertyManagement from '@/components/admin/PropertyManagement';
+import Dashboard from '@/components/admin/Dashboard';
+import ContentManager from '@/components/admin/ContentManager';
+import AnalyticsPanel from '@/components/admin/AnalyticsPanel';
 
 interface HeroImage {
   id: string;
@@ -460,10 +463,18 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="dashboard" className="gap-2">
+              <Monitor className="h-4 w-4" />
+              Dashboard
+            </TabsTrigger>
             <TabsTrigger value="properties" className="gap-2">
               <Home className="h-4 w-4" />
               Properties
+            </TabsTrigger>
+            <TabsTrigger value="content" className="gap-2">
+              <Globe className="h-4 w-4" />
+              Content
             </TabsTrigger>
             <TabsTrigger value="hero" className="gap-2">
               <Image className="h-4 w-4" />
@@ -477,18 +488,22 @@ const Admin = () => {
               <BarChart3 className="h-4 w-4" />
               Analytics
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2">
-              <Shield className="h-4 w-4" />
-              Security
-            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="h-4 w-4" />
               Settings
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="dashboard" className="space-y-6">
+            <Dashboard />
+          </TabsContent>
+
           <TabsContent value="properties" className="space-y-6">
             <PropertyManagement />
+          </TabsContent>
+
+          <TabsContent value="content" className="space-y-6">
+            <ContentManager />
           </TabsContent>
 
           <TabsContent value="hero" className="space-y-6">
@@ -708,45 +723,134 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="analytics" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Analytics Dashboard
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Analytics features will be implemented here.</p>
-              </CardContent>
-            </Card>
+            <AnalyticsPanel />
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Security Settings
-                </CardTitle>
+                <CardTitle>Security Settings</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Security settings will be implemented here.</p>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Authentication</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Two-Factor Authentication</span>
+                        <Badge variant="secondary">Enabled</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Password Policy</span>
+                        <Badge variant="secondary">Strong</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Session Timeout</span>
+                        <Badge variant="secondary">24 hours</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Access Control</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm">Admin Users</span>
+                        <Badge variant="secondary">3</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Active Sessions</span>
+                        <Badge variant="secondary">7</Badge>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">Failed Login Attempts</span>
+                        <Badge variant="secondary">0</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Application Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Application settings will be implemented here.</p>
-              </CardContent>
-            </Card>
+            <div className="grid gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Site Configuration</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="site-name">Site Name</Label>
+                      <Input id="site-name" defaultValue="Luxury Real Estate" />
+                    </div>
+                    <div>
+                      <Label htmlFor="site-url">Site URL</Label>
+                      <Input id="site-url" defaultValue="https://yoursite.com" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="site-description">Site Description</Label>
+                    <Textarea 
+                      id="site-description" 
+                      defaultValue="Premier luxury real estate marketplace featuring exclusive waterfront properties and exceptional service."
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="contact-email">Contact Email</Label>
+                      <Input id="contact-email" type="email" defaultValue="info@yoursite.com" />
+                    </div>
+                    <div>
+                      <Label htmlFor="contact-phone">Contact Phone</Label>
+                      <Input id="contact-phone" type="tel" defaultValue="+1 (555) 123-4567" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="contact-address">Address</Label>
+                    <Textarea 
+                      id="contact-address" 
+                      defaultValue="123 Luxury Lane, Premium District, City, State 12345"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Email Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label htmlFor="smtp-host">SMTP Host</Label>
+                      <Input id="smtp-host" defaultValue="smtp.yourprovider.com" />
+                    </div>
+                    <div>
+                      <Label htmlFor="smtp-port">SMTP Port</Label>
+                      <Input id="smtp-port" type="number" defaultValue="587" />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch id="smtp-ssl" defaultChecked />
+                    <Label htmlFor="smtp-ssl">Enable SSL/TLS</Label>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
