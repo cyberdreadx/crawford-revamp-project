@@ -37,6 +37,7 @@ const Hero = () => {
         if (error) {
           console.error('Error fetching hero images:', error);
         } else {
+          console.log('Fetched hero images:', data);
           setHeroImages(data || []);
         }
       } catch (error) {
@@ -52,18 +53,30 @@ const Hero = () => {
   // Auto-advance carousel for multiple images
   useEffect(() => {
     const currentImages = heroImages.length > 0 ? heroImages : [{ image_url: heroImage }];
+    console.log('Auto-cycling effect - Images:', currentImages, 'Length:', currentImages.length);
     
     if (currentImages.length > 1) {
+      console.log('Setting up interval for', currentImages.length, 'images');
       const interval = setInterval(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % currentImages.length);
+        setCurrentImageIndex((prev) => {
+          const newIndex = (prev + 1) % currentImages.length;
+          console.log('Cycling from index', prev, 'to', newIndex);
+          return newIndex;
+        });
       }, 4000); // Change image every 4 seconds
 
-      return () => clearInterval(interval);
+      return () => {
+        console.log('Clearing interval');
+        clearInterval(interval);
+      };
+    } else {
+      console.log('Not setting up interval - only', currentImages.length, 'image(s)');
     }
   }, [heroImages]);
 
   // Reset to first image when hero images change
   useEffect(() => {
+    console.log('Resetting to first image');
     setCurrentImageIndex(0);
   }, [heroImages]);
 
