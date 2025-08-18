@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,6 +52,7 @@ const Admin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadingHeroImages, setUploadingHeroImages] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [googleDriveFolderId, setGoogleDriveFolderId] = useState('');
   const [totalFiles, setTotalFiles] = useState(0);
   const [currentFile, setCurrentFile] = useState(0);
   const [activeSection, setActiveSection] = useState('properties');
@@ -428,6 +429,42 @@ const Admin = () => {
     });
   };
 
+  const handleGoogleDriveSync = async () => {
+    if (!googleDriveFolderId) return;
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-hero-images', {
+        body: { folderId: googleDriveFolderId }
+      });
+
+      if (error) {
+        console.error('Error syncing from Google Drive:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to sync from Google Drive',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      toast({
+        title: 'Success',
+        description: `Successfully synced ${data.count} images from Google Drive`
+      });
+      await fetchHeroImages(); // Refresh the list
+    } catch (error) {
+      console.error('Error calling sync function:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to sync from Google Drive',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -509,6 +546,23 @@ const Admin = () => {
           <TabsContent value="hero" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Hero Images</h2>
+              <div className="flex gap-2 items-center">
+                <Input
+                  placeholder="Google Drive Folder ID"
+                  value={googleDriveFolderId}
+                  onChange={(e) => setGoogleDriveFolderId(e.target.value)}
+                  className="w-64"
+                />
+                <Button 
+                  onClick={handleGoogleDriveSync}
+                  disabled={!googleDriveFolderId || isLoading}
+                  variant="secondary"
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  Sync from Google Drive
+                </Button>
+              </div>
               <Dialog open={isHeroDialogOpen} onOpenChange={setIsHeroDialogOpen}>
                 <DialogTrigger asChild>
                   <Button onClick={() => { setSelectedHeroImage(null); resetHeroForm(); }}>
