@@ -86,7 +86,7 @@ const Hero = () => {
 
       {/* Content */}
       <motion.div 
-        className="relative z-10 text-center px-6 lg:px-8 w-full max-w-5xl mx-auto"
+        className="relative z-10 text-center px-4 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -94,46 +94,59 @@ const Hero = () => {
 
         {/* Team Name */}
         <motion.div 
-          className="mb-12"
+          className="mb-6 sm:mb-8 lg:mb-12"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
           <h1 
-            className="text-7xl md:text-8xl lg:text-9xl font-cursive text-white leading-tight"
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-cursive text-white leading-[0.9] tracking-tight"
             style={{
-              textShadow: '0 2px 10px rgba(0,0,0,0.4), 0 4px 20px rgba(0,0,0,0.2)'
+              textShadow: '0 4px 20px rgba(0,0,0,0.6), 0 8px 40px rgba(0,0,0,0.3)',
+              filter: 'drop-shadow(0 0 30px rgba(255,255,255,0.1))'
             }}
           >
             The Crawford Team
           </h1>
         </motion.div>
 
+        {/* Achievement Badge */}
+        <motion.div
+          className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6 sm:mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
+          <span className="text-white/90 text-sm sm:text-base font-medium">Top 5% Pinellas County</span>
+        </motion.div>
+
         {/* Main Headline */}
-        <motion.h1 
-          className="text-5xl md:text-6xl lg:text-7xl font-elegant text-white mb-8 leading-tight"
+        <motion.h2 
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
           style={{
-            textShadow: '0 2px 10px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.15)'
+            textShadow: '0 2px 15px rgba(0,0,0,0.4)'
           }}
         >
-          Top 5% of Pinellas County
-        </motion.h1>
+          Luxury Real Estate Experts
+        </motion.h2>
 
         {/* Subheadline */}
         <motion.p 
-          className="text-white/90 text-lg md:text-xl mb-10"
+          className="text-white/80 text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1 }}
         >
-          Keller Williams St Pete
+          Keller Williams St Pete • Your trusted partners in finding extraordinary homes
         </motion.p>
 
-        {/* Single CTA Button */}
+        {/* CTA Buttons */}
         <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.1, duration: 0.8 }}
@@ -145,10 +158,24 @@ const Hero = () => {
             <Button 
               size="lg" 
               onClick={scrollToProperties}
-              className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold px-10 py-5 text-lg transition-all duration-300 border border-white/30 hover:border-white/50 rounded-full shadow-2xl hover:shadow-white/20"
+              className="bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary font-semibold px-8 py-4 text-base sm:text-lg transition-all duration-300 rounded-full shadow-2xl hover:shadow-white/30 border-0"
             >
               Search All Homes
-              <ArrowRight className="ml-3 w-5 h-5" />
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button 
+              variant="outline"
+              size="lg" 
+              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="bg-white/5 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-8 py-4 text-base sm:text-lg transition-all duration-300 border border-white/30 hover:border-white/50 rounded-full"
+            >
+              Get Consultation
             </Button>
           </motion.div>
         </motion.div>
