@@ -264,9 +264,19 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Error in process-dossier function:', error);
+    console.error('=== CRITICAL ERROR in process-dossier ===');
+    console.error('Error type:', typeof error);
+    console.error('Error name:', error?.name);
+    console.error('Error message:', error?.message);
+    console.error('Error stack:', error?.stack);
+    console.error('Full error object:', error);
+    
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: error.message }),
+      JSON.stringify({ 
+        error: 'Internal server error', 
+        details: error?.message || 'Unknown error',
+        errorType: error?.name || 'UnknownError'
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
