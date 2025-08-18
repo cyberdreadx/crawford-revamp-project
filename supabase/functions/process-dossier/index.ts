@@ -157,12 +157,12 @@ If information is not available, use empty strings for text fields, 0 for number
     );
 
   } catch (error) {
-    console.error('Error processing dossier:', error);
+    console.error('Error processing dossier:', error?.message || 'Unknown error');
     return new Response(
       JSON.stringify({ 
         success: false,
         error: 'Processing failed',
-        message: error.message
+        message: error?.message || 'Unknown error occurred'
       }),
       { 
         status: 500,
