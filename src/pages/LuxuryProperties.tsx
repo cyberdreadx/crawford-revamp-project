@@ -267,19 +267,19 @@ const LuxuryProperties = () => {
     <div className="min-h-screen bg-black relative">
       <Navigation />
       
-      {/* Luxury Property Showcase */}
+      {/* Mobile-First Luxury Property Showcase */}
       <div 
-        className="relative h-screen overflow-hidden"
+        className="relative min-h-screen overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPropertyIndex}
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             {/* Background Media */}
@@ -292,19 +292,19 @@ const LuxuryProperties = () => {
                       src={currentMedia.url || '/placeholder.svg'}
                       alt={currentMedia.alt}
                       className="w-full h-full object-cover"
-                      initial={{ scale: 1.05, opacity: 0 }}
+                      initial={{ scale: 1.02, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.95, opacity: 0 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      exit={{ scale: 0.98, opacity: 0 }}
+                      transition={{ duration: 1, ease: "easeOut" }}
                     />
                   ) : (
                     <motion.div
                       key={`${currentPropertyIndex}-${currentMediaIndex}-video`}
                       className="w-full h-full"
-                      initial={{ scale: 1.05, opacity: 0 }}
+                      initial={{ scale: 1.02, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.95, opacity: 0 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      exit={{ scale: 0.98, opacity: 0 }}
+                      transition={{ duration: 1, ease: "easeOut" }}
                     >
                       <video
                         src={currentMedia.url}
@@ -318,143 +318,95 @@ const LuxuryProperties = () => {
                   )}
                 </AnimatePresence>
                 
-                {/* Luxury Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
+                {/* Mobile-Optimized Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-black/20" />
               </div>
             )}
 
-            {/* Luxury Content Overlay */}
-            <div className="relative z-10 h-full flex items-center">
-              <div className="container mx-auto px-8 lg:px-12">
-                <div className="max-w-5xl">
-                  {/* Luxury Badge */}
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
-                    className="mb-6 md:mb-8"
+            {/* Mobile-First Content Layout */}
+            <div className="relative z-10 h-full flex flex-col justify-end pb-20 md:pb-32">
+              <div className="px-6 md:px-8 lg:px-12 space-y-4 md:space-y-6">
+                {/* Mobile Property Title */}
+                <motion.h1
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
+                >
+                  {currentProperty?.title}
+                </motion.h1>
+
+                {/* Mobile Location */}
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+                  className="flex items-center text-white/90 text-base md:text-lg font-light"
+                >
+                  <MapPin className="w-4 md:w-5 h-4 md:h-5 mr-2 text-gold-accent flex-shrink-0" />
+                  <span className="truncate">{currentProperty?.location}</span>
+                </motion.div>
+
+                {/* Mobile Price */}
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                  className="text-3xl md:text-4xl lg:text-5xl font-light text-gold-accent tracking-wide"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
+                >
+                  {formatPrice(currentProperty?.price || 0)}
+                </motion.div>
+
+                {/* Mobile Property Stats */}
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                  className="flex items-center gap-4 md:gap-6 text-white/90 text-sm md:text-base font-light"
+                >
+                  <div className="flex items-center gap-2">
+                    <Bed className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
+                    <span>{currentProperty?.bedrooms}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Bath className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
+                    <span>{currentProperty?.bathrooms}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Square className="w-4 md:w-5 h-4 md:h-5 text-gold-accent flex-shrink-0" />
+                    <span>{currentProperty?.sqft?.toLocaleString()}</span>
+                  </div>
+                </motion.div>
+
+                {/* Mobile Action Buttons */}
+                <motion.div
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                  className="flex flex-col gap-3 pt-4"
+                >
+                  <Button
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary/90 hover:to-primary/70 font-semibold py-4 text-base shadow-lg transition-all duration-300"
+                    onClick={() => setShowDetails(true)}
                   >
-                    <Badge className="bg-gradient-to-r from-gold-accent to-yellow-400 text-black font-bold px-4 md:px-6 py-2 md:py-3 text-sm md:text-base border border-gold-accent/30 shadow-2xl backdrop-blur-sm">
-                      <Crown className="w-4 md:w-5 h-4 md:h-5 mr-2" />
-                      EXCLUSIVE LUXURY COLLECTION
-                    </Badge>
-                  </motion.div>
-
-                  {/* Property Title */}
-                  <motion.h1
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white mb-4 md:mb-6 leading-tight tracking-tight"
-                    style={{ fontFamily: 'Playfair Display, serif' }}
+                    <Eye className="w-5 h-5 mr-3" />
+                    View Estate Details
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => setAutoPlay(!autoPlay)}
+                    className="w-full border border-white/40 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 font-medium py-4 text-base transition-all duration-300"
                   >
-                    {currentProperty?.title}
-                  </motion.h1>
-
-                  {/* Location */}
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
-                    className="flex items-center text-white/90 text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 font-light tracking-wide"
-                  >
-                    <MapPin className="w-5 md:w-6 lg:w-7 h-5 md:h-6 lg:h-7 mr-3 md:mr-4 text-gold-accent flex-shrink-0" />
-                    <span className="truncate">{currentProperty?.location}</span>
-                  </motion.div>
-
-                  {/* Price */}
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.9, duration: 1, ease: "easeOut" }}
-                    className="text-5xl md:text-6xl font-light text-gold-accent mb-10 tracking-wide"
-                    style={{ fontFamily: 'Playfair Display, serif' }}
-                  >
-                    {formatPrice(currentProperty?.price || 0)}
-                  </motion.div>
-
-                  {/* Property Stats */}
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 1.1, duration: 1, ease: "easeOut" }}
-                    className="flex flex-wrap items-center gap-6 md:gap-8 lg:gap-12 text-white/90 text-lg md:text-xl mb-8 md:mb-12 font-light"
-                  >
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <Bed className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
-                      <span>{currentProperty?.bedrooms} Beds</span>
-                    </div>
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <Bath className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
-                      <span>{currentProperty?.bathrooms} Baths</span>
-                    </div>
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <Square className="w-5 md:w-6 h-5 md:h-6 text-gold-accent flex-shrink-0" />
-                      <span>{currentProperty?.sqft?.toLocaleString()} sq ft</span>
-                    </div>
-                  </motion.div>
-
-                  {/* Luxury Action Buttons */}
-                  <motion.div
-                    initial={{ y: 40, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 1.3, duration: 1, ease: "easeOut" }}
-                    className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6"
-                  >
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-gold-accent to-yellow-400 text-black hover:from-yellow-400 hover:to-gold-accent font-bold px-10 py-4 text-lg shadow-2xl border border-gold-accent/30 transition-all duration-300 hover:scale-105"
-                      onClick={() => setShowDetails(true)}
-                    >
-                      <Eye className="w-5 h-5 mr-3" />
-                      View Estate Details
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={() => setAutoPlay(!autoPlay)}
-                      className="border-2 border-white/30 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 font-semibold px-8 py-4 text-lg transition-all duration-300 hover:border-white/60"
-                    >
-                      {autoPlay ? <Pause className="w-5 h-5 mr-3" /> : <Play className="w-5 h-5 mr-3" />}
-                      {autoPlay ? 'Pause Tour' : 'Auto Tour'}
-                    </Button>
-
-                    {currentPropertyVideos.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="border-2 border-gold-accent/50 bg-gold-accent/10 backdrop-blur-md text-gold-accent hover:bg-gold-accent/20 font-semibold px-8 py-4 text-lg transition-all duration-300"
-                        onClick={() => {
-                          const firstVideoIndex = currentPropertyImages.length;
-                          setCurrentMediaIndex(firstVideoIndex);
-                          setShowVideo(true);
-                        }}
-                      >
-                        <Play className="w-5 h-5 mr-3" />
-                        Virtual Tour
-                      </Button>
-                    )}
-
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      className="text-white/80 hover:text-white hover:bg-white/10 p-4 transition-all duration-300"
-                    >
-                      <Heart className="w-6 h-6" />
-                    </Button>
-
-                    <Button
-                      variant="ghost"
-                      size="lg"
-                      className="text-white/80 hover:text-white hover:bg-white/10 p-4 transition-all duration-300"
-                    >
-                      <Share2 className="w-6 h-6" />
-                    </Button>
-                  </motion.div>
-                </div>
+                    {autoPlay ? <Pause className="w-5 h-5 mr-3" /> : <Play className="w-5 h-5 mr-3" />}
+                    {autoPlay ? 'Pause Tour' : 'Auto Tour'}
+                  </Button>
+                </motion.div>
               </div>
             </div>
           </motion.div>
@@ -535,23 +487,8 @@ const LuxuryProperties = () => {
           </>
         )}
 
-        {/* Property Counter & Status */}
-        <div className="absolute top-8 right-8 z-20 flex flex-col gap-3">
-          <div className="bg-black/60 text-white px-6 py-3 rounded-full backdrop-blur-xl border border-white/20 shadow-2xl">
-            <span className="text-lg font-light tracking-wide">
-              {currentPropertyIndex + 1} of {properties.length}
-            </span>
-          </div>
-          {currentMedia.type === 'video' && (
-            <div className="bg-gradient-to-r from-gold-accent to-yellow-400 text-black px-4 py-2 rounded-full backdrop-blur-xl text-sm font-bold tracking-wide shadow-2xl">
-              <Play className="w-3 h-3 inline mr-2" />
-              {currentMedia.videoType?.toUpperCase()} TOUR
-            </div>
-          )}
-        </div>
-
-        {/* Luxury Property Dots */}
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-4 z-20">
+        {/* Mobile-Optimized Property Dots */}
+        <div className="absolute bottom-40 md:bottom-48 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
           {properties.map((_, index) => (
             <button
               key={index}
@@ -560,11 +497,11 @@ const LuxuryProperties = () => {
                 setCurrentMediaIndex(0);
                 setShowVideo(false);
               }}
-              className={`transition-all duration-500 rounded-full border-2 ${
+              className={`transition-all duration-300 rounded-full ${
                 index === currentPropertyIndex 
-                  ? 'w-5 h-5 bg-gold-accent border-gold-accent shadow-lg shadow-gold-accent/50' 
-                  : 'w-4 h-4 bg-transparent border-white/40 hover:border-white/80 hover:bg-white/20'
-              } backdrop-blur-sm`}
+                  ? 'w-3 h-3 md:w-4 md:h-4 bg-primary' 
+                  : 'w-2 h-2 md:w-3 md:h-3 bg-white/50'
+              }`}
             />
           ))}
         </div>
