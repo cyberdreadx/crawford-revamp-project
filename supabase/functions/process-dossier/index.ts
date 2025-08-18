@@ -19,6 +19,10 @@ serve(async (req) => {
 
   try {
     console.log('Starting dossier processing...');
+    console.log('Environment check:');
+    console.log('- OpenAI API Key exists:', !!openAIApiKey);
+    console.log('- Supabase URL exists:', !!supabaseUrl);
+    console.log('- Service key exists:', !!supabaseServiceKey);
     
     const formData = await req.formData();
     const file = formData.get('file') as File;
@@ -35,7 +39,7 @@ serve(async (req) => {
     if (!openAIApiKey) {
       console.error('OpenAI API key not configured');
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured' }),
+        JSON.stringify({ error: 'OpenAI API key not configured. Please add your OpenAI API key to Supabase secrets.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }

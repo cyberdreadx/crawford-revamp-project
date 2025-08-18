@@ -81,6 +81,8 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
 
       setProgress(70);
 
+      console.log('Function response:', { data, error });
+
       if (error) {
         console.error('Error processing dossier:', error);
         toast.error(`Failed to process dossier: ${error.message || 'Unknown error'}`);
@@ -113,7 +115,8 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
           onPropertyCreated(data.property);
         }
       } else {
-        toast.error('Failed to extract property data');
+        console.error('Unexpected response format:', data);
+        toast.error('Failed to extract property data - unexpected response format');
       }
     } catch (error) {
       console.error('Error:', error);
