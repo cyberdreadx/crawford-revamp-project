@@ -12,10 +12,6 @@ import {
   Star, 
   Play, 
   Pause, 
-  ChevronLeft, 
-  ChevronRight,
-  ArrowLeft,
-  ArrowRight,
   Eye,
   Heart,
   Share2
@@ -77,7 +73,6 @@ const LuxuryProperties = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const { toast } = useToast();
 
   // Fetch luxury properties and images from database
@@ -268,11 +263,7 @@ const LuxuryProperties = () => {
       <Navigation />
       
       {/* Mobile-First Luxury Property Showcase */}
-      <div 
-        className="relative min-h-screen overflow-hidden"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative min-h-screen overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPropertyIndex}
@@ -412,83 +403,21 @@ const LuxuryProperties = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Luxury Navigation Controls */}
-        <div className={`absolute inset-y-0 left-0 flex items-center z-20 transition-all duration-500 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-          <Button
-            variant="ghost"
-            size="lg"
+        {/* Simple Navigation - Touch Areas */}
+        <div className="absolute inset-0 z-10 flex">
+          <div 
+            className="w-1/3 h-full cursor-pointer"
             onClick={prevProperty}
-            className="ml-8 h-16 w-16 rounded-full bg-black/40 hover:bg-black/70 text-white border-2 border-white/20 hover:border-white/40 backdrop-blur-xl transition-all duration-300 hover:scale-110 shadow-2xl"
-          >
-            <ArrowLeft className="w-8 h-8" />
-          </Button>
-        </div>
-
-        <div className={`absolute inset-y-0 right-0 flex items-center z-20 transition-all duration-500 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>
-          <Button
-            variant="ghost"
-            size="lg"
+          />
+          <div className="w-1/3 h-full" />
+          <div 
+            className="w-1/3 h-full cursor-pointer"
             onClick={nextProperty}
-            className="mr-8 h-16 w-16 rounded-full bg-black/40 hover:bg-black/70 text-white border-2 border-white/20 hover:border-white/40 backdrop-blur-xl transition-all duration-300 hover:scale-110 shadow-2xl"
-          >
-            <ArrowRight className="w-8 h-8" />
-          </Button>
+          />
         </div>
 
-        {/* Media Navigation */}
-        {totalMedia > 1 && (
-          <>
-            <div className={`absolute top-1/2 left-6 transform -translate-y-1/2 z-20 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={prevMedia}
-                className="h-12 w-12 rounded-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/60 backdrop-blur-md transition-all duration-300 hover:scale-110"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </Button>
-            </div>
-
-            <div className={`absolute top-1/2 right-6 transform -translate-y-1/2 z-20 transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={nextMedia}
-                className="h-12 w-12 rounded-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/60 backdrop-blur-md transition-all duration-300 hover:scale-110"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </Button>
-            </div>
-
-            {/* Elegant Media Indicators */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
-              {Array.from({ length: totalMedia }).map((_, index) => {
-                const isVideo = index >= currentPropertyImages.length;
-                return (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      setCurrentMediaIndex(index);
-                      setShowVideo(isVideo);
-                    }}
-                    className={`relative transition-all duration-300 ${
-                      index === currentMediaIndex 
-                        ? 'w-12 h-3 bg-gold-accent shadow-lg shadow-gold-accent/50' 
-                        : 'w-3 h-3 bg-white/40 hover:bg-white/70'
-                    } rounded-full backdrop-blur-sm border border-white/20`}
-                  >
-                    {isVideo && (
-                      <Play className="w-2 h-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-current" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </>
-        )}
-
-        {/* Mobile-Optimized Property Dots */}
-        <div className="absolute bottom-40 md:bottom-48 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
+        {/* Clean Property Dots */}
+        <div className="absolute bottom-32 md:bottom-40 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
           {properties.map((_, index) => (
             <button
               key={index}
@@ -602,107 +531,54 @@ const LuxuryProperties = () => {
                 )}
               </div>
 
-              {/* Luxury Amenities */}
+              {/* Contact & Investment Info */}
               <div className="space-y-8">
                 <div>
                   <h3 className="text-2xl font-light mb-6 text-gold-accent uppercase tracking-widest" style={{ fontFamily: 'Playfair Display, serif' }}>
-                    Luxury Amenities
+                    Investment Overview
                   </h3>
-                  <div className="space-y-4">
-                    {[
-                      { title: 'Resort-Style Pool', desc: 'spa, cabanas, lounging areas, and fire pit' },
-                      { title: 'Fitness Center', desc: 'state-of-the-art equipment for residents' },
-                      { title: 'Social Spaces', desc: 'lounge spaces for socializing and events' },
-                      { title: 'Concierge Services', desc: '24/7 front desk staff, controlled building access' },
-                      { title: 'Valet Services', desc: 'professional valet parking available' },
-                      { title: 'Private Spaces', desc: 'convenient on-site areas for pet owners' }
-                    ].map((amenity, index) => (
-                      <div key={index} className="flex items-start gap-4">
-                        <div className="w-2 h-2 bg-gold-accent rounded-full mt-3 flex-shrink-0" />
-                        <span className="text-white/90 leading-relaxed">
-                          <strong className="text-gold-accent">{amenity.title}:</strong> {amenity.desc}
-                        </span>
+                  <div className="space-y-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-8 rounded-lg border border-gold-accent/20">
+                    <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                      <span className="text-white/70">Property Type</span>
+                      <span className="text-white font-light">{currentProperty?.property_type}</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                      <span className="text-white/70">Status</span>
+                      <span className="text-gold-accent font-light capitalize">{currentProperty?.status}</span>
+                    </div>
+                    {currentProperty?.taxes && (
+                      <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                        <span className="text-white/70">Annual Taxes</span>
+                        <span className="text-white font-light">{formatPrice(currentProperty.taxes)}</span>
                       </div>
-                    ))}
+                    )}
+                    {currentProperty?.flood_zone && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-white/70">Flood Zone</span>
+                        <span className="text-white font-light">{currentProperty.flood_zone}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Lifestyle */}
-                <div>
-                  <h3 className="text-2xl font-light mb-6 text-gold-accent uppercase tracking-widest" style={{ fontFamily: 'Playfair Display, serif' }}>
-                    Luxury Lifestyle
-                  </h3>
-                  <div className="space-y-4">
-                    {[
-                      'Situated in an exclusive neighborhood with premium dining and shopping',
-                      'Minutes from cultural attractions and entertainment venues',
-                      'Access to world-class recreational facilities and parks',
-                      'Prestigious location with convenient transportation access'
-                    ].map((lifestyle, index) => (
-                      <div key={index} className="flex items-start gap-4">
-                        <div className="w-2 h-2 bg-gold-accent rounded-full mt-3 flex-shrink-0" />
-                        <span className="text-white/90 leading-relaxed">{lifestyle}</span>
-                      </div>
-                    ))}
-                  </div>
+                {/* Contact Actions */}
+                <div className="space-y-4">
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-gradient-to-r from-gold-accent to-yellow-400 text-black hover:from-yellow-400 hover:to-gold-accent font-bold py-4 text-lg shadow-2xl border border-gold-accent/30 transition-all duration-300"
+                  >
+                    Schedule Private Viewing
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="w-full border-2 border-gold-accent/50 bg-gold-accent/10 backdrop-blur-md text-gold-accent hover:bg-gold-accent/20 font-semibold py-4 text-lg transition-all duration-300"
+                  >
+                    Request Information Package
+                  </Button>
                 </div>
               </div>
             </div>
-
-            {/* Property Details */}
-            <div className="border-t border-gold-accent/20 pt-8">
-              <h3 className="text-2xl font-light mb-6 text-gold-accent uppercase tracking-widest" style={{ fontFamily: 'Playfair Display, serif' }}>
-                Estate Details
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-white/70">Property Type:</span>
-                    <span className="font-medium text-white">{currentProperty?.property_type}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-white/70">Status:</span>
-                    <Badge variant={currentProperty?.status === 'For Sale' ? 'default' : 'secondary'}>
-                      {currentProperty?.status}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  {currentProperty?.taxes && (
-                    <div className="flex justify-between">
-                      <span className="text-white/70">Annual Taxes:</span>
-                      <span className="font-medium text-white">{formatPrice(currentProperty.taxes)}</span>
-                    </div>
-                  )}
-                  {currentProperty?.flood_zone && (
-                    <div className="flex justify-between">
-                      <span className="text-white/70">Flood Zone:</span>
-                      <span className="font-medium text-white">{currentProperty.flood_zone}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-4">
-                  <div className="text-center p-6 bg-gradient-to-br from-gold-accent/10 to-yellow-400/10 rounded-lg border border-gold-accent/30">
-                    <div className="text-sm text-gold-accent uppercase tracking-wide mb-2">Luxury Specialist</div>
-                    <div className="font-semibold text-white">The Crawford Team</div>
-                    <div className="text-sm text-white/70">Exclusive Property Experts</div>
-                    <div className="text-sm text-gold-accent mt-3">Private Showing Available</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            {currentProperty?.description && (
-              <div className="border-t border-gold-accent/20 pt-8">
-                <h3 className="text-2xl font-light mb-6 text-gold-accent uppercase tracking-widest" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  Estate Description
-                </h3>
-                <p className="text-white/90 leading-relaxed text-lg">
-                  {currentProperty.description}
-                </p>
-              </div>
-            )}
           </div>
         </DialogContent>
       </Dialog>
