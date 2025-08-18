@@ -12,8 +12,13 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 serve(async (req) => {
+  console.log('=== EDGE FUNCTION CALLED ===');
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('Handling CORS preflight');
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -25,8 +30,13 @@ serve(async (req) => {
     console.log('- Service key exists:', !!supabaseServiceKey);
     
     const formData = await req.formData();
+    console.log('FormData parsed successfully');
+    
     const file = formData.get('file') as File;
     const propertyId = formData.get('propertyId') as string;
+    
+    console.log('File info:', file ? { name: file.name, type: file.type, size: file.size } : 'No file');
+    console.log('Property ID:', propertyId);
 
     if (!file) {
       console.error('No file provided');
