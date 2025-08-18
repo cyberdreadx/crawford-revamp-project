@@ -9,6 +9,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 // Property Image Carousel Component
 interface PropertyImageCarouselProps {
@@ -111,6 +112,7 @@ interface Property {
 }
 
 const Listings = () => {
+  const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(6);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -551,9 +553,9 @@ const Listings = () => {
                     <Button 
                       variant="outline" 
                       className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors"
-                      onClick={() => setSelectedProperty(property)}
+                      onClick={() => navigate(`/property/${property.id}`)}
                     >
-                      View Details
+                      View Full Dossier
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </CardContent>

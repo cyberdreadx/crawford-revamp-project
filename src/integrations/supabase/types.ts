@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -88,6 +88,12 @@ export type Database = {
       }
       properties: {
         Row: {
+          agent_email: string | null
+          agent_image_url: string | null
+          agent_name: string | null
+          agent_phone: string | null
+          agent_title: string | null
+          amenities: string[] | null
           bathrooms: number
           bedrooms: number
           created_at: string
@@ -96,17 +102,26 @@ export type Database = {
           id: string
           is_featured: boolean | null
           key_features: string[] | null
+          lifestyle_events: string[] | null
           location: string
           price: number
           property_type: string
           sqft: number
           status: string
+          tagline: string | null
           taxes: number | null
           title: string
+          unit_features: string[] | null
           updated_at: string
           year_built: number | null
         }
         Insert: {
+          agent_email?: string | null
+          agent_image_url?: string | null
+          agent_name?: string | null
+          agent_phone?: string | null
+          agent_title?: string | null
+          amenities?: string[] | null
           bathrooms: number
           bedrooms: number
           created_at?: string
@@ -115,17 +130,26 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           key_features?: string[] | null
+          lifestyle_events?: string[] | null
           location: string
           price: number
           property_type?: string
           sqft: number
           status?: string
+          tagline?: string | null
           taxes?: number | null
           title: string
+          unit_features?: string[] | null
           updated_at?: string
           year_built?: number | null
         }
         Update: {
+          agent_email?: string | null
+          agent_image_url?: string | null
+          agent_name?: string | null
+          agent_phone?: string | null
+          agent_title?: string | null
+          amenities?: string[] | null
           bathrooms?: number
           bedrooms?: number
           created_at?: string
@@ -134,13 +158,16 @@ export type Database = {
           id?: string
           is_featured?: boolean | null
           key_features?: string[] | null
+          lifestyle_events?: string[] | null
           location?: string
           price?: number
           property_type?: string
           sqft?: number
           status?: string
+          tagline?: string | null
           taxes?: number | null
           title?: string
+          unit_features?: string[] | null
           updated_at?: string
           year_built?: number | null
         }
@@ -215,8 +242,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }

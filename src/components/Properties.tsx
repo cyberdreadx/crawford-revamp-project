@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Bed, Bath, Square, Calendar, MapPin, Car, Home, DollarSign, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Property Image Carousel Component
 interface PropertyImageCarouselProps {
@@ -135,6 +135,7 @@ interface PropertyImage {
 }
 
 const Properties = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -323,9 +324,9 @@ const Properties = () => {
                     <Button 
                       size="lg"
                       className="bg-gradient-gold hover:shadow-button transition-all duration-200 w-full sm:w-auto"
-                      onClick={() => setSelectedProperty(currentProperty)}
+                      onClick={() => navigate(`/property/${currentProperty.id}`)}
                     >
-                      View Details
+                      View Full Dossier
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                     <Button 
