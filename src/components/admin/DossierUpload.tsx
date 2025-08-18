@@ -75,9 +75,18 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
 
       setProgress(30);
 
-      const { data, error } = await supabase.functions.invoke('process-dossier', {
+      console.log('Calling process-dossier function...');
+      
+      // Add timeout to the function call
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Function call timed out after 30 seconds')), 30000)
+      );
+
+      const functionPromise = supabase.functions.invoke('process-dossier', {
         body: formData,
       });
+
+      const { data, error } = await Promise.race([functionPromise, timeoutPromise]) as any;
 
       setProgress(70);
 

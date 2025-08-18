@@ -17,11 +17,26 @@ serve(async (req) => {
   try {
     console.log('Processing request...');
     
+    // Try to parse formData but don't fail if it doesn't work
+    let hasFile = false;
+    try {
+      const formData = await req.formData();
+      const file = formData.get('file') as File;
+      hasFile = !!file;
+      console.log('File present:', hasFile);
+      if (file) {
+        console.log('File details:', { name: file.name, type: file.type, size: file.size });
+      }
+    } catch (formError) {
+      console.log('FormData parsing failed:', formError.message);
+    }
+    
     // Simple success response for testing
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Function is working!',
+        hasFile: hasFile,
         timestamp: new Date().toISOString()
       }),
       { 
