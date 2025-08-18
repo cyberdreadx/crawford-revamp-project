@@ -51,9 +51,10 @@ Deno.serve(async (req) => {
     )
 
     if (!driveResponse.ok) {
-      console.error('Google Drive API error:', await driveResponse.text())
+      const errorText = await driveResponse.text()
+      console.error('Google Drive API error:', driveResponse.status, errorText)
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch images from Google Drive' }),
+        JSON.stringify({ error: `Google Drive API error: ${driveResponse.status}. ${errorText}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -62,10 +63,15 @@ Deno.serve(async (req) => {
     const files: GoogleDriveFile[] = driveData.files || []
 
     console.log(`Found ${files.length} images in Google Drive folder`)
+    console.log('Files:', files.map(f => ({ name: f.name, mimeType: f.mimeType })))
 
     if (files.length === 0) {
       return new Response(
-        JSON.stringify({ message: 'No images found in the specified folder', count: 0 }),
+        JSON.stringify({ 
+          message: 'No images found in the specified folder. Make sure the folder contains images and is publicly accessible.',
+          count: 0,
+          folderId: folderId
+        }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
