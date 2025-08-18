@@ -27,6 +27,7 @@ const Hero = () => {
 
   useEffect(() => {
     const fetchHeroImages = async () => {
+      setLoading(true);
       try {
         const { data, error } = await supabase
           .from('hero_images')
@@ -36,9 +37,20 @@ const Hero = () => {
 
         if (error) {
           console.error('Error fetching hero images:', error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          console.log('Auto-cycling effect - Images:', data, 'Length:', data.length);
+          setHeroImages(data);
+          // Preload first few images for better performance
+          data.slice(0, 3).forEach(image => {
+            const img = new Image();
+            img.src = image.image_url;
+          });
         } else {
-          console.log('Fetched hero images:', data);
-          setHeroImages(data || []);
+          // Fallback to static image if no hero images in database
+          setHeroImages([]);
         }
       } catch (error) {
         console.error('Error fetching hero images:', error);
@@ -90,13 +102,23 @@ const Hero = () => {
         {currentImages.map((image, index) => (
           <div
             key={image.id || index}
-            className={`absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
               index === currentImageIndex ? 'opacity-100' : 'opacity-0'
             }`}
-            style={{
-              backgroundImage: `url(${image.image_url})`
-            }}
           >
+            <img
+              src={image.image_url}
+              alt={image.title || 'Hero Image'}
+              className="w-full h-full object-cover"
+              loading={index < 3 ? 'eager' : 'lazy'} // Eager load first 3 images
+              onLoad={() => {
+                // Preload next image
+                if (index === currentImageIndex && currentImages[index + 1]) {
+                  const nextImg = new Image();
+                  nextImg.src = currentImages[index + 1].image_url;
+                }
+              }}
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
           </div>
         ))}

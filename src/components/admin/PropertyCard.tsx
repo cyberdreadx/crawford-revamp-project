@@ -1,7 +1,13 @@
-import { Edit, Trash2, Star, MapPin, Bed, Bath, Square, Calendar } from 'lucide-react';
+import { useState } from 'react';
+import { Edit, Trash2, Star, MapPin, Bed, Bath, Square, Calendar, Cloud, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface Property {
   id: string;
@@ -37,8 +43,67 @@ interface PropertyCardProps {
 }
 
 export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: PropertyCardProps) => {
+  const [isDriveDialogOpen, setIsDriveDialogOpen] = useState(false);
+  const [driveUrl, setDriveUrl] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
+  
   const primaryImage = images.find(img => img.is_primary) || images[0];
   
+  const handleGoogleDriveSync = async () => {
+    if (!driveUrl.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a Google Drive folder URL",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Extract folder ID from the URL
+    const match = driveUrl.match(/\/folders\/([a-zA-Z0-9-_]+)/);
+    if (!match) {
+      toast({
+        title: "Error",
+        description: "Invalid Google Drive folder URL. Please use a valid folder link.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const folderId = match[1];
+    setIsSyncing(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-property-images', {
+        body: { folderId, propertyId: property.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Synced ${data.count} images from Google Drive`,
+      });
+
+      setIsDriveDialogOpen(false);
+      setDriveUrl('');
+      // Trigger a refresh of the parent component
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Google Drive sync error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to sync images: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -83,7 +148,7 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
             </div>
           )}
           
-          {/* Overlays */}
+          {/* Status and Featured Badges */}
           <div className="absolute top-3 left-3 flex gap-2">
             <Badge 
               variant="secondary" 
@@ -99,6 +164,7 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
             )}
           </div>
 
+          {/* Photo count */}
           <div className="absolute top-3 right-3">
             <Badge variant="secondary" className="bg-black/20 text-white border-0 backdrop-blur-sm">
               {images.length} photo{images.length !== 1 ? 's' : ''}
@@ -123,6 +189,61 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
             >
               <Trash2 className="h-3 w-3" />
             </Button>
+          </div>
+          
+          {/* Image management buttons */}
+          <div className="absolute bottom-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 bg-white/90 hover:bg-white backdrop-blur-sm text-xs px-2"
+              disabled={isUploading}
+            >
+              <Upload className="h-3 w-3 mr-1" />
+              {isUploading ? `${uploadProgress}%` : 'Upload'}
+            </Button>
+            
+            <Dialog open={isDriveDialogOpen} onOpenChange={setIsDriveDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 bg-white/90 hover:bg-white backdrop-blur-sm text-xs px-2"
+                  disabled={isSyncing}
+                >
+                  <Cloud className="h-3 w-3 mr-1" />
+                  {isSyncing ? 'Syncing...' : 'Drive'}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Sync from Google Drive</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="drive-url">Google Drive Folder URL</Label>
+                    <Input
+                      id="drive-url"
+                      placeholder="https://drive.google.com/drive/folders/your-folder-id"
+                      value={driveUrl}
+                      onChange={(e) => setDriveUrl(e.target.value)}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      Make sure the folder is publicly accessible (Anyone with the link can view)
+                    </p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setIsDriveDialogOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleGoogleDriveSync} disabled={isSyncing}>
+                      {isSyncing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Sync Images
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </CardHeader>
