@@ -87,13 +87,23 @@ Deno.serve(async (req) => {
     }
 
     // Insert new hero images from Google Drive
-    const heroImages = files.map((file, index) => ({
-      title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
-      description: `Image from Google Drive: ${file.name}`,
-      image_url: `https://drive.google.com/uc?id=${file.id}`,
-      display_order: index + 1,
-      is_active: true
-    }))
+    const heroImages = files.map((file, index) => {
+      // Try multiple URL formats for better compatibility
+      let imageUrl = file.thumbnailLink || `https://drive.google.com/thumbnail?id=${file.id}&sz=w2000`;
+      
+      // For larger images, use the direct download format
+      if (file.mimeType && file.mimeType.startsWith('image/')) {
+        imageUrl = `https://drive.google.com/thumbnail?id=${file.id}&sz=w2000`;
+      }
+      
+      return {
+        title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
+        description: `Image from Google Drive: ${file.name}`,
+        image_url: imageUrl,
+        display_order: index + 1,
+        is_active: true
+      };
+    })
 
     const { data, error } = await supabaseClient
       .from('hero_images')
