@@ -47,6 +47,11 @@ serve(async (req) => {
 
     console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', file.size);
 
+    // Check file size (limit to 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('File too large. Please use a file smaller than 10MB.');
+    }
+
     // Convert file to base64
     const arrayBuffer = await file.arrayBuffer();
     const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
@@ -123,17 +128,17 @@ If information is not available, use empty strings for text fields, 0 for number
     try {
       extractedData = JSON.parse(extractedText);
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response as JSON:', parseError);
+      console.error('Failed to parse OpenAI response as JSON');
       // Fallback extraction
       extractedData = {
         title: "Property details extracted",
-        location: "Location not specified",
+        location: "Location not specified", 
         price: "Price not specified",
         bedrooms: 0,
         bathrooms: 0,
         area: "Area not specified",
         propertyType: "Property",
-        description: extractedText.substring(0, 500),
+        description: extractedText ? extractedText.substring(0, 500) : "Description not available",
         features: [],
         agent: {
           name: "Agent not specified",
