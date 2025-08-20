@@ -136,7 +136,15 @@ If information is not available, use empty strings for text fields, 0 for number
     // Parse the JSON response
     let extractedData: ExtractedData;
     try {
-      extractedData = JSON.parse(extractedText);
+      // Clean the response - remove markdown code blocks if present
+      let cleanedText = extractedText.trim();
+      if (cleanedText.startsWith('```json')) {
+        cleanedText = cleanedText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanedText.startsWith('```')) {
+        cleanedText = cleanedText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+      
+      extractedData = JSON.parse(cleanedText);
     } catch (parseError) {
       console.error('Failed to parse OpenAI response as JSON');
       // Fallback extraction
