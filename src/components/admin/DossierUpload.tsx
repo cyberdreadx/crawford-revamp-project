@@ -59,6 +59,63 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
     }
   };
 
+  const savePropertyToDatabase = async (data: any) => {
+    try {
+      // Parse price from string format
+      const priceValue = data.price && typeof data.price === 'string' 
+        ? parseFloat(data.price.replace(/[^\d.]/g, '')) || 0
+        : data.price || 0;
+      
+      // Parse area to get sqft
+      const sqftValue = data.area && typeof data.area === 'string'
+        ? parseInt(data.area.replace(/[^\d]/g, '')) || 0
+        : data.sqft || 0;
+
+      const propertyData = {
+        title: data.title || 'Untitled Property',
+        location: data.location || 'Location not specified',
+        price: priceValue,
+        bedrooms: data.bedrooms || 0,
+        bathrooms: data.bathrooms || 0,
+        sqft: sqftValue,
+        property_type: data.propertyType || 'Condo',
+        status: 'For Sale',
+        description: data.description || '',
+        key_features: data.features || [],
+        agent_name: data.agent?.name || '',
+        agent_phone: data.agent?.phone || '',
+        agent_email: data.agent?.email || '',
+        is_featured: false
+      };
+
+      if (propertyId && propertyId !== 'new') {
+        // Update existing property
+        const { data: updatedProperty, error } = await supabase
+          .from('properties')
+          .update(propertyData)
+          .eq('id', propertyId)
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (onPropertyUpdated) onPropertyUpdated(updatedProperty);
+      } else {
+        // Create new property
+        const { data: newProperty, error } = await supabase
+          .from('properties')
+          .insert(propertyData)
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (onPropertyCreated) onPropertyCreated(newProperty);
+      }
+    } catch (error) {
+      console.error('Error saving property:', error);
+      toast.error('Failed to save property to database');
+    }
+  };
+
   const processDossier = async () => {
     if (!file) {
       toast.error('Please select a file first');
@@ -110,6 +167,11 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
         // Handle test response vs real response
         if (data.extractedData) {
           setExtractedData(data.extractedData);
+          setProgress(80);
+          
+          // Save the extracted data to database
+          await savePropertyToDatabase(data.extractedData);
+          
           setProcessingComplete(true);
           setProgress(100);
           
@@ -118,13 +180,6 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
               ? 'Property updated successfully!' 
               : 'Property created successfully!'
           );
-
-          // Call the appropriate callback
-          if (propertyId && propertyId !== 'new' && onPropertyUpdated && data.property) {
-            onPropertyUpdated(data.property);
-          } else if (onPropertyCreated && data.property) {
-            onPropertyCreated(data.property);
-          }
         } else {
           // Test response - just show success
           setProgress(100);
@@ -289,9 +344,17 @@ const DossierUpload: React.FC<DossierUploadProps> = ({
               </div>
             </div>
 
-            <Button onClick={resetUpload} variant="outline" className="w-full">
-              Process Another Dossier
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={resetUpload} variant="outline" className="flex-1">
+                Process Another Dossier
+              </Button>
+              <Button 
+                onClick={() => window.location.reload()} 
+                className="flex-1"
+              >
+                View Properties
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>
