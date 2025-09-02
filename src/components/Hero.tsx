@@ -91,218 +91,189 @@ const Hero = () => {
   const currentImages = heroImages.length > 0 ? heroImages : [{
     image_url: heroImage
   }];
-  return <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+  return (
+    <section id="home" className="relative min-h-screen w-full overflow-hidden">
       {/* Background Image Carousel with Fade */}
       <div className="absolute inset-0 w-full h-full">
-        {currentImages.map((image, index) => <div key={image.id || index} className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}>
-            <img src={image.image_url} alt={image.title || 'Hero Image'} className="w-full h-full object-cover" loading={index < 3 ? 'eager' : 'lazy'} // Eager load first 3 images
-        onLoad={() => {
-          // Preload next image
-          if (index === currentImageIndex && currentImages[index + 1]) {
-            const nextImg = new Image();
-            nextImg.src = currentImages[index + 1].image_url;
-          }
-        }} />
+        {currentImages.map((image, index) => (
+          <div
+            key={image.id || index}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img
+              src={image.image_url}
+              alt={image.title || 'Hero Image'}
+              className="w-full h-full object-cover"
+              loading={index < 3 ? 'eager' : 'lazy'}
+              onLoad={() => {
+                if (index === currentImageIndex && currentImages[index + 1]) {
+                  const nextImg = new Image();
+                  nextImg.src = currentImages[index + 1].image_url;
+                }
+              }}
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
-          </div>)}
+          </div>
+        ))}
       </div>
 
-      {/* Content */}
-      <motion.div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 w-full max-w-6xl mx-auto" initial={{
-      opacity: 0
-    }} animate={{
-      opacity: 1
-    }} transition={{
-      duration: 1
-    }}>
+      {/* Hero Content Grid */}
+      <div className="relative z-10 min-h-screen grid grid-rows-[auto_1fr_auto] gap-4 p-4 sm:p-6 lg:p-8">
+        
+        {/* Top Section - Achievement Badge */}
+        <motion.div
+          className="flex justify-center pt-4 sm:pt-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2">
+            <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
+            <span className="text-white/90 text-sm sm:text-base font-medium">Top 5% Pinellas County</span>
+          </div>
+        </motion.div>
 
-        {/* Team Name */}
-        <motion.div className="mb-6 sm:mb-8 lg:mb-12" initial={{
-        opacity: 0,
-        scale: 0.8
-      }} animate={{
-        opacity: 1,
-        scale: 1
-      }} transition={{
-        delay: 0.3,
-        duration: 0.8
-      }}>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-cursive text-white leading-[0.9] tracking-tight" style={{
-          textShadow: '0 6px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.8), 0 0 50px rgba(0,0,0,0.5)',
-          filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.4))'
-        }}>
-            The Crawford Team
-          </h1>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center justify-items-center max-w-7xl mx-auto w-full">
           
-          {/* CARE Tagline */}
-          <motion.div className="mt-4 sm:mt-6" initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          delay: 0.6,
-          duration: 0.8
-        }}>
-            <div className="space-y-6">
-              {/* CARE Words - Vertical Stack */}
-              <motion.div className="flex flex-col items-center justify-center space-y-2" initial={{
-              opacity: 0,
-              scale: 0.8
-            }} animate={{
-              opacity: 1,
-              scale: 1
-            }} transition={{
-              duration: 0.8,
-              delay: 0.8
-            }}>
-                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-              }} initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.0
-              }}>
-                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">C</span>reating
-                </motion.div>
-                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-              }} initial={{
-                opacity: 0,
-                x: 20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.2
-              }}>
-                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">A</span>
-                </motion.div>
-                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-              }} initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.4
-              }}>
-                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">R</span>eferrable
-                </motion.div>
-                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-              }} initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.6,
-                delay: 1.4
-              }}>
-                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">E</span>xperience
-                </motion.div>
+          {/* Left Side - Team Name */}
+          <motion.div
+            className="lg:col-span-5 text-center lg:text-left"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            <h1 
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-cursive text-white leading-tight tracking-tight"
+              style={{
+                textShadow: '0 6px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.8)',
+                filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.4))'
+              }}
+            >
+              The Crawford Team
+            </h1>
+          </motion.div>
+
+          {/* Center - CARE Tagline */}
+          <motion.div
+            className="lg:col-span-2 flex flex-col items-center justify-center space-y-2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+            >
+              <span className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl block">C</span>
+              <span className="text-white/90 font-medium text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide block" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+                reating
+              </span>
+            </motion.div>
+            
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
+              <span className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl block">A</span>
+            </motion.div>
+            
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+            >
+              <span className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl block">R</span>
+              <span className="text-white/90 font-medium text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide block" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+                eferrable
+              </span>
+            </motion.div>
+            
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+            >
+              <span className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl block">E</span>
+              <span className="text-white/90 font-medium text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-wide block" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+                xperience
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Right Side - Description & CTA */}
+          <motion.div
+            className="lg:col-span-5 text-center lg:text-right space-y-6"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.7 }}
+          >
+            <h2 
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight"
+              style={{ textShadow: '0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)' }}
+            >
+              Real Estate Experts
+            </h2>
+            
+            <p className="text-white/80 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-2xl lg:ml-auto">
+              Keller Williams St Pete • Your trusted partners in finding extraordinary homes
+            </p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end items-center pt-4"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.8, duration: 0.8 }}
+            >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="lg"
+                  onClick={scrollToProperties}
+                  className="bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary font-semibold px-8 py-4 text-lg transition-all duration-300 rounded-full shadow-2xl hover:shadow-white/30 border-0"
+                >
+                  Search All Homes
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
               </motion.div>
-            </div>
+              
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+                  className="bg-white/5 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-8 py-4 text-lg transition-all duration-300 border border-white/30 hover:border-white/50 rounded-full"
+                >
+                  Get Consultation
+                </Button>
+              </motion.div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-
-        {/* Achievement Badge */}
-        <motion.div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-6 sm:mb-8" initial={{
-        opacity: 0,
-        y: 20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        delay: 0.5,
-        duration: 0.8
-      }}>
-          <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-          <span className="text-white/90 text-sm sm:text-base font-medium">Top 5% Pinellas County</span>
-        </motion.div>
-
-        {/* Main Headline */}
-        <motion.h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight tracking-tight" initial={{
-        opacity: 0,
-        y: 30
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        delay: 0.6,
-        duration: 1
-      }} style={{
-        textShadow: '0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)'
-      }}>Real Estate Experts</motion.h2>
-
-        {/* Subheadline */}
-        <motion.p className="text-white/80 text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed" initial={{
-        opacity: 0,
-        y: 30
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        delay: 0.8,
-        duration: 1
-      }}>
-          Keller Williams St Pete • Your trusted partners in finding extraordinary homes
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div className="flex flex-col sm:flex-row gap-4 justify-center items-center" initial={{
-        opacity: 0,
-        scale: 0.8
-      }} animate={{
-        opacity: 1,
-        scale: 1
-      }} transition={{
-        delay: 1.1,
-        duration: 0.8
-      }}>
-          <motion.div whileHover={{
-          scale: 1.05
-        }} whileTap={{
-          scale: 0.95
-        }}>
-            <Button size="lg" onClick={scrollToProperties} className="bg-gradient-to-r from-white to-white/95 hover:from-white/95 hover:to-white text-primary font-semibold px-8 py-4 text-base sm:text-lg transition-all duration-300 rounded-full shadow-2xl hover:shadow-white/30 border-0">
-              Search All Homes
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </motion.div>
-          
-          <motion.div whileHover={{
-          scale: 1.05
-        }} whileTap={{
-          scale: 0.95
-        }}>
-            <Button variant="outline" size="lg" onClick={() => document.querySelector("#contact")?.scrollIntoView({
-            behavior: "smooth"
-          })} className="bg-white/5 backdrop-blur-md hover:bg-white/15 text-white font-semibold px-8 py-4 text-base sm:text-lg transition-all duration-300 border border-white/30 hover:border-white/50 rounded-full">
-              Get Consultation
-            </Button>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
         </div>
+
+        {/* Bottom Section - Scroll Indicator */}
+        <motion.div
+          className="flex justify-center pb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.0, duration: 0.8 }}
+        >
+          <div className="animate-bounce">
+            <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+              <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
+            </div>
+          </div>
+        </motion.div>
       </div>
-    </section>;
+    </section>
+  );
 };
 export default Hero;
