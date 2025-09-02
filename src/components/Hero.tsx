@@ -145,9 +145,9 @@ const Hero = () => {
           delay: 0.6,
           duration: 0.8
         }}>
-            <div className="space-y-4">
-              {/* CARE Letters Row */}
-              <motion.div className="flex items-center justify-center gap-1 sm:gap-2" initial={{
+            <div className="space-y-6">
+              {/* CARE Letters - Vertical Stack */}
+              <motion.div className="flex flex-col items-center justify-center" initial={{
               opacity: 0,
               scale: 0.8
             }} animate={{
@@ -157,7 +157,7 @@ const Hero = () => {
               duration: 0.8,
               delay: 0.8
             }}>
-                <motion.span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl" initial={{
+                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
                 scale: 0,
                 rotate: -15
               }} animate={{
@@ -169,10 +169,9 @@ const Hero = () => {
                 type: "spring",
                 bounce: 0.4
               }}>
-                  C
-                </motion.span>
-                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
-                <motion.span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl" initial={{
+                  C.
+                </motion.div>
+                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
                 scale: 0,
                 rotate: 15
               }} animate={{
@@ -184,10 +183,9 @@ const Hero = () => {
                 type: "spring",
                 bounce: 0.4
               }}>
-                  A
-                </motion.span>
-                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
-                <motion.span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl" initial={{
+                  A.
+                </motion.div>
+                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
                 scale: 0,
                 rotate: -10
               }} animate={{
@@ -199,10 +197,9 @@ const Hero = () => {
                 type: "spring",
                 bounce: 0.4
               }}>
-                  R
-                </motion.span>
-                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
-                <motion.span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl" initial={{
+                  R.
+                </motion.div>
+                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
                 scale: 0,
                 rotate: 20
               }} animate={{
@@ -214,12 +211,11 @@ const Hero = () => {
                 type: "spring",
                 bounce: 0.4
               }}>
-                  E
-                </motion.span>
-                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
+                  E.
+                </motion.div>
               </motion.div>
               
-              {/* Full Text Row */}
+              {/* Full Text with Underlined Letters */}
               <motion.p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide text-center" style={{
               textShadow: '0 2px 10px rgba(0,0,0,0.7)'
             }} initial={{
@@ -242,7 +238,7 @@ const Hero = () => {
                 duration: 0.5,
                 delay: 2.0
               }}>
-                  Creating{' '}
+                  <u>C</u>reating{' '}
                 </motion.span>
                 <motion.span initial={{
                 opacity: 0,
@@ -254,7 +250,7 @@ const Hero = () => {
                 duration: 0.5,
                 delay: 2.2
               }}>
-                  A{' '}
+                  <u>A</u>{' '}
                 </motion.span>
                 <motion.span initial={{
                 opacity: 0,
@@ -266,7 +262,7 @@ const Hero = () => {
                 duration: 0.5,
                 delay: 2.4
               }}>
-                  Referable{' '}
+                  <u>R</u>eferrable{' '}
                 </motion.span>
                 <motion.span initial={{
                 opacity: 0,
@@ -278,7 +274,7 @@ const Hero = () => {
                 duration: 0.5,
                 delay: 2.6
               }}>
-                  Experience
+                  <u>E</u>xperience
                 </motion.span>
               </motion.p>
             </div>
