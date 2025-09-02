@@ -148,6 +148,26 @@ const Hero = () => {
           >
             The Crawford Team
           </h1>
+          
+          {/* CARE Tagline */}
+          <motion.div 
+            className="mt-4 sm:mt-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          >
+            <p 
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide"
+              style={{
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+              }}
+            >
+              <span className="text-coral-500 font-bold text-shadow-glow">C</span>reating{' '}
+              <span className="text-coral-500 font-bold text-shadow-glow">A</span>{' '}
+              <span className="text-coral-500 font-bold text-shadow-glow">R</span>eferable{' '}
+              <span className="text-coral-500 font-bold text-shadow-glow">E</span>xperience
+            </p>
+          </motion.div>
         </motion.div>
 
         {/* Achievement Badge */}
