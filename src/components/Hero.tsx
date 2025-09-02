@@ -183,7 +183,7 @@ const Hero = () => {
                 duration: 0.6,
                 delay: 1.2
               }}>
-                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">A</span> Referrable
+                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">A</span> <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">R</span>eferrable
                 </motion.div>
                 <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
                 textShadow: '0 2px 10px rgba(0,0,0,0.7)'
