@@ -172,6 +172,7 @@ const Hero = () => {
                 >
                   C
                 </motion.span>
+                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
                 <motion.span 
                   className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
                   initial={{ scale: 0, rotate: 15 }}
@@ -180,6 +181,7 @@ const Hero = () => {
                 >
                   A
                 </motion.span>
+                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
                 <motion.span 
                   className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
                   initial={{ scale: 0, rotate: -10 }}
@@ -188,6 +190,7 @@ const Hero = () => {
                 >
                   R
                 </motion.span>
+                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
                 <motion.span 
                   className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
                   initial={{ scale: 0, rotate: 20 }}
@@ -196,6 +199,7 @@ const Hero = () => {
                 >
                   E
                 </motion.span>
+                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl">.</span>
               </motion.div>
               
               {/* Full Text Row */}
