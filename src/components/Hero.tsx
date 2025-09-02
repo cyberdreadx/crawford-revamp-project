@@ -156,66 +156,88 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            <p 
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide"
-              style={{
-                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-              }}
-            >
-              <motion.span 
-                className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl inline-block"
-                initial={{ scale: 0, rotate: -15 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, delay: 0.8, type: "spring", bounce: 0.4 }}
+            <div className="space-y-4">
+              {/* CARE Letters Row */}
+              <motion.div 
+                className="flex items-center justify-center gap-1 sm:gap-2"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
               >
-                C
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 1.0 }}
-              >
-                reating{' '}
-              </motion.span>
-              <motion.span 
-                className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl inline-block"
-                initial={{ scale: 0, rotate: 15 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, delay: 1.2, type: "spring", bounce: 0.4 }}
-              >
-                A
-              </motion.span>{' '}
-              <motion.span 
-                className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl inline-block"
-                initial={{ scale: 0, rotate: -10 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, delay: 1.4, type: "spring", bounce: 0.4 }}
-              >
-                R
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 1.6 }}
-              >
-                eferable{' '}
-              </motion.span>
-              <motion.span 
-                className="text-primary font-bold text-shadow-glow text-5xl sm:text-6xl md:text-7xl lg:text-8xl inline-block"
-                initial={{ scale: 0, rotate: 20 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, delay: 1.8, type: "spring", bounce: 0.4 }}
-              >
-                E
-              </motion.span>
-              <motion.span
+                <motion.span 
+                  className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  initial={{ scale: 0, rotate: -15 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, delay: 1.0, type: "spring", bounce: 0.4 }}
+                >
+                  C
+                </motion.span>
+                <motion.span 
+                  className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  initial={{ scale: 0, rotate: 15 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, delay: 1.2, type: "spring", bounce: 0.4 }}
+                >
+                  A
+                </motion.span>
+                <motion.span 
+                  className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, delay: 1.4, type: "spring", bounce: 0.4 }}
+                >
+                  R
+                </motion.span>
+                <motion.span 
+                  className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                  initial={{ scale: 0, rotate: 20 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ duration: 0.6, delay: 1.6, type: "spring", bounce: 0.4 }}
+                >
+                  E
+                </motion.span>
+              </motion.div>
+              
+              {/* Full Text Row */}
+              <motion.p 
+                className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide text-center"
+                style={{
+                  textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 2.0 }}
+                transition={{ duration: 0.8, delay: 1.8 }}
               >
-                xperience
-              </motion.span>
-            </p>
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 2.0 }}
+                >
+                  Creating{' '}
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 2.2 }}
+                >
+                  A{' '}
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 2.4 }}
+                >
+                  Referable{' '}
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 2.6 }}
+                >
+                  Experience
+                </motion.span>
+              </motion.p>
+            </div>
           </motion.div>
         </motion.div>
 
