@@ -108,7 +108,7 @@ const Hero = () => {
       </div>
 
       {/* Content - Diagonal Vertical Layout */}
-      <motion.div className="relative z-10 w-full h-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" initial={{
+      <motion.div className="relative z-10 w-full h-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex items-center justify-center" initial={{
       opacity: 0
     }} animate={{
       opacity: 1
@@ -116,11 +116,11 @@ const Hero = () => {
       duration: 1
     }}>
 
-        {/* Diagonal Container */}
-        <div className="relative w-full h-full min-h-screen flex flex-col justify-center">
+        {/* Diagonal Container - Centered */}
+        <div className="relative w-full max-w-4xl h-[500px] mx-auto">
           
           {/* Top Left - Team Name & Badge */}
-          <motion.div className="absolute top-[10%] left-[5%] max-w-md" initial={{
+          <motion.div className="absolute top-0 left-0 max-w-sm" initial={{
           opacity: 0,
           x: -50,
           y: -30
@@ -132,7 +132,7 @@ const Hero = () => {
           delay: 0.3,
           duration: 0.8
         }}>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-cursive text-white leading-[0.9] tracking-tight mb-4" style={{
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-cursive text-white leading-[0.9] tracking-tight mb-4" style={{
             textShadow: '0 6px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.8), 0 0 50px rgba(0,0,0,0.5)',
             filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.4))'
           }}>
@@ -156,7 +156,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Center - CARE Words (Diagonal Arrangement) */}
-          <motion.div className="absolute top-[25%] left-[50%] transform -translate-x-1/2 w-full max-w-lg" initial={{
+          <motion.div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" initial={{
           opacity: 0,
           scale: 0.8
         }} animate={{
@@ -167,7 +167,7 @@ const Hero = () => {
           duration: 0.8
         }}>
             
-            <motion.div className="relative w-full h-80">
+            <div className="relative w-80 h-60">
               {/* C - Top Left */}
               <motion.div className="absolute top-0 left-0 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
               textShadow: '0 2px 10px rgba(0,0,0,0.7)'
@@ -187,7 +187,7 @@ const Hero = () => {
               </motion.div>
               
               {/* A - Moving Right and Down */}
-              <motion.div className="absolute top-16 left-20 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
+              <motion.div className="absolute top-12 left-16 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
               textShadow: '0 2px 10px rgba(0,0,0,0.7)'
             }} initial={{
               opacity: 0,
@@ -205,7 +205,7 @@ const Hero = () => {
               </motion.div>
               
               {/* R - Continue Diagonal */}
-              <motion.div className="absolute top-32 left-40 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
+              <motion.div className="absolute top-24 left-32 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
               textShadow: '0 2px 10px rgba(0,0,0,0.7)'
             }} initial={{
               opacity: 0,
@@ -223,7 +223,7 @@ const Hero = () => {
               </motion.div>
               
               {/* E - Bottom Right */}
-              <motion.div className="absolute top-48 left-60 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
+              <motion.div className="absolute top-36 left-48 text-lg sm:text-xl md:text-2xl text-white/90 font-medium tracking-wide" style={{
               textShadow: '0 2px 10px rgba(0,0,0,0.7)'
             }} initial={{
               opacity: 0,
@@ -239,11 +239,11 @@ const Hero = () => {
             }}>
                 <span className="text-primary font-bold text-shadow-glow text-3xl sm:text-4xl md:text-5xl">E</span>xperience
               </motion.div>
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Bottom Right - Content & CTA */}
-          <motion.div className="absolute bottom-[15%] right-[5%] max-w-md text-right" initial={{
+          <motion.div className="absolute bottom-0 right-0 max-w-sm text-right" initial={{
           opacity: 0,
           x: 50,
           y: 30
