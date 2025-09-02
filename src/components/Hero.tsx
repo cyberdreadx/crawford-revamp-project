@@ -146,8 +146,8 @@ const Hero = () => {
           duration: 0.8
         }}>
             <div className="space-y-6">
-              {/* CARE Letters - Vertical Stack */}
-              <motion.div className="flex flex-col items-center justify-center" initial={{
+              {/* CARE Words - Vertical Stack */}
+              <motion.div className="flex flex-col items-center justify-center space-y-2" initial={{
               opacity: 0,
               scale: 0.8
             }} animate={{
@@ -157,126 +157,63 @@ const Hero = () => {
               duration: 0.8,
               delay: 0.8
             }}>
-                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
-                scale: 0,
-                rotate: -15
+                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+              }} initial={{
+                opacity: 0,
+                x: -20
               }} animate={{
-                scale: 1,
-                rotate: 0
+                opacity: 1,
+                x: 0
               }} transition={{
                 duration: 0.6,
-                delay: 1.0,
-                type: "spring",
-                bounce: 0.4
+                delay: 1.0
               }}>
-                  C.
+                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">C</span>reating
                 </motion.div>
-                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
-                scale: 0,
-                rotate: 15
+                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+              }} initial={{
+                opacity: 0,
+                x: 20
               }} animate={{
-                scale: 1,
-                rotate: 0
+                opacity: 1,
+                x: 0
               }} transition={{
                 duration: 0.6,
-                delay: 1.2,
-                type: "spring",
-                bounce: 0.4
+                delay: 1.2
               }}>
-                  A.
+                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">A</span>
                 </motion.div>
-                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
-                scale: 0,
-                rotate: -10
+                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+              }} initial={{
+                opacity: 0,
+                x: -20
               }} animate={{
-                scale: 1,
-                rotate: 0
+                opacity: 1,
+                x: 0
               }} transition={{
                 duration: 0.6,
-                delay: 1.4,
-                type: "spring",
-                bounce: 0.4
+                delay: 1.4
               }}>
-                  R.
+                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">R</span>eferrable
                 </motion.div>
-                <motion.div className="text-primary font-bold text-shadow-glow text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.8]" initial={{
-                scale: 0,
-                rotate: 20
+                <motion.div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide" style={{
+                textShadow: '0 2px 10px rgba(0,0,0,0.7)'
+              }} initial={{
+                opacity: 0,
+                x: 20
               }} animate={{
-                scale: 1,
-                rotate: 0
+                opacity: 1,
+                x: 0
               }} transition={{
                 duration: 0.6,
-                delay: 1.6,
-                type: "spring",
-                bounce: 0.4
+                delay: 1.6
               }}>
-                  E.
+                  <span className="text-primary font-bold text-shadow-glow text-4xl sm:text-5xl md:text-6xl lg:text-7xl">E</span>xperience
                 </motion.div>
               </motion.div>
-              
-              {/* Full Text with Underlined Letters */}
-              <motion.p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-medium tracking-wide text-center" style={{
-              textShadow: '0 2px 10px rgba(0,0,0,0.7)'
-            }} initial={{
-              opacity: 0,
-              y: 20
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              duration: 0.8,
-              delay: 1.8
-            }}>
-                <motion.span initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.5,
-                delay: 2.0
-              }}>
-                  <u>C</u>reating{' '}
-                </motion.span>
-                <motion.span initial={{
-                opacity: 0,
-                x: 20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.5,
-                delay: 2.2
-              }}>
-                  <u>A</u>{' '}
-                </motion.span>
-                <motion.span initial={{
-                opacity: 0,
-                x: -20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.5,
-                delay: 2.4
-              }}>
-                  <u>R</u>eferrable{' '}
-                </motion.span>
-                <motion.span initial={{
-                opacity: 0,
-                x: 20
-              }} animate={{
-                opacity: 1,
-                x: 0
-              }} transition={{
-                duration: 0.5,
-                delay: 2.6
-              }}>
-                  <u>E</u>xperience
-                </motion.span>
-              </motion.p>
             </div>
           </motion.div>
         </motion.div>
