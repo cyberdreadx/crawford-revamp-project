@@ -162,10 +162,10 @@ const Hero = () => {
                 textShadow: '0 2px 10px rgba(0,0,0,0.7)'
               }}
             >
-              <span className="text-ocean-400 font-bold text-shadow-glow">C</span>reating{' '}
-              <span className="text-ocean-400 font-bold text-shadow-glow">A</span>{' '}
-              <span className="text-ocean-400 font-bold text-shadow-glow">R</span>eferable{' '}
-              <span className="text-ocean-400 font-bold text-shadow-glow">E</span>xperience
+              <span className="text-primary font-bold text-shadow-glow">C</span>reating{' '}
+              <span className="text-primary font-bold text-shadow-glow">A</span>{' '}
+              <span className="text-primary font-bold text-shadow-glow">R</span>eferable{' '}
+              <span className="text-primary font-bold text-shadow-glow">E</span>xperience
             </p>
           </motion.div>
         </motion.div>
