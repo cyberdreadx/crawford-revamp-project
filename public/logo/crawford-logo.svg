@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <style>
+    .text { font-family: Arial, sans-serif; font-weight: 400; fill: white; }
+    .team-text { font-size: 48px; letter-spacing: 4px; }
+    .the-text { font-size: 48px; letter-spacing: 4px; }
+    .crawford-text { font-size: 120px; letter-spacing: 4px; }
+    .welcome-text { font-size: 50px; letter-spacing: 8px; }
+    .line { stroke: white; stroke-width: 3; }
+    .pineapple { fill: white; }
+  </style>
+  
+  <!-- Logo Container -->
+  <g>
+    <!-- Decorative lines -->
+    <line x1="90" y1="240" x2="330" y2="240" class="line" />
+    <line x1="470" y1="240" x2="710" y2="240" class="line" />
+    <line x1="90" y1="480" x2="710" y2="480" class="line" />
+    
+    <!-- Roof design -->
+    <polyline points="330,240 400,160 470,240" class="line" />
+    
+    <!-- Pineapple icon -->
+    <g class="pineapple">
+      <path d="M400,180 C420,200 420,230 400,250 C380,230 380,200 400,180 Z" />
+      <path d="M400,170 L400,150 L410,140 L390,140 L400,150 L400,170 Z" />
+      <path d="M390,225 C380,215 380,190 390,180 L400,190 L410,180 C420,190 420,215 410,225 Z" />
+    </g>
+    
+    <!-- Text elements -->
+    <text x="140" y="370" class="text crawford-text">CRAWFORD</text>
+    <text x="100" y="370" class="text the-text">THE</text>
+    <text x="620" y="370" class="text team-text">TEAM</text>
+    <text x="400" y="540" class="text welcome-text" text-anchor="middle">WELCOME HOME</text>
+  </g>
+</svg>
