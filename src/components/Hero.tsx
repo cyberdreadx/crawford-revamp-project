@@ -150,7 +150,7 @@ const Hero = () => {
 
             {/* CARE Values */}
             <motion.div
-              className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 mb-8"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 md:gap-6 mb-8 max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
@@ -163,17 +163,17 @@ const Hero = () => {
               ].map((item, index) => (
                 <motion.div
                   key={item.letter}
-                  className="text-center px-3 py-2"
+                  className="text-center px-1 py-2"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
                 >
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#7BBCB0] block" style={{
+                  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#7BBCB0] block" style={{
                     textShadow: '0 2px 8px rgba(0,0,0,0.8)'
                   }}>
                     {item.letter}
                   </span>
-                  <span className="text-white text-sm sm:text-base font-medium" style={{
+                  <span className="text-white text-xs sm:text-sm md:text-base font-medium" style={{
                     textShadow: '0 2px 4px rgba(0,0,0,0.9)'
                   }}>
                     {item.word}
