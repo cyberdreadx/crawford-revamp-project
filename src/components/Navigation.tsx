@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, Phone, Mail, User, ChevronDown, Facebook, Instagram, Linkedin } from "lucide-react";
+import { Menu, Phone, Mail, User, ChevronDown, Facebook, Instagram, Youtube } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
@@ -66,42 +66,42 @@ const Navigation = () => {
   return (
     <>
       {/* Top Social Media Bar */}
-      <div className="bg-muted/30 border-b border-border/30 py-2">
+      <div className="bg-muted/30 border-b border-border/30 py-1">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center space-x-3">
             <a
-              href="#"
+              href="https://www.facebook.com/yourcrawfordteam"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
               aria-label="Facebook"
             >
               <Facebook className="w-4 h-4" />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/yourcrawfordteam/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
               aria-label="Instagram"
             >
               <Instagram className="w-4 h-4" />
             </a>
             <a
-              href="#"
+              href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
-              aria-label="LinkedIn"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="YouTube"
             >
-              <Linkedin className="w-4 h-4" />
+              <Youtube className="w-4 h-4" />
             </a>
           </div>
         </div>
       </div>
       
       <nav 
-        className={`fixed top-[48px] w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-[34px] w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
@@ -129,7 +129,7 @@ const Navigation = () => {
                       <ChevronDown className="ml-1 h-3 w-3" />
                       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-background border border-border shadow-lg z-50">
+                    <DropdownMenuContent className="bg-background border border-border shadow-lg z-[60]">
                       <DropdownMenuItem asChild>
                         <Link to="/listings" className="w-full">
                           Our Listings
