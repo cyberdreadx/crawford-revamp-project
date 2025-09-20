@@ -140,7 +140,7 @@ const Hero = () => {
                 <img 
                   src="/logo/crawford-logo-white.png" 
                   alt="The Crawford Team" 
-                  className="h-16 sm:h-20 md:h-24 lg:h-28"
+                  className="h-32 sm:h-40 md:h-48 lg:h-56"
                   style={{
                     filter: 'drop-shadow(0 4px 20px rgba(0,0,0,1)) drop-shadow(0 2px 12px rgba(0,0,0,0.9)) drop-shadow(0 0 30px rgba(0,0,0,0.6))'
                   }}
