@@ -43,7 +43,7 @@ const Contact = () => {
     title: "Call or Text Us",
     value: "(727) 599-1944",
     href: "tel:727-599-1944",
-    description: "Call or text for immediate assistance"
+    description: "Call or text for assistance"
   }, {
     icon: Mail,
     title: "Email Us",
