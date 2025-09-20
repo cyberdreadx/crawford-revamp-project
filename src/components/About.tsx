@@ -51,7 +51,7 @@ const About = () => {
               transition={{ delay: 0.1, duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Badge variant="outline" className="mb-4 px-4 py-2 bg-white/10 text-white border-white/20">
+              <Badge variant="outline" className="mb-4 px-4 py-2 bg-seafoam-light/20 text-seafoam-dark border-seafoam-light">
                 About Us
               </Badge>
             </motion.div>
@@ -119,7 +119,7 @@ const About = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Monica Crawford</h3>
-                    <Badge variant="outline" className="text-lg px-6 py-2 bg-white/10 text-white border-white/20">Owner & Lead Listing Agent</Badge>
+                    <Badge variant="outline" className="text-lg px-6 py-2 bg-seafoam-light/20 text-seafoam-dark border-seafoam-light">Owner & Lead Listing Agent</Badge>
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
@@ -156,7 +156,7 @@ const About = () => {
                 <div className="lg:order-1 space-y-6">
                   <div>
                     <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Ashley Eidam</h3>
-                    <Badge variant="outline" className="text-lg px-6 py-2 bg-white/10 text-white border-white/20">Team Coordinator & Realtor</Badge>
+                    <Badge variant="outline" className="text-lg px-6 py-2 bg-seafoam-light/20 text-seafoam-dark border-seafoam-light">Team Coordinator & Realtor</Badge>
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
@@ -193,7 +193,7 @@ const About = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Aline Sarria</h3>
-                    <Badge variant="outline" className="text-lg px-6 py-2 bg-white/10 text-white border-white/20">Luxury Property Matchmaker</Badge>
+                    <Badge variant="outline" className="text-lg px-6 py-2 bg-seafoam-light/20 text-seafoam-dark border-seafoam-light">Luxury Property Matchmaker</Badge>
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
@@ -230,7 +230,7 @@ const About = () => {
                 <div className="lg:order-1 space-y-6">
                   <div>
                     <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
-                    <Badge variant="outline" className="text-lg px-6 py-2 bg-white/10 text-white border-white/20">Realtor & Investor Specialist</Badge>
+                    <Badge variant="outline" className="text-lg px-6 py-2 bg-seafoam-light/20 text-seafoam-dark border-seafoam-light">Realtor & Investor Specialist</Badge>
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
