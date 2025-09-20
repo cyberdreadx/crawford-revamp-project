@@ -274,33 +274,42 @@ const Contact = () => {
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.02 }}
                   >
-                    <Card className="p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
-                    <CardContent className="p-0">
-                      <div className="flex items-start space-x-4">
-                        <div className="p-3 bg-accent/10 rounded-full flex-shrink-0">
-                          <Icon className="w-6 h-6 text-accent" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-foreground mb-1">
-                            {info.title}
-                          </h4>
-                          {info.href.startsWith('tel:') || info.href.startsWith('mailto:') ? (
-                            <a 
-                              href={info.href}
-                              className="text-foreground hover:text-accent transition-colors font-medium"
-                            >
-                              {info.value}
-                            </a>
-                          ) : (
-                            <p className="text-foreground font-medium">{info.value}</p>
-                          )}
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {info.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                     <Card className="p-6 shadow-card hover:shadow-elegant transition-shadow duration-300 border-0">
+                     <CardContent className="p-0">
+                       <div className="flex items-start space-x-4">
+                         <div className="p-3 bg-accent/10 rounded-full flex-shrink-0">
+                           <Icon className="w-6 h-6 text-accent" />
+                         </div>
+                         <div className="flex-1 min-w-0">
+                           <h4 className="font-semibold text-foreground mb-2">
+                             {info.title}
+                           </h4>
+                           {info.href.startsWith('tel:') || info.href.startsWith('mailto:') ? (
+                             <a 
+                               href={info.href}
+                               className="text-foreground hover:text-accent transition-colors font-medium block break-all"
+                             >
+                               {info.value}
+                             </a>
+                           ) : info.href.startsWith('https://maps') ? (
+                             <a 
+                               href={info.href}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-foreground hover:text-accent transition-colors font-medium block"
+                             >
+                               {info.value}
+                             </a>
+                           ) : (
+                             <p className="text-foreground font-medium">{info.value}</p>
+                           )}
+                           <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                             {info.description}
+                           </p>
+                         </div>
+                       </div>
+                     </CardContent>
+                   </Card>
                   </motion.div>
                 );
               })}
