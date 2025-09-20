@@ -8,6 +8,11 @@ const dossiers = [{
   image: "/lovable-uploads/art-house-dossier-cover.png",
   pdf: "https://arthouse-luxury-cmw5k98.gamma.site/",
   downloadPdf: "/dossiers/Art_House.pdf"
+}, {
+  title: "REFLECTION",
+  image: "/lovable-uploads/reflection-dossier-cover.png",
+  pdf: "https://reflection-luxury-living-j1rkof1.gamma.site/",
+  downloadPdf: "/dossiers/Reflection.pdf" // Update this path when PDF is available
 }
 // Add more dossiers here
 ];
