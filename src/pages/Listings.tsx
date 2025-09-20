@@ -140,11 +140,28 @@ const Listings = () => {
     try {
       setLoading(true);
       
-      // Fetch properties
-      const { data: propertiesData, error: propertiesError } = await supabase
-        .from('properties')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Check if user is authenticated admin to use full properties table
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      let propertiesData, propertiesError;
+      
+      if (user) {
+        // Admin users get full property data
+        const result = await supabase
+          .from('properties')
+          .select('*')
+          .order('created_at', { ascending: false });
+        propertiesData = result.data;
+        propertiesError = result.error;
+      } else {
+        // Non-admin users get public property data (no agent contact info)
+        const result = await supabase
+          .from('properties_public')
+          .select('*')
+          .order('created_at', { ascending: false });
+        propertiesData = result.data;
+        propertiesError = result.error;
+      }
 
       if (propertiesError) throw propertiesError;
       setProperties(propertiesData || []);

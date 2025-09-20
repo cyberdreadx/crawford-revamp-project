@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Phone, Mail, MapPin, Bed, Bath, Square, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
+import ContactAgentForm from '@/components/ContactAgentForm';
 
 interface PropertyImage {
   id: string;
@@ -52,11 +53,30 @@ const PropertyDetail = () => {
 
   const fetchProperty = async () => {
     try {
-      const { data: propertyData, error: propertyError } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('id', id)
-        .single();
+      // Check if user is authenticated admin to use full properties table
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      let propertyData, propertyError;
+      
+      if (user) {
+        // Admin users get full property data
+        const result = await supabase
+          .from('properties')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
+        propertyData = result.data;
+        propertyError = result.error;
+      } else {
+        // Non-admin users get public property data (no agent contact info)
+        const result = await supabase
+          .from('properties_public')
+          .select('*')
+          .eq('id', id)
+          .maybeSingle();
+        propertyData = result.data;
+        propertyError = result.error;
+      }
 
       if (propertyError) throw propertyError;
 
@@ -317,25 +337,14 @@ const PropertyDetail = () => {
                       {property.agent_title && (
                         <div className="text-sm text-muted-foreground mb-3">{property.agent_title}</div>
                       )}
+                      {/* Contact info only shown to admin users */}
                       <div className="space-y-2">
-                        {property.agent_phone && (
-                          <a
-                            href={`tel:${property.agent_phone}`}
-                            className="flex items-center text-sm text-primary hover:underline"
-                          >
-                            <Phone className="h-4 w-4 mr-2" />
-                            {property.agent_phone}
-                          </a>
-                        )}
-                        {property.agent_email && (
-                          <a
-                            href={`mailto:${property.agent_email}`}
-                            className="flex items-center text-sm text-primary hover:underline"
-                          >
-                            <Mail className="h-4 w-4 mr-2" />
-                            {property.agent_email}
-                          </a>
-                        )}
+                        <Button variant="outline" size="sm" className="w-full">
+                          Contact Agent
+                        </Button>
+                        <p className="text-xs text-muted-foreground text-center">
+                          Use the contact form below for agent inquiries
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -343,15 +352,12 @@ const PropertyDetail = () => {
               </Card>
             )}
 
-            {/* CTA Buttons */}
-            <div className="space-y-3">
-              <Button className="w-full" size="lg">
-                Schedule Tour
-              </Button>
-              <Button variant="outline" className="w-full" size="lg">
-                Request Info
-              </Button>
-            </div>
+            {/* Contact Agent Form */}
+            <ContactAgentForm 
+              propertyTitle={property.title}
+              propertyId={property.id}
+              agentName={property.agent_name}
+            />
           </div>
         </div>
       </div>

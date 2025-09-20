@@ -151,12 +151,30 @@ const Properties = () => {
     try {
       setLoading(true);
       
-      // Fetch featured properties
-      const { data: propertiesData, error: propertiesError } = await supabase
-        .from('properties')
-        .select('*')
-        .eq('is_featured', true)
-        .order('created_at', { ascending: false });
+      // Check if user is authenticated admin to use full properties table
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      let propertiesData, propertiesError;
+      
+      if (user) {
+        // Admin users get full property data
+        const result = await supabase
+          .from('properties')
+          .select('*')
+          .eq('is_featured', true)
+          .order('created_at', { ascending: false });
+        propertiesData = result.data;
+        propertiesError = result.error;
+      } else {
+        // Non-admin users get public property data (no agent contact info)
+        const result = await supabase
+          .from('properties_public')
+          .select('*')
+          .eq('is_featured', true)
+          .order('created_at', { ascending: false });
+        propertiesData = result.data;
+        propertiesError = result.error;
+      }
 
       if (propertiesError) throw propertiesError;
 
@@ -334,7 +352,7 @@ const Properties = () => {
                       size="lg"
                       className="text-base lg:text-lg px-6 lg:px-8 w-full sm:w-auto"
                     >
-                      Contact Agent
+                      Request Information
                     </Button>
                   </div>
                 </div>
