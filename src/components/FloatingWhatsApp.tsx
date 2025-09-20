@@ -2,7 +2,9 @@ import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const FloatingWhatsApp = () => {
-  const phoneNumber = "+1234567890"; // Replace with actual phone number
+  // Replace with your WhatsApp number in international format (no + sign, no spaces, no dashes)
+  // Example: "1234567890" for US number +1 (234) 567-890
+  const phoneNumber = "1234567890"; 
   const message = "Hi! I'm interested in your luxury properties. Can you help me?";
   
   const handleWhatsAppClick = () => {
