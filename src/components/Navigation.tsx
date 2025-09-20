@@ -97,7 +97,7 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map(item => item.isDropdown ? <div key={item.name} className="relative group">
-                  <button className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative flex items-center group">
+                  <button className="text-foreground hover:text-teal-600 px-4 py-2 text-sm font-medium transition-all duration-200 relative flex items-center group">
                     {item.name}
                     <ChevronDown className="ml-1 h-3 w-3 transition-transform duration-200 group-hover:rotate-180" />
                   </button>
@@ -122,10 +122,10 @@ const Navigation = () => {
                         </>}
                     </div>
                   </div>
-                </div> : item.href === "/" && item.section && !isHomePage ? <a key={item.name} href={`/${item.section}`} className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
+                </div> : item.href === "/" && item.section && !isHomePage ? <a key={item.name} href={`/${item.section}`} className="text-foreground hover:text-teal-600 px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
                   {item.name}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-                </a> : item.href === "/" && !isHomePage ? <Link key={item.name} to={item.href} className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
+                </a> : item.href === "/" && !isHomePage ? <Link key={item.name} to={item.href} className="text-foreground hover:text-teal-600 px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
                   {item.name}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
                 </Link> : <button key={item.name} onClick={() => handleNavClick(item)} className="text-foreground hover:text-teal-600 px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
