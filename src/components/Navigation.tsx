@@ -45,6 +45,7 @@ const Navigation = () => {
     { name: "About", href: "/", section: "#about" },
     { name: "Properties", href: null, section: null, isDropdown: true },
     { name: "Luxury", href: "/luxury", section: null },
+    { name: "Blog", href: "/blog", section: null },
     { name: "Services", href: "/", section: "#services" },
     { name: "Contact", href: "/", section: "#contact" },
   ];
@@ -111,7 +112,7 @@ const Navigation = () => {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                ) : (item.href === "/luxury") ? (
+                ) : (item.href === "/luxury" || item.href === "/blog") ? (
                   <Link
                     key={item.name}
                     to={item.href}
@@ -291,7 +292,7 @@ const Navigation = () => {
                             </button>
                           </div>
                         </div>
-                      ) : item.href === "/luxury" ? (
+                      ) : (item.href === "/luxury" || item.href === "/blog") ? (
                         <Link
                           key={item.name}
                           to={item.href}

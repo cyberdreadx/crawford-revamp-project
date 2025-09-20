@@ -10,7 +10,8 @@ import {
   TrendingUp, 
   DollarSign,
   Eye,
-  Calendar
+  Calendar,
+  FileText
 } from 'lucide-react';
 
 interface DashboardStats {
@@ -20,6 +21,8 @@ interface DashboardStats {
   activeUsers: number;
   totalHeroImages: number;
   activeHeroImages: number;
+  totalBlogPosts: number;
+  publishedBlogPosts: number;
   recentActivities: any[];
 }
 
@@ -31,6 +34,8 @@ export default function Dashboard() {
     activeUsers: 0,
     totalHeroImages: 0,
     activeHeroImages: 0,
+    totalBlogPosts: 0,
+    publishedBlogPosts: 0,
     recentActivities: []
   });
   const [loading, setLoading] = useState(true);
@@ -41,15 +46,17 @@ export default function Dashboard() {
 
   const fetchDashboardStats = async () => {
     try {
-      const [propertiesResult, usersResult, heroImagesResult] = await Promise.all([
+      const [propertiesResult, usersResult, heroImagesResult, blogPostsResult] = await Promise.all([
         supabase.from('properties').select('status'),
         supabase.from('profiles').select('status'),
-        supabase.from('hero_images').select('is_active')
+        supabase.from('hero_images').select('is_active'),
+        supabase.from('blog_posts').select('is_published')
       ]);
 
       const properties = propertiesResult.data || [];
       const users = usersResult.data || [];
       const heroImages = heroImagesResult.data || [];
+      const blogPosts = blogPostsResult.data || [];
 
       setStats({
         totalProperties: properties.length,
@@ -58,6 +65,8 @@ export default function Dashboard() {
         activeUsers: users.filter(u => u.status === 'active').length,
         totalHeroImages: heroImages.length,
         activeHeroImages: heroImages.filter(h => h.is_active).length,
+        totalBlogPosts: blogPosts.length,
+        publishedBlogPosts: blogPosts.filter(p => p.is_published).length,
         recentActivities: []
       });
     } catch (error) {
@@ -76,11 +85,11 @@ export default function Dashboard() {
       color: 'text-blue-600'
     },
     {
-      title: 'Users',
-      value: stats.totalUsers,
-      active: stats.activeUsers,
-      icon: Users,
-      color: 'text-green-600'
+      title: 'Blog Posts',
+      value: stats.totalBlogPosts,
+      active: stats.publishedBlogPosts,
+      icon: FileText,
+      color: 'text-indigo-600'
     },
     {
       title: 'Hero Images',
@@ -90,11 +99,11 @@ export default function Dashboard() {
       color: 'text-purple-600'
     },
     {
-      title: 'Active Listings',
-      value: stats.activeProperties,
-      active: stats.activeProperties,
-      icon: Activity,
-      color: 'text-orange-600'
+      title: 'Users',
+      value: stats.totalUsers,
+      active: stats.activeUsers,
+      icon: Users,
+      color: 'text-green-600'
     }
   ];
 
