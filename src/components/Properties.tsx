@@ -421,32 +421,16 @@ const Properties = () => {
           {/* CTA Section */}
           <div className="text-center">
             <p className="text-muted-foreground mb-8">
-              Explore our exclusive listings or search the entire MLS database
+              Discover exceptional properties curated by The Crawford Team
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-gradient-gold hover:shadow-button transition-all duration-200"
-                asChild
-              >
-                <Link to="/listings">
-                  Our Listings
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-              <Button 
-                variant="outline"
-                size="lg"
-                className="text-base px-6"
-                onClick={() => {
-                  // Placeholder for MLS search functionality
-                  alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                }}
-              >
-                Search All Listings
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </div>
+            <Button 
+              size="lg"
+              className="bg-gradient-gold hover:shadow-button transition-all duration-200"
+              onClick={() => navigate(`/property/${currentProperty.id}`)}
+            >
+              View This Property
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
           </div>
         </div>
 

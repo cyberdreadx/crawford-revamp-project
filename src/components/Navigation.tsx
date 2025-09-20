@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Phone, Mail, User } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Menu, Phone, Mail, User, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
@@ -42,7 +43,7 @@ const Navigation = () => {
   const navItems = [
     { name: "Home", href: "/", section: "#home" },
     { name: "About", href: "/", section: "#about" },
-    { name: "Properties", href: "/listings", section: "#properties" },
+    { name: "Properties", href: null, section: null, isDropdown: true },
     { name: "Luxury", href: "/luxury", section: null },
     { name: "Services", href: "/", section: "#services" },
     { name: "Contact", href: "/", section: "#contact" },
@@ -85,7 +86,30 @@ const Navigation = () => {
           <div className="hidden md:flex flex-1 justify-center max-w-lg mx-4">
             <div className="flex items-baseline justify-center space-x-6 w-full">
               {navItems.map((item) => (
-                (item.href === "/listings" || item.href === "/luxury") ? (
+                item.isDropdown ? (
+                  <DropdownMenu key={item.name}>
+                    <DropdownMenuTrigger className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group flex items-center">
+                      {item.name}
+                      <ChevronDown className="ml-1 h-3 w-3" />
+                      <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-background border border-border shadow-lg z-50">
+                      <DropdownMenuItem asChild>
+                        <Link to="/listings" className="w-full">
+                          Our Listings
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => {
+                          alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                        }}
+                        className="cursor-pointer"
+                      >
+                        Search All Listings
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (item.href === "/luxury") ? (
                   <Link
                     key={item.name}
                     to={item.href}
@@ -210,7 +234,31 @@ const Navigation = () => {
                   {/* Navigation */}
                   <nav className="flex flex-col space-y-1 py-4 flex-1">
                     {navItems.map((item) => (
-                      (item.href === "/listings" || item.href === "/luxury") ? (
+                      item.isDropdown ? (
+                        <div key={item.name} className="space-y-1">
+                          <div className="flex items-center py-3 px-3 text-base font-medium text-foreground">
+                            {item.name}
+                          </div>
+                          <div className="pl-4 space-y-1">
+                            <Link
+                              to="/listings"
+                              onClick={() => setIsOpen(false)}
+                              className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                            >
+                              Our Listings
+                            </Link>
+                            <button
+                              onClick={() => {
+                                alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                                setIsOpen(false);
+                              }}
+                              className="flex items-center py-2 px-3 text-sm font-medium text-left rounded-lg hover:bg-accent/10 hover:text-accent transition-colors w-full"
+                            >
+                              Search All Listings
+                            </button>
+                          </div>
+                        </div>
+                      ) : item.href === "/luxury" ? (
                         <Link
                           key={item.name}
                           to={item.href}
