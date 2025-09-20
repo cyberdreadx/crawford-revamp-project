@@ -72,7 +72,7 @@ const Hero = () => {
     if (currentImages.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex(prev => (prev + 1) % currentImages.length);
-      }, 4000);
+      }, 8000);
 
       return () => clearInterval(interval);
     }
@@ -98,8 +98,8 @@ const Hero = () => {
               className="w-full h-full object-cover"
               loading={index < 3 ? 'eager' : 'lazy'}
             />
-            {/* Stronger overlay gradient for better text visibility */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/60 to-black/85"></div>
+            {/* Overlay gradient for text visibility */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
             {/* Crawford Team overlay with seafoam color */}
             <div className="absolute inset-0 bg-[#7BBCB0]/40 mix-blend-overlay"></div>
           </div>
