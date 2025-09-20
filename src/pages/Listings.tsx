@@ -323,7 +323,7 @@ const Listings = () => {
   }
 
   return (
-    <div className="min-h-screen pt-[98px]">
+    <div className="min-h-screen pt-[64px]">
       <Navigation />
       
       {/* Hero Section */}

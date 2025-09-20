@@ -67,7 +67,7 @@ const Navigation = () => {
     <>
       
       <nav 
-        className={`fixed top-[34px] w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >

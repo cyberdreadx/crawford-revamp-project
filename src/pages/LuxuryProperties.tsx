@@ -46,7 +46,7 @@ const DossierCard = ({
 		</CardContent>
 	</Card>;
 const LuxuryProperties = () => {
-  return <div className="pt-[98px]">
+  return <div className="pt-[64px]">
 			<Navigation />
 			<div className="container mx-auto px-4 py-12 md:px-6 lg:py-16">
 				<div className="mb-12 text-center">
