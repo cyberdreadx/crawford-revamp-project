@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 const FloatingWhatsApp = () => {
   // Replace with your WhatsApp number in international format (no + sign, no spaces, no dashes)
   // Example: "1234567890" for US number +1 (234) 567-890
-  const phoneNumber = "15551234567"; // +1 (555) 123-4567 in international format 
+  const phoneNumber = "17275991944"; // (727) 599-1944 in international format 
   const message = "Hi! I'm interested in your luxury properties. Can you help me?";
   
   const handleWhatsAppClick = () => {
