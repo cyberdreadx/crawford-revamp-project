@@ -237,16 +237,15 @@ const Hero = () => {
 
             {/* Stats */}
             <motion.div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 pt-8 border-t border-white/20"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-12 pt-8 border-t border-white/20"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.8 }}
             >
               {[
-                { number: '300+', label: 'Families Helped' },
-                { number: '15+', label: 'Years Experience' },
-                { number: '98%', label: 'Client Satisfaction' },
-                { number: '24/7', label: 'Support' }
+                { number: '500+', label: 'Families Helped' },
+                { number: '$150M+', label: 'Closed Volume' },
+                { number: '300+', label: 'Five Star Reviews' }
               ].map((stat, index) => (
                 <motion.div
                   key={stat.label}
