@@ -287,7 +287,7 @@ const Contact = () => {
                            {info.href.startsWith('tel:') || info.href.startsWith('mailto:') ? (
                              <a 
                                href={info.href}
-                               className="text-foreground hover:text-accent transition-colors font-medium block break-all"
+                               className="text-foreground hover:text-accent transition-colors font-medium text-sm block"
                              >
                                {info.value}
                              </a>
