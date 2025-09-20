@@ -12,7 +12,12 @@ const dossiers = [{
   title: "REFLECTION",
   image: "/lovable-uploads/reflection-dossier-cover-2.png",
   pdf: "https://reflection-luxury-living-j1rkof1.gamma.site/",
-  downloadPdf: "/dossiers/Reflection.pdf" // Update this path when PDF is available
+  downloadPdf: "/dossiers/Reflection.pdf"
+}, {
+  title: "400 CENTRAL",
+  image: "/lovable-uploads/400-central-dossier-cover.png",
+  pdf: "https://luxuryinthesky-iovagxi.gamma.site/",
+  downloadPdf: "/dossiers/400_Central.pdf" // Update this path when PDF is available
 }
 // Add more dossiers here
 ];
