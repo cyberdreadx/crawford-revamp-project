@@ -123,13 +123,13 @@ const About = () => {
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
-                      Monica Crawford was born and raised among the beautiful horse farms and Bourbon trails in Kentucky. In 2012, she and her husband, Adam, traded the Bluegrass for the sandy Gulf beaches and decided to call Gulfport their home.
+                      Monica Crawford was born and raised among the beautiful horse farms and Bourbon trails in Kentucky. In 2012, she and her husband, Adam, traded the Bluegrass for the sandy Gulf Beaches and decided to call Gulfport their home.
                     </p>
                     <p>
-                      Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019.
+                      Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019 and has served on the Agent Leadership Council, as the Chairperson of the KW Luxury Division and is a Certified Keller Williams Instructor.
                     </p>
                     <p>
-                      Since 2013, Monica and her teammates have helped more than 500 clients achieve their real estate goals and have closed over $150 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients.
+                      When she isn't selling houses or spending time in nature with her family, Monica helps empower women to live aligned, designed lives through her coaching company Her True North.
                     </p>
                   </div>
                 </div>
@@ -200,7 +200,7 @@ const About = () => {
                       Aline Sarria is a dedicated luxury property matchmaker specializing in waterfront condos and high-end real estate in downtown St. Petersburg (DTSP). Known for her ability to uncover the hidden potential in every property, Aline brings a visionary approach to both buying and selling luxury homes.
                     </p>
                     <p>
-                      Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate.
+                      Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate. Native Spanish speaker and fluent in French, Aline serves a diverse clientele.
                     </p>
                     <p>
                       Now a proud St. Petersburg resident, Aline is passionate about showcasing the city's best properties to local buyers and international investors alike, especially those drawn to Florida's Gulf Coast lifestyle.
@@ -230,7 +230,7 @@ const About = () => {
                 <div className="lg:order-1 space-y-6">
                   <div>
                     <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
-                    <Badge variant="secondary" className="text-lg px-6 py-2">Realtor</Badge>
+                    <Badge variant="secondary" className="text-lg px-6 py-2">Realtor & Investor Specialist</Badge>
                   </div>
                   <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
                     <p>
