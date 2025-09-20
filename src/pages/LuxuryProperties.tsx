@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 const dossiers = [{
   title: "ART HOUSE",
   image: "/lovable-uploads/art-house-dossier-cover.png",
-  pdf: "/dossiers/ART-HOUSE-Designed-for-Your-Downtown-Life.pdf",
+  pdf: "https://arthouse-luxury-cmw5k98.gamma.site/",
   downloadPdf: "/dossiers/Art_House.pdf"
 }
 // Add more dossiers here
