@@ -215,7 +215,7 @@ const Hero = () => {
                   onClick={scrollToProperties}
                   className="bg-[#7BBCB0] hover:bg-[#6AABA0] text-white font-semibold px-8 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 min-w-[200px]"
                 >
-                  Search All Homes
+                  Search Our Listings
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </motion.div>
