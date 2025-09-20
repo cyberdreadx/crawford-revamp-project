@@ -128,7 +128,7 @@ const Navigation = () => {
                 </a> : item.href === "/" && !isHomePage ? <Link key={item.name} to={item.href} className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
                   {item.name}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
-                </Link> : <button key={item.name} onClick={() => handleNavClick(item)} className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
+                </Link> : <button key={item.name} onClick={() => handleNavClick(item)} className="text-foreground hover:text-teal-600 px-4 py-2 text-sm font-medium transition-all duration-200 relative group">
                   {item.name}
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
                 </button>)}
