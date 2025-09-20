@@ -6,28 +6,28 @@ import { motion } from "framer-motion";
 const About = () => {
   const achievements = [
     {
-      icon: Home,
+      icon: Users,
       number: "500+",
-      label: "Homes Sold",
+      label: "Families Helped",
       description: "Successfully closed transactions"
     },
     {
-      icon: Users,
-      number: "15+",
-      label: "Years Experience",
-      description: "Serving the Tampa Bay area"
-    },
-    {
       icon: TrendingUp,
-      number: "$50M+",
-      label: "Sales Volume",
+      number: "$150M+",
+      label: "Closed Volume",
       description: "In real estate transactions"
     },
     {
       icon: Award,
-      number: "98%",
-      label: "Client Satisfaction",
-      description: "Five-star reviews and referrals"
+      number: "300+",
+      label: "Five Star Reviews",
+      description: "Client testimonials and referrals"
+    },
+    {
+      icon: Home,
+      number: "Top 5%",
+      label: "Pinellas County",
+      description: "Ranking among all agents"
     }
   ];
 
@@ -71,7 +71,7 @@ const About = () => {
               transition={{ delay: 0.5, duration: 1 }}
               viewport={{ once: true }}
             >
-              The Crawford Team is a top-producing real estate team in Tampa Bay. Comprised of fierce females with a shared commitment to educating and empowering our clients, The Crawford Team is powered by Keller Williams St Pete Realty, the top producing real estate brokerage in Pinellas County. Our team consistently performs in the Top 5% of Pinellas County and has helped more than 425 families achieve their real estate goals with closed volume of more than $141 million... and counting!
+              The Crawford Team is a top-producing real estate team in Tampa Bay. Comprised of fierce females with a shared commitment to educating and empowering our clients, The Crawford Team is powered by Keller Williams St Pete Realty, the top producing real estate brokerage in Pinellas County. Our team consistently performs in the Top 5% of Pinellas County and has helped more than 500 families achieve their real estate goals with closed volume of more than $150 million... and counting!
             </motion.p>
             <motion.p 
               className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8"
@@ -129,7 +129,7 @@ const About = () => {
                       Monica has been a licensed Realtor® since 2013 and is honored to be part of the Keller Williams St Pete MarketCenter; the #1 brokerage in the county. She served as the Lead Buyer's Agent for one of the highest producing teams in Pinellas County before launching The Crawford Team in 2019.
                     </p>
                     <p>
-                      Since 2013, Monica and her teammates have helped more than 425 clients achieve their real estate goals and have closed over $141 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients.
+                      Since 2013, Monica and her teammates have helped more than 500 clients achieve their real estate goals and have closed over $150 Million in volume. She is most proud of the fact that nearly 95% of her team's business comes from referrals and repeat clients.
                     </p>
                   </div>
                 </div>
