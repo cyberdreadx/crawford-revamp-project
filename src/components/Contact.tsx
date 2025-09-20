@@ -12,7 +12,10 @@ import {
   Clock, 
   Send,
   MessageSquare,
-  Star
+  Star,
+  Facebook,
+  Instagram,
+  Linkedin
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -30,7 +33,7 @@ const Contact = () => {
     e.preventDefault();
     toast({
       title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+      description: "Thank you for contacting us. We'll get back to you soon.",
     });
     setFormData({ name: "", email: "", phone: "", message: "", propertyType: "" });
   };
@@ -45,32 +48,38 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: Phone,
-      title: "Call Us",
+      title: "Call or Text Us",
       value: "(727) 599-1944",
       href: "tel:727-599-1944",
-      description: "Available 24/7 for urgent inquiries"
+      description: "Call or text for immediate assistance"
     },
     {
       icon: Mail,
       title: "Email Us",
       value: "hello@yourcrawfordteam.com",
       href: "mailto:hello@yourcrawfordteam.com",
-      description: "We respond within 2 hours"
+      description: "Send us a message anytime"
     },
     {
       icon: MapPin,
       title: "Office Location",
-      value: "St. Petersburg, FL",
-      href: "#",
-      description: "Serving the entire Tampa Bay area"
+      value: "360 Central Ave St. 600, St. Petersburg, FL 33701",
+      href: "https://maps.google.com/?q=360+Central+Ave+St+600+St+Petersburg+FL+33701",
+      description: "Visit us at our downtown office"
     },
     {
       icon: Clock,
       title: "Office Hours",
-      value: "Mon - Sun: 8AM - 8PM",
+      value: "Monday-Friday 9am-5pm",
       href: "#",
-      description: "Extended hours for your convenience"
+      description: "Weekend by appointment"
     }
+  ];
+
+  const socialMedia = [
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" }
   ];
 
   return (
@@ -79,6 +88,33 @@ const Contact = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
+            {/* Social Media Icons */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+              viewport={{ once: true }}
+              className="flex justify-center space-x-4 mb-8"
+            >
+              {socialMedia.map((social, index) => {
+                const Icon = social.icon;
+                return (
+                  <motion.a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 bg-accent/10 rounded-full hover:bg-accent/20 transition-colors duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label={social.label}
+                  >
+                    <Icon className="w-5 h-5 text-accent" />
+                  </motion.a>
+                );
+              })}
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -127,7 +163,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-2xl font-semibold text-foreground">Send us a message</h3>
-                      <p className="text-muted-foreground">We'll get back to you within 24 hours</p>
+                      <p className="text-muted-foreground">We'll get back to you soon</p>
                     </div>
                   </div>
 
