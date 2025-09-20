@@ -10,7 +10,7 @@ const dossiers = [{
   downloadPdf: "/dossiers/Art_House.pdf"
 }, {
   title: "REFLECTION",
-  image: "/lovable-uploads/reflection-dossier-cover.png",
+  image: "/lovable-uploads/reflection-dossier-cover-2.png",
   pdf: "https://reflection-luxury-living-j1rkof1.gamma.site/",
   downloadPdf: "/dossiers/Reflection.pdf" // Update this path when PDF is available
 }
