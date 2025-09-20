@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, Phone, Mail, User, ChevronDown, Facebook, Instagram, Youtube } from "lucide-react";
+import { Menu, Phone, Mail, User, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
@@ -161,39 +161,9 @@ const Navigation = () => {
           </div>
 
           {/* Contact Info & CTA - Flex shrink */}
-          <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
-            {/* Social Media Icons */}
-            <div className="flex items-center space-x-2 mr-4">
-              <a
-                href="https://www.facebook.com/yourcrawfordteam"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.instagram.com/yourcrawfordteam/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-                aria-label="YouTube"
-              >
-                <Youtube className="w-4 h-4" />
-              </a>
-            </div>
-            
-            <div className="flex items-center space-x-3 text-sm text-muted-foreground">
+          <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">
+            {/* Compact Contact Info */}
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <a href="tel:727-599-1944" className="flex items-center space-x-1 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4" />
                 <span className="hidden xl:inline">(727) 599-1944</span>
@@ -352,37 +322,6 @@ const Navigation = () => {
 
                   {/* Footer */}
                   <div className="border-t border-border pt-4 space-y-4">
-                    {/* Social Media Icons */}
-                    <div className="flex justify-center space-x-4">
-                      <a
-                        href="https://www.facebook.com/yourcrawfordteam"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200 rounded-lg hover:bg-accent/10"
-                        aria-label="Facebook"
-                      >
-                        <Facebook className="w-5 h-5" />
-                      </a>
-                      <a
-                        href="https://www.instagram.com/yourcrawfordteam/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200 rounded-lg hover:bg-accent/10"
-                        aria-label="Instagram"
-                      >
-                        <Instagram className="w-5 h-5" />
-                      </a>
-                      <a
-                        href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200 rounded-lg hover:bg-accent/10"
-                        aria-label="YouTube"
-                      >
-                        <Youtube className="w-5 h-5" />
-                      </a>
-                    </div>
-                    
                     <div className="space-y-3">
                       <a href="tel:727-599-1944" className="flex items-center space-x-3 text-muted-foreground hover:text-accent transition-colors p-2 rounded-lg hover:bg-accent/10">
                         <Phone className="w-4 h-4" />
