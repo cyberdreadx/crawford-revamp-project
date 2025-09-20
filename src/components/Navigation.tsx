@@ -67,115 +67,116 @@ const Navigation = () => {
     <>
       
       <nav 
-        className={`fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border/20 z-50 transition-transform duration-300 ease-in-out ${
           isVisible ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-      <div className="container mx-auto px-4 lg:px-8 max-w-full">
-        <div className="flex items-center justify-between h-16 w-full">
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 min-w-0">
+          <div className="flex-shrink-0">
             <Link to="/" className="block">
               <img 
                 src="/lovable-uploads/cc4cbfba-4aae-4fc4-8318-208b94a333eb.png" 
                 alt="The Crawford Team" 
-                className="h-16 md:h-20 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex flex-1 justify-center max-w-lg mx-4">
-            <div className="flex items-baseline justify-center space-x-6 w-full">
-              {navItems.map((item) => (
-                item.isDropdown ? (
-                  <div key={item.name} className="relative group">
-                    <button className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative flex items-center">
-                      {item.name}
-                      <ChevronDown className="ml-1 h-3 w-3" />
-                      <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                    </button>
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 bg-background border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
-                      <div className="py-1">
-                        {item.isResources ? (
-                          <>
-                            <Link 
-                              to="/luxury" 
-                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              Luxury Properties
-                            </Link>
-                            <Link 
-                              to="/blog" 
-                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              Market Insights
-                            </Link>
-                          </>
-                        ) : (
-                          <>
-                            <Link 
-                              to="/listings" 
-                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              Our Listings
-                            </Link>
-                            <button
-                              onClick={() => {
-                                alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                            >
-                              Search All Listings
-                            </button>
-                          </>
-                        )}
-                      </div>
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => (
+              item.isDropdown ? (
+                <div key={item.name} className="relative group">
+                  <button className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative flex items-center group">
+                    {item.name}
+                    <ChevronDown className="ml-1 h-3 w-3 transition-transform duration-200 group-hover:rotate-180" />
+                  </button>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-background border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
+                    <div className="py-2">
+                      {item.isResources ? (
+                        <>
+                          <Link 
+                            to="/luxury" 
+                            className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2"
+                          >
+                            Luxury Properties
+                          </Link>
+                          <Link 
+                            to="/blog" 
+                            className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2"
+                          >
+                            Market Insights
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link 
+                            to="/listings" 
+                            className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2"
+                          >
+                            Our Listings
+                          </Link>
+                          <button
+                            onClick={() => {
+                              alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                            }}
+                            className="block w-full text-left px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2"
+                          >
+                            Search All Listings
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
-                ) : item.href === "/" && item.section && !isHomePage ? (
-                  <a
-                    key={item.name}
-                    href={`/${item.section}`}
-                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-                  >
-                    {item.name}
-                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                  </a>
-                ) : item.href === "/" && !isHomePage ? (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-                  >
-                    {item.name}
-                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                  </Link>
-                ) : (
-                  <button
-                    key={item.name}
-                    onClick={() => handleNavClick(item)}
-                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-                  >
-                    {item.name}
-                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                  </button>
-                )
-              ))}
-            </div>
+                </div>
+              ) : item.href === "/" && item.section && !isHomePage ? (
+                <a
+                  key={item.name}
+                  href={`/${item.section}`}
+                  className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group"
+                >
+                  {item.name}
+                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                </a>
+              ) : item.href === "/" && !isHomePage ? (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group"
+                >
+                  {item.name}
+                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                </Link>
+              ) : (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavClick(item)}
+                  className="text-foreground hover:text-accent-foreground px-4 py-2 text-sm font-medium transition-all duration-200 relative group"
+                >
+                  {item.name}
+                  <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                </button>
+              )
+            ))}
           </div>
 
-          {/* Contact Info & CTA - Flex shrink */}
-          <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">
-            {/* Compact Contact Info */}
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <a href="tel:727-599-1944" className="flex items-center space-x-1 hover:text-accent transition-colors">
-                <Phone className="w-4 h-4" />
-                <span className="hidden xl:inline">(727) 599-1944</span>
+          {/* Contact Info & CTA */}
+          <div className="hidden lg:flex items-center space-x-4">
+            {/* Contact Icons */}
+            <div className="flex items-center space-x-3">
+              <a 
+                href="tel:727-599-1944" 
+                className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group"
+              >
+                <Phone className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
-              <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center space-x-1 hover:text-accent transition-colors">
-                <Mail className="w-4 h-4" />
-                <span className="hidden xl:inline">hello@yourcrawfordteam.com</span>
+              <a 
+                href="mailto:hello@yourcrawfordteam.com" 
+                className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group"
+              >
+                <Mail className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
             </div>
             
@@ -187,15 +188,16 @@ const Navigation = () => {
                 asChild
               >
                 <Link to="/member-portal">
-                  <User className="w-4 h-4 lg:mr-2" />
-                  <span className="hidden lg:inline">Portal</span>
+                  <User className="w-4 h-4 mr-2" />
+                  Portal
                 </Link>
               </Button>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Button 
                   variant="ghost"
                   size="sm"
+                  className="text-muted-foreground hover:text-foreground"
                   asChild
                 >
                   <Link to="/auth">Sign In</Link>
@@ -218,7 +220,7 @@ const Navigation = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="lg:hidden flex items-center space-x-3">
             {user && (
               <Button 
                 variant="ghost"
