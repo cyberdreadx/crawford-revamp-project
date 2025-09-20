@@ -18,6 +18,11 @@ const dossiers = [{
   image: "/lovable-uploads/400-central-dossier-cover.png",
   pdf: "https://luxuryinthesky-iovagxi.gamma.site/",
   downloadPdf: "/dossiers/400_Central.pdf" // Update this path when PDF is available
+}, {
+  title: "SALTAIRE",
+  image: "/lovable-uploads/saltaire-dossier-cover.png",
+  pdf: "https://saltaire-luxury-on-the-b-bymxniy.gamma.site/",
+  downloadPdf: "/dossiers/Saltaire.pdf" // Update this path when PDF is available
 }
 // Add more dossiers here
 ];
