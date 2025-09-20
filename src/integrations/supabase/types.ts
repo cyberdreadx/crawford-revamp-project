@@ -321,11 +321,13 @@ export type Database = {
       }
     }
     Functions: {
-      get_user_roles: {
-        Args: { _user_id: string }
-        Returns: {
-          role: Database["public"]["Enums"]["app_role"]
-        }[]
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_any_role: {
+        Args: { roles: Database["public"]["Enums"]["app_role"][] }
+        Returns: boolean
       }
       has_role: {
         Args: {
