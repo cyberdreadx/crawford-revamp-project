@@ -65,40 +65,6 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Top Social Media Bar */}
-      <div className="bg-muted/30 border-b border-border/30 py-1">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="flex justify-center space-x-3">
-            <a
-              href="https://www.facebook.com/yourcrawfordteam"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-              aria-label="Facebook"
-            >
-              <Facebook className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.instagram.com/yourcrawfordteam/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-              aria-label="Instagram"
-            >
-              <Instagram className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
-              aria-label="YouTube"
-            >
-              <Youtube className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </div>
       
       <nav 
         className={`fixed top-[34px] w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
@@ -393,6 +359,40 @@ const Navigation = () => {
         </div>
       </div>
       </nav>
+      {/* Social Media Bar under NAV */}
+      <div className="fixed left-0 right-0 top-16 md:top-20 bg-muted/30 border-b border-border/30 py-0.5 z-40">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex justify-center space-x-3">
+            <a
+              href="https://www.facebook.com/yourcrawfordteam"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/yourcrawfordteam/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCEqjELvyG0pTBTqyJAANrGQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="YouTube"
+            >
+              <Youtube className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
