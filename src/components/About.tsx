@@ -80,7 +80,7 @@ const About = () => {
               transition={{ delay: 0.7, duration: 1 }}
               viewport={{ once: true }}
             >
-              Creating A Referable Experience (C.A.R.E.) is our commitment to every client, and it's achieved with the unique systems and processes designed to guide clients through their real estate journey. As a result, we are proud and honored that nearly 90% of our business comes from referrals and repeat clients.
+              Creating Authentic Referrable Experiences (C.A.R.E.) is our commitment to every client, and it's achieved with the unique systems and processes designed to guide clients through their real estate journey. As a result, we are proud and honored that nearly 90% of our business comes from referrals and repeat clients.
             </motion.p>
             <motion.p 
               className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
