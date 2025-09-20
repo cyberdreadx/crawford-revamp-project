@@ -44,8 +44,7 @@ const Navigation = () => {
     { name: "Home", href: "/", section: "#home" },
     { name: "About", href: "/", section: "#about" },
     { name: "Properties", href: null, section: null, isDropdown: true },
-    { name: "Luxury", href: "/luxury", section: null },
-    { name: "Blog", href: "/blog", section: null },
+    { name: "Resources", href: null, section: null, isDropdown: true, isResources: true },
     { name: "Services", href: "/", section: "#services" },
     { name: "Contact", href: "/", section: "#contact" },
   ];
@@ -97,30 +96,38 @@ const Navigation = () => {
                       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-background border border-border shadow-lg z-[60]">
-                      <DropdownMenuItem asChild>
-                        <Link to="/listings" className="w-full">
-                          Our Listings
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => {
-                          alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                        }}
-                        className="cursor-pointer"
-                      >
-                        Search All Listings
-                      </DropdownMenuItem>
+                      {item.isResources ? (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link to="/luxury" className="w-full">
+                              Luxury Properties
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link to="/blog" className="w-full">
+                              Market Insights
+                            </Link>
+                          </DropdownMenuItem>
+                        </>
+                      ) : (
+                        <>
+                          <DropdownMenuItem asChild>
+                            <Link to="/listings" className="w-full">
+                              Our Listings
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                            }}
+                            className="cursor-pointer"
+                          >
+                            Search All Listings
+                          </DropdownMenuItem>
+                        </>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                ) : (item.href === "/luxury" || item.href === "/blog") ? (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-                  >
-                    {item.name}
-                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                  </Link>
                 ) : item.href === "/" && item.section && !isHomePage ? (
                   <a
                     key={item.name}
@@ -274,33 +281,45 @@ const Navigation = () => {
                             {item.name}
                           </div>
                           <div className="pl-4 space-y-1">
-                            <Link
-                              to="/listings"
-                              onClick={() => setIsOpen(false)}
-                              className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
-                            >
-                              Our Listings
-                            </Link>
-                            <button
-                              onClick={() => {
-                                alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                                setIsOpen(false);
-                              }}
-                              className="flex items-center py-2 px-3 text-sm font-medium text-left rounded-lg hover:bg-accent/10 hover:text-accent transition-colors w-full"
-                            >
-                              Search All Listings
-                            </button>
+                            {item.isResources ? (
+                              <>
+                                <Link
+                                  to="/luxury"
+                                  onClick={() => setIsOpen(false)}
+                                  className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                                >
+                                  Luxury Properties
+                                </Link>
+                                <Link
+                                  to="/blog"
+                                  onClick={() => setIsOpen(false)}
+                                  className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                                >
+                                  Market Insights
+                                </Link>
+                              </>
+                            ) : (
+                              <>
+                                <Link
+                                  to="/listings"
+                                  onClick={() => setIsOpen(false)}
+                                  className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
+                                >
+                                  Our Listings
+                                </Link>
+                                <button
+                                  onClick={() => {
+                                    alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                                    setIsOpen(false);
+                                  }}
+                                  className="flex items-center py-2 px-3 text-sm font-medium text-left rounded-lg hover:bg-accent/10 hover:text-accent transition-colors w-full"
+                                >
+                                  Search All Listings
+                                </button>
+                              </>
+                            )}
                           </div>
                         </div>
-                      ) : (item.href === "/luxury" || item.href === "/blog") ? (
-                        <Link
-                          key={item.name}
-                          to={item.href}
-                          onClick={() => setIsOpen(false)}
-                          className="flex items-center py-3 px-3 text-base font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors"
-                        >
-                          {item.name}
-                        </Link>
                       ) : item.href === "/" && item.section && !isHomePage ? (
                         <a
                           key={item.name}
