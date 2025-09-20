@@ -136,14 +136,16 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <img 
-                src="/logo/crawford-logo.svg" 
-                alt="The Crawford Team" 
-                className="h-16 sm:h-20 md:h-24 lg:h-28 mb-4 filter brightness-0 invert"
-                style={{
-                  filter: 'drop-shadow(0 4px 20px rgba(0,0,0,1)) drop-shadow(0 2px 12px rgba(0,0,0,0.9)) drop-shadow(0 0 30px rgba(0,0,0,0.6))'
-                }}
-              />
+              <div className="flex justify-center mb-4">
+                <img 
+                  src="/logo/crawford-logo-white.png" 
+                  alt="The Crawford Team" 
+                  className="h-16 sm:h-20 md:h-24 lg:h-28"
+                  style={{
+                    filter: 'drop-shadow(0 4px 20px rgba(0,0,0,1)) drop-shadow(0 2px 12px rgba(0,0,0,0.9)) drop-shadow(0 0 30px rgba(0,0,0,0.6))'
+                  }}
+                />
+              </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6" style={{
                 textShadow: '0 4px 15px rgba(0,0,0,1), 0 2px 10px rgba(0,0,0,0.9)'
               }}>
