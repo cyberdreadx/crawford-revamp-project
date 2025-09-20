@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 const dossiers = [{
   title: "ART HOUSE",
   image: "/lovable-uploads/art-house-dossier-cover.png",
-  pdf: "/dossiers/Art_House.pdf"
+  pdf: "/dossiers/ART-HOUSE-Designed-for-Your-Downtown-Life.pdf",
+  downloadPdf: "/dossiers/Art_House.pdf"
 }
 // Add more dossiers here
 ];
@@ -17,6 +18,7 @@ const DossierCard = ({
     title: string;
     image: string;
     pdf: string;
+    downloadPdf: string;
   };
 }) => <Card className="overflow-hidden">
 		<div className="relative">
@@ -36,7 +38,7 @@ const DossierCard = ({
 					</a>
 				</Button>
 				<Button asChild>
-					<a href={dossier.pdf} download>
+					<a href={dossier.downloadPdf} download>
 						<FileDown className="mr-2 h-4 w-4" /> Download
 					</a>
 				</Button>
