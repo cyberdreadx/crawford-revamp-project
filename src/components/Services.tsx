@@ -50,18 +50,23 @@ const Services = () => {
   const benefits = [
     {
       icon: Clock,
-      title: "24/7 Availability",
-      description: "We're here when you need us, ensuring you never miss an opportunity."
+      title: "Responsiveness",
+      description: "Each client has the support of the full team behind them, ensuring we're here when you need us."
     },
     {
       icon: Users,
-      title: "Team Approach",
-      description: "Multiple experts working together to provide comprehensive service."
+      title: "Communication",
+      description: "Consistent and honest communication is our promise."
+    },
+    {
+      icon: Search,
+      title: "Unique Strategic Development",
+      description: "Real estate is not one-size-fits-all and we create a unique strategy for each client we serve."
     },
     {
       icon: Award,
       title: "Proven Results",
-      description: "Track record of successful transactions and satisfied clients."
+      description: "More than 98% of our business comes from referrals and forever clients."
     }
   ];
 
@@ -165,7 +170,7 @@ const Services = () => {
               Why Choose The Crawford Team?
             </h3>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-8">
               {benefits.map((benefit, index) => {
                 const Icon = benefit.icon;
                 return (
