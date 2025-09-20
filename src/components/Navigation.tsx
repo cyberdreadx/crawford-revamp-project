@@ -89,45 +89,50 @@ const Navigation = () => {
             <div className="flex items-baseline justify-center space-x-6 w-full">
               {navItems.map((item) => (
                 item.isDropdown ? (
-                  <DropdownMenu key={item.name}>
-                    <DropdownMenuTrigger className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative group flex items-center">
+                  <div key={item.name} className="relative group">
+                    <button className="text-foreground hover:text-accent-foreground px-3 py-2 text-sm font-medium transition-colors duration-200 relative flex items-center">
                       {item.name}
                       <ChevronDown className="ml-1 h-3 w-3" />
                       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-background border border-border shadow-lg z-[60]">
-                      {item.isResources ? (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link to="/luxury" className="w-full">
+                    </button>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 bg-background border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60]">
+                      <div className="py-1">
+                        {item.isResources ? (
+                          <>
+                            <Link 
+                              to="/luxury" 
+                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
                               Luxury Properties
                             </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to="/blog" className="w-full">
+                            <Link 
+                              to="/blog" 
+                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
                               Market Insights
                             </Link>
-                          </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link to="/listings" className="w-full">
+                          </>
+                        ) : (
+                          <>
+                            <Link 
+                              to="/listings" 
+                              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
                               Our Listings
                             </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => {
-                              alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                            }}
-                            className="cursor-pointer"
-                          >
-                            Search All Listings
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                            <button
+                              onClick={() => {
+                                alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                            >
+                              Search All Listings
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : item.href === "/" && item.section && !isHomePage ? (
                   <a
                     key={item.name}
