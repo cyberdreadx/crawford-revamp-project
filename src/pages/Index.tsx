@@ -23,7 +23,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
+    <div className="min-h-screen w-full overflow-x-hidden pt-[112px]">
       <Navigation />
       <main className="w-full">
         <Hero />

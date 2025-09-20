@@ -136,7 +136,7 @@ const PropertyDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 pt-[112px]">
       {/* Hero Section with Image */}
       <div className="relative h-[70vh] overflow-hidden">
         {currentImage && (

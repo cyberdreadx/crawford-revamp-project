@@ -88,33 +88,6 @@ const Contact = () => {
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-16">
-            {/* Social Media Icons */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.8 }}
-              viewport={{ once: true }}
-              className="flex justify-center space-x-4 mb-8"
-            >
-              {socialMedia.map((social, index) => {
-                const Icon = social.icon;
-                return (
-                  <motion.a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-accent/10 rounded-full hover:bg-accent/20 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label={social.label}
-                  >
-                    <Icon className="w-5 h-5 text-accent" />
-                  </motion.a>
-                );
-              })}
-            </motion.div>
-
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}

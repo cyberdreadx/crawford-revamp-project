@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, Phone, Mail, User, ChevronDown } from "lucide-react";
+import { Menu, Phone, Mail, User, ChevronDown, Facebook, Instagram, Linkedin } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
@@ -64,11 +64,47 @@ const Navigation = () => {
   };
 
   return (
-    <nav 
-      className={`fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
-    >
+    <>
+      {/* Top Social Media Bar */}
+      <div className="bg-muted/30 border-b border-border/30 py-2">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="flex justify-center space-x-4">
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-muted-foreground hover:text-accent transition-colors duration-200"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <nav 
+        className={`fixed top-[48px] w-full bg-background/95 backdrop-blur-sm border-b border-border/50 z-50 overflow-hidden transition-transform duration-300 ease-in-out ${
+          isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
       <div className="container mx-auto px-4 lg:px-8 max-w-full">
         <div className="flex items-center justify-between h-16 w-full">
           {/* Logo */}
@@ -356,7 +392,8 @@ const Navigation = () => {
           </div>
         </div>
       </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 
