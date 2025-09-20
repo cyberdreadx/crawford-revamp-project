@@ -16,40 +16,34 @@ import { motion } from "framer-motion";
 const Services = () => {
   const services = [
     {
-      icon: Home,
-      title: "Home Buying",
-      description: "Expert guidance through every step of the home buying process, from pre-approval to closing.",
-      features: ["Market Analysis", "Property Search", "Negotiation Support", "Closing Assistance"]
+      icon: Users,
+      title: "Consultation",
+      description: "More than property stats, we gain a deep understanding of the clients needs, motivations and goals to develop a game plan specific to each unique client.",
+      features: ["Needs Assessment", "Goal Setting", "Custom Strategy", "Personal Game Plan"]
     },
     {
       icon: TrendingUp,
-      title: "Home Selling",
-      description: "Strategic marketing and pricing to sell your home quickly and for the best possible price.",
-      features: ["Market Valuation", "Professional Photography", "Marketing Strategy", "Buyer Qualification"]
-    },
-    {
-      icon: Search,
-      title: "Property Search",
-      description: "Access to exclusive listings and off-market properties tailored to your specific needs.",
-      features: ["MLS Access", "Off-Market Listings", "Custom Searches", "Property Tours"]
-    },
-    {
-      icon: Calculator,
-      title: "Investment Analysis",
-      description: "Comprehensive investment property analysis to maximize your real estate portfolio returns.",
-      features: ["ROI Analysis", "Market Trends", "Cash Flow Projections", "Property Evaluation"]
+      title: "Performance",
+      description: "Whether showing homes to buyers to marketing our listings, we deliver high performance with results to match.",
+      features: ["Expert Showings", "Strategic Marketing", "Results-Driven", "Proven Track Record"]
     },
     {
       icon: FileText,
-      title: "Market Reports",
-      description: "Detailed market insights and trends to help you make informed real estate decisions.",
-      features: ["Neighborhood Data", "Price Trends", "Market Forecasts", "Comparative Analysis"]
+      title: "Advise",
+      description: "We advise each client not just through a transaction but through every step of home ownership from worthy property improvements to strategic ways to use their property's equity.",
+      features: ["Transaction Guidance", "Property Improvements", "Equity Strategies", "Ongoing Support"]
+    },
+    {
+      icon: Search,
+      title: "Connectors",
+      description: "We happily connect our clients with our long list of local vetted contractors, service providers, and other affiliates.",
+      features: ["Vetted Contractors", "Service Providers", "Local Network", "Trusted Affiliates"]
     },
     {
       icon: Shield,
-      title: "Transaction Management",
-      description: "Complete transaction coordination ensuring smooth closings and protecting your interests.",
-      features: ["Contract Review", "Timeline Management", "Vendor Coordination", "Risk Mitigation"]
+      title: "Long-Term Support",
+      description: "We are your real estate team for life and work hard to nurture our client relationships.",
+      features: ["Lifetime Partnership", "Relationship Building", "Ongoing Care", "Always Available"]
     }
   ];
 
