@@ -149,7 +149,7 @@ const Contact = () => {
                 <CardContent className="p-8">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="p-3 bg-gradient-gold rounded-full">
-                      <MessageSquare className="w-6 h-6 text-navy-deep" />
+                      <MessageSquare className="w-6 h-6 text-accent" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-semibold text-foreground">Send us a message</h3>
