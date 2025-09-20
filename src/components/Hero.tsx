@@ -243,7 +243,7 @@ const Hero = () => {
               transition={{ delay: 1.2, duration: 0.8 }}
             >
               {[
-                { number: '500+', label: 'Homes Sold' },
+                { number: '500+', label: 'Families Helped' },
                 { number: '15+', label: 'Years Experience' },
                 { number: '98%', label: 'Client Satisfaction' },
                 { number: '24/7', label: 'Support' }
