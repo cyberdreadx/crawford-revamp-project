@@ -16,7 +16,7 @@ const FloatingWhatsApp = () => {
       <Button
         onClick={handleWhatsAppClick}
         size="lg"
-        className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+        className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
         aria-label="Contact us on WhatsApp"
       >
         <MessageCircle className="h-6 w-6" />
