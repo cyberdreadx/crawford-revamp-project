@@ -32,6 +32,14 @@ const Index = () => {
         <Services />
         <Contact />
       </main>
+      
+      {/* Keller Williams Attribution */}
+      <div className="bg-muted py-6 text-center">
+        <p className="text-sm text-muted-foreground">
+          Keller Williams St. Pete
+        </p>
+      </div>
+      
       <Footer />
     </div>
   );
