@@ -230,7 +230,7 @@ const Hero = () => {
                   onClick={scrollToContact}
                   className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border-white/30 hover:border-white/50 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 min-w-[200px]"
                 >
-                  Get Consultation
+                  Schedule Consultation
                 </Button>
               </motion.div>
             </motion.div>
