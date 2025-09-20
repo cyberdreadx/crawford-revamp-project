@@ -195,7 +195,7 @@ const Hero = () => {
               transition={{ delay: 0.8, duration: 0.8 }}
               style={{ textShadow: '0 2px 10px rgba(0,0,0,1), 0 4px 15px rgba(0,0,0,0.9)' }}
             >
-              Keller Williams St Pete • Your trusted partners in finding home in Greater Tampa Bay
+              Keller Williams St Pete • Your trusted partners in finding homes in Greater Tampa Bay
             </motion.p>
 
             {/* CTA Buttons */}
