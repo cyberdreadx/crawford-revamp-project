@@ -95,7 +95,7 @@ const Navigation = () => {
                       <ChevronDown className="ml-1 h-3 w-3" />
                       <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
                     </button>
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 bg-background border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60]">
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 bg-background border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                       <div className="py-1">
                         {item.isResources ? (
                           <>
