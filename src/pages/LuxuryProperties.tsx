@@ -6,12 +6,12 @@ import Footer from "@/components/Footer";
 const dossiers = [{
   title: "ART HOUSE",
   image: "/lovable-uploads/art-house-dossier-cover.png",
-  pdf: "https://arthouse-luxury-cmw5k98.gamma.site/",
+  pdf: "https://luxuryinthesky-iovagxi.gamma.site/art-house",
   downloadPdf: "/dossiers/Art_House.pdf"
 }, {
   title: "REFLECTION",
   image: "/lovable-uploads/reflection-dossier-cover-2.png",
-  pdf: "https://reflection-luxury-living-j1rkof1.gamma.site/",
+  pdf: "https://luxuryinthesky-iovagxi.gamma.site/reflection",
   downloadPdf: "/dossiers/Reflection.pdf"
 }, {
   title: "400 CENTRAL",
@@ -21,7 +21,7 @@ const dossiers = [{
 }, {
   title: "SALTAIRE",
   image: "/lovable-uploads/saltaire-new-cover.jpg",
-  pdf: "https://saltaire-luxury-on-the-b-bymxniy.gamma.site/",
+  pdf: "https://luxuryinthesky-iovagxi.gamma.site/saltaire-luxury",
   downloadPdf: "/dossiers/Saltaire.pdf" // Update this path when PDF is available
 }
 // Add more dossiers here
