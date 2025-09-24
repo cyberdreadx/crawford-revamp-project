@@ -20,7 +20,7 @@ const dossiers = [{
   downloadPdf: "/dossiers/400_Central.pdf" // Update this path when PDF is available
 }, {
   title: "SALTAIRE",
-  image: "/lovable-uploads/saltaire-dossier-cover.png",
+  image: "/lovable-uploads/saltaire-new-cover.jpg",
   pdf: "https://saltaire-luxury-on-the-b-bymxniy.gamma.site/",
   downloadPdf: "/dossiers/Saltaire.pdf" // Update this path when PDF is available
 }
