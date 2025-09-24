@@ -49,7 +49,7 @@ const About = () => {
           }} viewport={{
             once: true
           }}>
-              <Badge variant="secondary" className="mb-4 px-4 py-2">
+              <Badge variant="secondary" className="mb-4 px-4 py-2 bg-[#7bbcb0]">
                 About Us
               </Badge>
             </motion.div>
