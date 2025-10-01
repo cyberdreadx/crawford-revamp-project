@@ -140,13 +140,12 @@ const Listings = () => {
     try {
       setLoading(true);
       
-      // Check if user is authenticated admin to use full properties table
       const { data: { user } } = await supabase.auth.getUser();
       
       let propertiesData, propertiesError;
       
       if (user) {
-        // Admin users get full property data
+        // Admin users get full property data including agent contact
         const result = await supabase
           .from('properties')
           .select('*')
@@ -154,10 +153,14 @@ const Listings = () => {
         propertiesData = result.data;
         propertiesError = result.error;
       } else {
-        // Non-admin users get public property data (no agent contact info)
+        // Non-admin users get property data WITHOUT agent email/phone
         const result = await supabase
-          .from('properties_public')
-          .select('*')
+          .from('properties')
+          .select(`
+            id, title, location, price, bedrooms, bathrooms, sqft,
+            year_built, status, description, key_features, taxes, flood_zone,
+            is_featured, created_at, updated_at, property_type
+          `)
           .order('created_at', { ascending: false });
         propertiesData = result.data;
         propertiesError = result.error;

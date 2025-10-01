@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Mail, Phone, User } from 'lucide-react';
+import { contactSchema } from '@/lib/validation';
 
 interface ContactAgentFormProps {
   propertyTitle: string;
@@ -27,6 +28,9 @@ const ContactAgentForm = ({ propertyTitle, propertyId, agentName }: ContactAgent
     setIsSubmitting(true);
 
     try {
+      // Validate input
+      const validatedData = contactSchema.parse(formData);
+      
       // Here you would integrate with your email service or CRM
       // For now, we'll simulate a successful submission
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -42,10 +46,17 @@ const ContactAgentForm = ({ propertyTitle, propertyId, agentName }: ContactAgent
         phone: '',
         message: `I'm interested in learning more about ${propertyTitle}. Please contact me with additional information.`
       });
-    } catch (error) {
-      toast.error("Failed to send inquiry", {
-        description: "Please try again or call us directly."
-      });
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        toast.error("Validation Error", {
+          description: error.errors[0]?.message || "Please check your input"
+        });
+      } else {
+        toast.error("Failed to send inquiry", {
+          description: "Please try again or call us directly."
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

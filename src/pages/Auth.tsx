@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { signInSchema, signUpSchema } from '@/lib/validation';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,50 +35,102 @@ const Auth = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await signIn(signInForm.email, signInForm.password);
+    try {
+      // Validate input
+      const validatedData = signInSchema.parse(signInForm);
 
-    if (error) {
-      toast({
-        title: 'Error signing in',
-        description: error.message,
-        variant: 'destructive',
-      });
-    } else {
-      toast({
-        title: 'Welcome back!',
-        description: 'You have been signed in successfully.',
-      });
-      navigate('/member-portal');
+      const { error } = await signIn(validatedData.email, validatedData.password);
+
+      if (error) {
+        // Don't expose detailed auth errors to prevent user enumeration
+        const userFriendlyMessage = error.message.includes('Invalid login credentials')
+          ? 'Invalid email or password'
+          : 'An error occurred during sign in. Please try again.';
+        
+        toast({
+          title: 'Sign in failed',
+          description: userFriendlyMessage,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Welcome back!',
+          description: 'You have been signed in successfully.',
+        });
+        navigate('/member-portal');
+      }
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        toast({
+          title: 'Validation Error',
+          description: error.errors[0]?.message || 'Please check your input',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'An unexpected error occurred',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await signUp(
-      signUpForm.email, 
-      signUpForm.password, 
-      signUpForm.firstName, 
-      signUpForm.lastName
-    );
+    try {
+      // Validate input
+      const validatedData = signUpSchema.parse(signUpForm);
 
-    if (error) {
-      toast({
-        title: 'Error creating account',
-        description: error.message,
-        variant: 'destructive',
-      });
-    } else {
-      toast({
-        title: 'Account created!',
-        description: 'Please check your email to verify your account.',
-      });
+      const { error } = await signUp(
+        validatedData.email, 
+        validatedData.password, 
+        validatedData.firstName, 
+        validatedData.lastName
+      );
+
+      if (error) {
+        // Provide user-friendly error messages
+        const userFriendlyMessage = error.message.includes('already registered')
+          ? 'An account with this email already exists'
+          : 'Unable to create account. Please try again.';
+        
+        toast({
+          title: 'Sign up failed',
+          description: userFriendlyMessage,
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Account created!',
+          description: 'Please check your email to verify your account.',
+        });
+        // Clear form
+        setSignUpForm({ email: '', password: '', firstName: '', lastName: '' });
+      }
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        toast({
+          title: 'Validation Error',
+          description: error.errors[0]?.message || 'Please check your input',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: 'An unexpected error occurred',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (

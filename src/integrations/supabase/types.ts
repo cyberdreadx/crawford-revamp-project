@@ -257,14 +257,43 @@ export type Database = {
             referencedRelation: "properties"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "property_images_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
-            referencedRelation: "properties_public"
-            referencedColumns: ["id"]
-          },
         ]
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -289,87 +318,7 @@ export type Database = {
       }
     }
     Views: {
-      properties_public: {
-        Row: {
-          agent_image_url: string | null
-          agent_name: string | null
-          agent_title: string | null
-          amenities: string[] | null
-          bathrooms: number | null
-          bedrooms: number | null
-          created_at: string | null
-          description: string | null
-          flood_zone: string | null
-          id: string | null
-          is_featured: boolean | null
-          key_features: string[] | null
-          lifestyle_events: string[] | null
-          location: string | null
-          price: number | null
-          property_type: string | null
-          sqft: number | null
-          status: string | null
-          tagline: string | null
-          taxes: number | null
-          title: string | null
-          unit_features: string[] | null
-          updated_at: string | null
-          year_built: number | null
-        }
-        Insert: {
-          agent_image_url?: string | null
-          agent_name?: string | null
-          agent_title?: string | null
-          amenities?: string[] | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          created_at?: string | null
-          description?: string | null
-          flood_zone?: string | null
-          id?: string | null
-          is_featured?: boolean | null
-          key_features?: string[] | null
-          lifestyle_events?: string[] | null
-          location?: string | null
-          price?: number | null
-          property_type?: string | null
-          sqft?: number | null
-          status?: string | null
-          tagline?: string | null
-          taxes?: number | null
-          title?: string | null
-          unit_features?: string[] | null
-          updated_at?: string | null
-          year_built?: number | null
-        }
-        Update: {
-          agent_image_url?: string | null
-          agent_name?: string | null
-          agent_title?: string | null
-          amenities?: string[] | null
-          bathrooms?: number | null
-          bedrooms?: number | null
-          created_at?: string | null
-          description?: string | null
-          flood_zone?: string | null
-          id?: string | null
-          is_featured?: boolean | null
-          key_features?: string[] | null
-          lifestyle_events?: string[] | null
-          location?: string | null
-          price?: number | null
-          property_type?: string | null
-          sqft?: number | null
-          status?: string | null
-          tagline?: string | null
-          taxes?: number | null
-          title?: string | null
-          unit_features?: string[] | null
-          updated_at?: string | null
-          year_built?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_slug: {
