@@ -226,10 +226,12 @@ const Hero = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={scrollToContact}
+                  asChild
                   className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border-white/30 hover:border-white/50 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 min-w-[200px]"
                 >
-                  Schedule Consultation
+                  <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
+                    Schedule Consultation
+                  </a>
                 </Button>
               </motion.div>
             </motion.div>

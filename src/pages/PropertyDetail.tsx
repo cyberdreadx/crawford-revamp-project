@@ -341,13 +341,15 @@ const PropertyDetail = () => {
                       {property.agent_title && (
                         <div className="text-sm text-muted-foreground mb-3">{property.agent_title}</div>
                       )}
-                      {/* Contact info only shown to admin users */}
+                      {/* Schedule consultation button */}
                       <div className="space-y-2">
-                        <Button variant="outline" size="sm" className="w-full">
-                          Contact Agent
+                        <Button variant="outline" size="sm" className="w-full" asChild>
+                          <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
+                            Schedule Consultation
+                          </a>
                         </Button>
                         <p className="text-xs text-muted-foreground text-center">
-                          Use the contact form below for agent inquiries
+                          Or use the contact form below
                         </p>
                       </div>
                     </div>

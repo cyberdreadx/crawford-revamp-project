@@ -533,7 +533,11 @@ const Properties = () => {
 
                   <div className="pt-4 space-y-2">
                     <Button className="w-full">Contact Agent</Button>
-                    <Button variant="outline" className="w-full">Schedule Showing</Button>
+                    <Button variant="outline" className="w-full" asChild>
+                      <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
+                        Schedule Showing
+                      </a>
+                    </Button>
                   </div>
                 </div>
               </div>

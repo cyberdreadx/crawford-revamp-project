@@ -623,8 +623,11 @@ const Listings = () => {
                 <Button 
                   variant="outline"
                   size="lg"
+                  asChild
                 >
-                  Schedule Consultation
+                  <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
+                    Schedule Consultation
+                  </a>
                 </Button>
               </div>
             </div>
@@ -740,8 +743,10 @@ const Listings = () => {
                     <Button className="flex-1 bg-gradient-gold hover:shadow-button">
                       Contact Agent
                     </Button>
-                    <Button variant="outline" className="flex-1">
-                      Schedule Showing
+                    <Button variant="outline" className="flex-1" asChild>
+                      <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
+                        Schedule Showing
+                      </a>
                     </Button>
                   </div>
                 </div>
