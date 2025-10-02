@@ -25,7 +25,7 @@ const dossiers = [{
   downloadPdf: "/dossiers/Saltaire.pdf"
 }, {
   title: "WALDORF ASTORIA",
-  image: "/lovable-uploads/waldorf-dossier-cover.png",
+  image: "/lovable-uploads/waldorf-astoria-cover.png",
   pdf: "https://luxuryinthesky-iovagxi.gamma.site/waldorf-astoria-st-petersburg",
   downloadPdf: "/dossiers/Waldorf_Astoria.pdf"
 }
