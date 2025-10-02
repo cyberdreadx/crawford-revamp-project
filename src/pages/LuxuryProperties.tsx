@@ -5,7 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 const dossiers = [{
   title: "ART HOUSE",
-  image: "/lovable-uploads/art-house-dossier-cover.png",
+  image: "/lovable-uploads/art-house-image.jpeg",
   pdf: "https://luxuryinthesky-iovagxi.gamma.site/art-house",
   downloadPdf: "/dossiers/Art_House.pdf"
 }, {
