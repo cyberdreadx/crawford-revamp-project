@@ -49,14 +49,14 @@ const DossierCard = ({
 				</CardTitle>
 			</CardHeader>
 		</div>
-		<CardContent className="p-6">
-			<div className="flex justify-around">
-				<Button variant="outline" asChild>
+		<CardContent className="p-6 bg-card/50">
+			<div className="flex justify-around gap-3">
+				<Button variant="outline" className="flex-1 border-coral-accent text-coral-accent hover:bg-coral-accent hover:text-white" asChild>
 					<a href={dossier.pdf} target="_blank" rel="noopener noreferrer">
 						<Eye className="mr-2 h-4 w-4" /> View
 					</a>
 				</Button>
-				<Button asChild>
+				<Button className="flex-1 bg-coral-accent hover:bg-coral-accent/90 text-white" asChild>
 					<a href={dossier.downloadPdf} download>
 						<FileDown className="mr-2 h-4 w-4" /> Download
 					</a>
