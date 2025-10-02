@@ -80,13 +80,13 @@ const Navigation = () => {
   };
   return <>
       
-      <nav className={`fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border/20 z-50 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-      <div className="container mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <nav className={`fixed top-0 w-full bg-background/10 backdrop-blur-md border-b border-white/10 z-50 transition-transform duration-300 ease-in-out shadow-lg ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <div className="container mx-auto px-4 lg:px-6">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 -ml-2">
             <Link to="/" className="block">
-              <img src="/lovable-uploads/cc4cbfba-4aae-4fc4-8318-208b94a333eb.png" alt="The Crawford Team" className="h-14 w-auto object-contain" />
+              <img src="/lovable-uploads/cc4cbfba-4aae-4fc4-8318-208b94a333eb.png" alt="The Crawford Team" className="h-20 w-auto object-contain" />
             </Link>
           </div>
 
