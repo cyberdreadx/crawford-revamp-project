@@ -22,9 +22,13 @@ const dossiers = [{
   title: "SALTAIRE",
   image: "/lovable-uploads/saltaire-new-cover.jpg",
   pdf: "https://luxuryinthesky-iovagxi.gamma.site/saltaire-luxury",
-  downloadPdf: "/dossiers/Saltaire.pdf" // Update this path when PDF is available
+  downloadPdf: "/dossiers/Saltaire.pdf"
+}, {
+  title: "WALDORF ASTORIA",
+  image: "/lovable-uploads/waldorf-dossier-cover.png",
+  pdf: "https://luxuryinthesky-iovagxi.gamma.site/waldorf-astoria-st-petersburg",
+  downloadPdf: "/dossiers/Waldorf.pdf"
 }
-// Add more dossiers here
 ];
 const DossierCard = ({
   dossier
