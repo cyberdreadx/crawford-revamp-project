@@ -9,6 +9,8 @@ import Listings from "./pages/Listings";
 import LuxuryProperties from "./pages/LuxuryProperties";
 import PropertyDetail from "./pages/PropertyDetail";
 import Blog from "./pages/Blog";
+import BuyerGuide from "./pages/BuyerGuide";
+import SellerGuide from "./pages/SellerGuide";
 import Auth from "./pages/Auth";
 import MemberPortal from "./pages/MemberPortal";
 import Admin from "./pages/Admin";
@@ -31,6 +33,8 @@ const App = () => (
             <Route path="/luxury" element={<LuxuryProperties />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
+            <Route path="/guides/buyer" element={<BuyerGuide />} />
+            <Route path="/guides/seller" element={<SellerGuide />} />
             <Route path="/property/:id" element={<PropertyDetail />} />
             <Route path="/auth" element={<Auth />} />
             <Route 

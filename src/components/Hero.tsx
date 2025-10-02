@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -198,39 +199,68 @@ const Hero = () => {
               Your trusted partners in finding homes in Greater Tampa Bay
             </motion.p>
 
-            {/* CTA Buttons */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            {/* Main Headline */}
+            <motion.h2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0, duration: 0.8 }}
+              style={{ textShadow: '0 2px 10px rgba(0,0,0,1)' }}
+            >
+              Ready to Buy, Sell, or Invest in St. Pete?
+            </motion.h2>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
               >
                 <Button
                   size="lg"
-                  onClick={scrollToProperties}
-                  className="bg-[#7BBCB0] hover:bg-[#6AABA0] text-white font-semibold px-8 py-4 text-lg rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 min-w-[200px]"
+                  asChild
+                  className="w-full bg-[#7BBCB0] hover:bg-[#6AABA0] text-white font-semibold px-6 py-6 text-base rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300"
                 >
-                  Search Our Listings
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <Link to="/guides/buyer">
+                    Get the Buyer's Guide
+                  </Link>
                 </Button>
               </motion.div>
 
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
               >
                 <Button
-                  variant="outline"
                   size="lg"
                   asChild
-                  className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border-white/30 hover:border-white/50 font-semibold px-8 py-4 text-lg rounded-full transition-all duration-300 min-w-[200px]"
+                  className="w-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border-2 border-white/30 hover:border-white/50 font-semibold px-6 py-6 text-base rounded-lg transition-all duration-300"
+                >
+                  <Link to="/guides/seller">
+                    Get the Seller's Guide
+                  </Link>
+                </Button>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
+              >
+                <Button
+                  size="lg"
+                  asChild
+                  className="w-full bg-white text-[#7BBCB0] hover:bg-white/90 font-semibold px-6 py-6 text-base rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300"
                 >
                   <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
-                    Schedule Consultation
+                    Book a Consultation
                   </a>
                 </Button>
               </motion.div>
