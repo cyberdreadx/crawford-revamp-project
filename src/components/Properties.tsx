@@ -347,7 +347,7 @@ const Properties = () => {
                       className="bg-gradient-gold hover:shadow-button transition-all duration-200 w-full sm:w-auto"
                       onClick={() => navigate(`/property/${currentProperty.id}`)}
                     >
-                      View Full Dossier
+                      View Listing
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                     <Button 
