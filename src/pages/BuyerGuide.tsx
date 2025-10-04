@@ -47,10 +47,6 @@ const BuyerGuide = () => {
               <p className="text-xl text-muted-foreground mb-8">
                 Your comprehensive roadmap to buying a home in St. Petersburg
               </p>
-              <Button onClick={handleDownload} size="lg" className="bg-coral-accent hover:bg-coral-accent/90 text-white">
-                <Download className="w-5 h-5 mr-2" />
-                Download Complete Guide (PDF)
-              </Button>
             </div>
           </div>
         </section>
@@ -116,6 +112,15 @@ const BuyerGuide = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              
+              {/* Survey CTA */}
+              <div className="mt-12 text-center">
+                <p className="text-lg font-medium mb-4">Get our Buyer's Guide by completing this brief survey.</p>
+                <Button onClick={() => window.location.href = '#survey'} size="lg" className="bg-gradient-teal hover:shadow-button text-teal-700">
+                  <FileText className="w-5 h-5 mr-2" />
+                  Take Buyer's Survey
+                </Button>
               </div>
             </div>
           </div>

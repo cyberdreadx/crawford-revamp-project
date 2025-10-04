@@ -100,13 +100,6 @@ const Navigation = () => {
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-background border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                     <div className="py-2">
                       {item.isResources ? <>
-                          <Link to="/guides/buyer" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
-                            Buyer's Guide
-                          </Link>
-                          <Link to="/guides/seller" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
-                            Seller's Guide
-                          </Link>
-                          <div className="border-t border-border my-2 mx-2"></div>
                           <Link to="/luxury" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Luxury Portfolio
                           </Link>
@@ -197,13 +190,6 @@ const Navigation = () => {
                           </div>
                           <div className="pl-4 space-y-1">
                             {item.isResources ? <>
-                                <Link to="/guides/buyer" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
-                                  Buyer's Guide
-                                </Link>
-                                <Link to="/guides/seller" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
-                                  Seller's Guide
-                                </Link>
-                                <div className="border-t border-border my-2"></div>
                                 <Link to="/luxury" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
                                   Luxury Portfolio
                                 </Link>
