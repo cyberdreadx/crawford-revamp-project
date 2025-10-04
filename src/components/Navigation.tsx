@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Menu, Phone, Mail, User, ChevronDown } from "lucide-react";
+import { Menu, Phone, Mail, User, ChevronDown, Facebook, Instagram, Youtube } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
@@ -139,6 +139,19 @@ const Navigation = () => {
               </a>
               <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
                 <Mail className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+              </a>
+            </div>
+            
+            {/* Social Media Icons */}
+            <div className="flex items-center space-x-3 pl-3 border-l border-border">
+              <a href="https://www.facebook.com/thecrawfordteamstpete" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
+                <Facebook className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+              </a>
+              <a href="https://www.instagram.com/thecrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
+                <Instagram className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+              </a>
+              <a href="https://www.youtube.com/channel/UCDH71KGcZhC7tgeFkr22_Hw" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
+                <Youtube className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
             </div>
             
