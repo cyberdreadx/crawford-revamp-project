@@ -117,7 +117,7 @@ const BuyerGuide = () => {
               {/* Survey CTA */}
               <div className="mt-12 text-center">
                 <p className="text-lg font-medium mb-4">Get our Buyer's Guide by completing this brief survey.</p>
-                <Button onClick={() => window.location.href = '#survey'} size="lg" className="bg-gradient-teal hover:shadow-button text-teal-700">
+                <Button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} size="lg" className="bg-gradient-teal hover:shadow-button text-teal-700">
                   <FileText className="w-5 h-5 mr-2" />
                   Take Buyer's Survey
                 </Button>
@@ -442,20 +442,20 @@ const BuyerGuide = () => {
         </section>
 
         {/* Contact Form Section */}
-        <section className="py-16 bg-gradient-to-br from-coral-light/5 to-background">
+        <section id="contact" className="py-16 bg-gradient-to-br from-coral-light/5 to-background">
           <div className="container mx-auto px-6">
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+                <h2 className="text-3xl font-bold mb-4">Get Your Free Buyer's Guide</h2>
                 <p className="text-muted-foreground">
-                  Let us know how we can help you with your home buying journey in St. Petersburg.
+                  Complete this brief survey and we'll email you the complete guide plus personalized insights for your home buying journey.
                 </p>
               </div>
               <Card>
                 <CardHeader>
-                  <CardTitle>Contact Us</CardTitle>
+                  <CardTitle>Your Information</CardTitle>
                   <CardDescription>
-                    Fill out the form and we'll be in touch shortly to discuss your home buying goals.
+                    Fill out your contact details below to receive your free Buyer's Guide via email.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
