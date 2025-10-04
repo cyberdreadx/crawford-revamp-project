@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Download, TrendingUp, Camera, Users, FileCheck } from "lucide-react";
+import { CheckCircle2, ClipboardList, TrendingUp, Camera, Users, FileCheck, DollarSign, Home } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
@@ -64,7 +64,7 @@ const SellerGuide = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              St. Pete Seller's Guide
+              Seller's Guide
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
               Sell your property for top dollar with our proven system. 
@@ -106,12 +106,18 @@ const SellerGuide = () => {
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-2 gap-6 text-center">
                     <div>
-                      <p className="text-3xl font-bold text-coral-accent">$150M+</p>
-                      <p className="text-sm text-muted-foreground mt-1">Closed Volume</p>
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <DollarSign className="w-6 h-6 text-coral-accent" />
+                        <p className="text-3xl font-bold text-coral-accent">$150M+</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Closed Volume</p>
                     </div>
                     <div>
-                      <p className="text-3xl font-bold text-coral-accent">500+</p>
-                      <p className="text-sm text-muted-foreground mt-1">Homes Sold</p>
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <Home className="w-6 h-6 text-coral-accent" />
+                        <p className="text-3xl font-bold text-coral-accent">500+</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Homes Sold</p>
                     </div>
                   </div>
                 </CardContent>
@@ -134,12 +140,12 @@ const SellerGuide = () => {
               <Card className="sticky top-24">
                 <CardHeader>
                   <CardTitle className="text-2xl">
-                    {submitted ? "Check Your Email!" : "Get Your Free Guide"}
+                    {submitted ? "Check Your Email!" : "Seller's Survey"}
                   </CardTitle>
                   <CardDescription>
                     {submitted 
                       ? "We've sent the Seller's Guide to your email. Don't forget to check your spam folder!"
-                      : "Enter your information below to receive your complimentary Seller's Guide"
+                      : "Get our Seller's Guide by completing this brief survey."
                     }
                   </CardDescription>
                 </CardHeader>
@@ -194,8 +200,8 @@ const SellerGuide = () => {
                         className="w-full bg-coral-accent hover:bg-coral-accent/90 text-white"
                         size="lg"
                       >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download Free Guide
+                        <ClipboardList className="mr-2 h-4 w-4" />
+                        Complete Survey
                       </Button>
 
                       <p className="text-xs text-muted-foreground text-center">
