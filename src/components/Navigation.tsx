@@ -132,18 +132,8 @@ const Navigation = () => {
 
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            {/* Contact Icons */}
-            <div className="flex items-center space-x-3">
-              <a href="tel:727-599-1944" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
-                <Phone className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
-              </a>
-              <a href="mailto:hello@yourcrawfordteam.com" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
-                <Mail className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
-              </a>
-            </div>
-            
             {/* Social Media Icons */}
-            <div className="flex items-center space-x-3 pl-3 border-l border-border">
+            <div className="flex items-center space-x-3">
               <a href="https://www.facebook.com/thecrawfordteamstpete" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
                 <Facebook className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
