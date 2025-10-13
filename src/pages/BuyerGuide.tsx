@@ -40,77 +40,115 @@ const BuyerGuide = () => {
       <Navigation />
       <main className="min-h-screen pt-24 pb-16">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-background via-background to-coral-light/10 py-16">
+        <section className="bg-gradient-to-br from-background via-background to-coral-light/10 py-20">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">Guide for Buyers</h1>
+              <div className="inline-block mb-4 px-4 py-2 bg-coral-accent/10 rounded-full">
+                <p className="text-coral-accent font-semibold text-sm">🔥 Limited Time Offer</p>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">Get Your Free Buyer's Guide</h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Your comprehensive roadmap to buying a home in St. Petersburg
+                Skip the research. Get insider knowledge from St. Petersburg's top real estate experts — completely free.
               </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-coral-accent" />
+                  <span>Only takes 2 minutes</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-coral-accent" />
+                  <span>100% Free, No Obligations</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Timeline Section */}
-        <section className="py-16">
+        {/* Preview Section */}
+        <section className="py-16 bg-gradient-to-br from-coral-light/5 to-background">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold mb-12 text-center">Home Buying Timeline</h2>
-              <div className="space-y-4">
+              <h2 className="text-3xl font-bold mb-4 text-center">What You'll Get Inside</h2>
+              <p className="text-center text-muted-foreground mb-12">Your complete 10-step roadmap to buying a home in St. Petersburg</p>
+              
+              <div className="space-y-4 relative">
+                {/* First 3 steps - visible */}
                 {[
-                  { step: "Prepare finances & get preapproved", icon: DollarSign },
-                  { step: "Buyer's Consultation", icon: FileText },
-                  { step: "Home search set up through One Home", icon: Home },
-                  { step: "Tour homes and neighborhoods", icon: TrendingUp },
-                  { step: "Make an offer", icon: FileText },
-                  { step: "Inspections", icon: CheckCircle2 },
-                  { step: "Negotiate repairs, extensions, or credits", icon: FileText },
-                  { step: "Lender orders appraisal", icon: DollarSign },
-                  { step: "Final walk through", icon: Home },
-                  { step: "Closing", icon: CheckCircle2 }
+                  { step: "Prepare finances & get preapproved", icon: DollarSign, desc: "Learn exactly what lenders look for and how to maximize your buying power" },
+                  { step: "Buyer's Consultation", icon: FileText, desc: "Get personalized guidance tailored to your specific needs and goals" },
+                  { step: "Home search set up through One Home", icon: Home, desc: "Access exclusive listings before they hit the market" }
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-coral-light/10 hover:bg-coral-light/20 transition-colors">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-coral-accent/20 flex items-center justify-center">
-                      <item.icon className="w-5 h-5 text-coral-accent" />
+                  <div key={index} className="flex items-start gap-4 p-6 rounded-lg bg-background border border-border hover:border-coral-accent/50 transition-all">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-coral-accent/20 flex items-center justify-center">
+                      <item.icon className="w-6 h-6 text-coral-accent" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium">{item.step}</p>
+                      <p className="font-semibold text-lg mb-1">{item.step}</p>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
                 ))}
-              </div>
-              
-              {/* Survey CTA */}
-              <div className="mt-12 text-center">
-                <p className="text-lg font-medium mb-4">Get our Buyer's Guide by completing this brief survey.</p>
-                <Button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} size="lg" className="bg-gradient-teal hover:shadow-button text-teal-700">
-                  <FileText className="w-5 h-5 mr-2" />
-                  Take Buyer's Survey
-                </Button>
+                
+                {/* Blurred preview of remaining steps */}
+                <div className="relative">
+                  <div className="blur-sm pointer-events-none opacity-60">
+                    {[
+                      { step: "Tour homes and neighborhoods", icon: TrendingUp },
+                      { step: "Make an offer", icon: FileText },
+                      { step: "Inspections", icon: CheckCircle2 },
+                      { step: "Plus 4 more critical steps...", icon: FileText }
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center gap-4 p-6 rounded-lg bg-background border border-border mb-4">
+                        <div className="flex-shrink-0 w-12 h-12 rounded-full bg-coral-accent/20 flex items-center justify-center">
+                          <item.icon className="w-6 h-6 text-coral-accent" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-semibold text-lg">{item.step}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Overlay CTA */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-background via-background/95 to-transparent">
+                    <div className="text-center p-8 max-w-md">
+                      <h3 className="text-2xl font-bold mb-4">Unlock All 10 Steps</h3>
+                      <p className="text-muted-foreground mb-6">Complete the quick survey below to get instant access to your complete Buyer's Guide</p>
+                      <Button 
+                        onClick={() => document.getElementById('survey')?.scrollIntoView({ behavior: 'smooth' })} 
+                        size="lg" 
+                        className="bg-gradient-gold text-navy-deep hover:opacity-90 font-semibold shadow-button"
+                      >
+                        <FileText className="w-5 h-5 mr-2" />
+                        Get My Free Guide Now
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Contact Form Section */}
-        <section id="contact" className="py-16 bg-gradient-to-br from-coral-light/5 to-background">
+        {/* Survey Form Section */}
+        <section id="survey" className="py-16">
           <div className="container mx-auto px-6">
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4">Get Your Free Buyer's Guide</h2>
+                <h2 className="text-3xl font-bold mb-4">Quick Survey — Get Instant Access</h2>
                 <p className="text-muted-foreground">
-                  Complete this brief survey and we'll email you the complete guide plus personalized insights for your home buying journey.
+                  Answer a few quick questions so we can personalize your guide and send you the most relevant insights for your St. Petersburg home search.
                 </p>
               </div>
-              <Card>
+              <Card className="border-coral-accent/20">
                 <CardHeader>
-                  <CardTitle>Your Information</CardTitle>
+                  <CardTitle>Tell Us About Your Home Buying Journey</CardTitle>
                   <CardDescription>
-                    Fill out your contact details below to receive your free Buyer's Guide via email.
+                    This helps us provide personalized recommendations in your guide.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name *</Label>
@@ -150,20 +188,41 @@ const BuyerGuide = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message">Tell us about your home buying goals</Label>
+                      <Label htmlFor="message">What are your home buying goals? *</Label>
                       <Textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="I'm looking for a 3-bedroom home in downtown St. Pete..."
+                        required
+                        placeholder="Example: Looking for a 3-bedroom home in downtown St. Pete, move-in ready, budget around $500k..."
                         rows={4}
                       />
+                      <p className="text-xs text-muted-foreground">The more details you share, the better we can personalize your guide.</p>
                     </div>
 
-                    <Button type="submit" className="w-full bg-coral-accent hover:bg-coral-accent/90 text-white" size="lg">
-                      Send Message
+                    <div className="bg-coral-light/10 rounded-lg p-4 border border-coral-accent/20">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-coral-accent flex-shrink-0 mt-0.5" />
+                        <div className="text-sm">
+                          <p className="font-medium mb-1">You'll receive instantly:</p>
+                          <ul className="space-y-1 text-muted-foreground">
+                            <li>✓ Complete 10-step buyer's timeline</li>
+                            <li>✓ Personalized market insights</li>
+                            <li>✓ Exclusive access to off-market listings</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button type="submit" className="w-full bg-gradient-gold text-navy-deep hover:opacity-90 font-semibold shadow-button" size="lg">
+                      <Download className="w-5 h-5 mr-2" />
+                      Send Me My Free Guide
                     </Button>
+                    
+                    <p className="text-xs text-center text-muted-foreground">
+                      By submitting, you agree to receive helpful home buying tips via email. Unsubscribe anytime.
+                    </p>
                   </form>
                 </CardContent>
               </Card>
