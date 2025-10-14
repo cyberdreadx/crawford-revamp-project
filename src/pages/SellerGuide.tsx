@@ -58,26 +58,30 @@ const SellerGuide = () => {
     }));
   };
 
-  const benefits = [
+  const steps = [
     {
       icon: TrendingUp,
       title: "Maximize Your Sale Price",
-      description: "Learn proven strategies to increase your home's value and attract premium offers"
+      description: "Learn proven strategies to increase your home's value and attract premium offers",
+      details: "Discover data-driven pricing strategies and home improvements that deliver the best ROI"
     },
     {
       icon: Camera,
       title: "Property Preparation",
-      description: "Discover staging secrets and home improvements that deliver the best ROI"
+      description: "Discover staging secrets and home improvements that deliver the best ROI",
+      details: "Professional staging tips and renovation priorities that increase buyer interest"
     },
     {
       icon: Users,
       title: "Marketing That Works",
-      description: "Our luxury marketing strategy reaches qualified buyers across multiple channels"
+      description: "Our luxury marketing strategy reaches qualified buyers across multiple channels",
+      details: "Multi-channel marketing approach including digital advertising, social media, and luxury networks"
     },
     {
       icon: FileCheck,
       title: "Smooth Transaction Process",
-      description: "Navigate inspections, negotiations, and closing with confidence"
+      description: "Navigate inspections, negotiations, and closing with confidence",
+      details: "Step-by-step guidance through inspections, negotiations, and closing procedures"
     }
   ];
 
@@ -116,45 +120,43 @@ const SellerGuide = () => {
                 Here's a preview of what's inside your FREE Seller's Guide:
               </p>
               
-              {/* Preview - Show first 2 benefits */}
+              {/* Preview - Show first 3 steps */}
               <div className="space-y-6 mb-6">
-                {benefits.slice(0, 2).map((benefit, index) => (
+                {steps.slice(0, 3).map((step, index) => (
                   <Card key={index} className="border-l-4 border-coral-accent">
-                    <CardHeader>
+                    <CardContent className="pt-6">
                       <div className="flex items-start gap-4">
-                        <div className="bg-coral-accent/10 p-3 rounded-lg">
-                          <benefit.icon className="w-6 h-6 text-coral-accent" />
+                        <div className="bg-coral-accent/10 p-3 rounded-lg flex-shrink-0">
+                          <step.icon className="w-6 h-6 text-coral-accent" />
                         </div>
-                        <div>
-                          <CardTitle className="text-lg">{benefit.title}</CardTitle>
-                          <CardDescription className="mt-2">
-                            {benefit.description}
-                          </CardDescription>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
+                          <p className="text-muted-foreground text-sm mb-2">{step.description}</p>
+                          <p className="text-sm text-foreground/70">{step.details}</p>
                         </div>
                       </div>
-                    </CardHeader>
+                    </CardContent>
                   </Card>
                 ))}
               </div>
 
-              {/* Blurred remaining benefits with overlay */}
+              {/* Blurred remaining steps with overlay */}
               <div className="relative">
                 <div className="space-y-6 blur-sm pointer-events-none select-none">
-                  {benefits.slice(2).map((benefit, index) => (
+                  {steps.slice(3).map((step, index) => (
                     <Card key={index} className="border-l-4 border-coral-accent">
-                      <CardHeader>
+                      <CardContent className="pt-6">
                         <div className="flex items-start gap-4">
-                          <div className="bg-coral-accent/10 p-3 rounded-lg">
-                            <benefit.icon className="w-6 h-6 text-coral-accent" />
+                          <div className="bg-coral-accent/10 p-3 rounded-lg flex-shrink-0">
+                            <step.icon className="w-6 h-6 text-coral-accent" />
                           </div>
-                          <div>
-                            <CardTitle className="text-lg">{benefit.title}</CardTitle>
-                            <CardDescription className="mt-2">
-                              {benefit.description}
-                            </CardDescription>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-lg mb-2">{step.title}</h3>
+                            <p className="text-muted-foreground text-sm mb-2">{step.description}</p>
+                            <p className="text-sm text-foreground/70">{step.details}</p>
                           </div>
                         </div>
-                      </CardHeader>
+                      </CardContent>
                     </Card>
                   ))}
                 </div>
@@ -442,14 +444,13 @@ const SellerGuide = () => {
                         </div>
                       </div>
 
-                      <Button 
-                        type="submit" 
-                        className="w-full bg-coral-accent hover:bg-coral-accent/90 text-white"
-                        size="lg"
-                      >
-                        <ClipboardList className="mr-2 h-4 w-4" />
-                        Submit & Get the Guide
-                      </Button>
+                       <Button 
+                         type="submit" 
+                         className="w-full bg-coral-accent hover:bg-coral-accent/90 text-white"
+                         size="lg"
+                       >
+                         Send Me My Free Guide
+                       </Button>
 
                       <p className="text-xs text-muted-foreground text-center">
                         By submitting, you agree to receive emails from The Crawford Team. 
