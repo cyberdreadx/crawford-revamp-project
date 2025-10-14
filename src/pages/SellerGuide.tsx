@@ -11,10 +11,16 @@ import { useToast } from "@/hooks/use-toast";
 const SellerGuide = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     phone: "",
+    propertyTypes: [] as string[],
+    propertyOther: "",
+    city: "",
+    address: "",
+    estimatedValue: "",
+    timeline: "",
+    contactPreference: [] as string[],
   });
   const [submitted, setSubmitted] = useState(false);
 
@@ -30,6 +36,26 @@ const SellerGuide = () => {
     });
     
     setSubmitted(true);
+  };
+
+  const handleCheckboxChange = (field: string, value: string) => {
+    setFormData(prev => {
+      const currentValues = prev[field as keyof typeof prev] as string[];
+      const isChecked = currentValues.includes(value);
+      return {
+        ...prev,
+        [field]: isChecked 
+          ? currentValues.filter(v => v !== value)
+          : [...currentValues, value]
+      };
+    });
+  };
+
+  const handleRadioChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const benefits = [
@@ -232,48 +258,188 @@ const SellerGuide = () => {
                           </li>
                         </ul>
                       </div>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      {/* Question 1: Property Type */}
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold">1. What type of property are you considering selling?</Label>
+                        <p className="text-sm text-muted-foreground">Select all that apply</p>
                         <div className="space-y-2">
-                          <Label htmlFor="firstName">First Name</Label>
-                          <Input
-                            id="firstName"
-                            required
-                            value={formData.firstName}
-                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="lastName">Last Name</Label>
-                          <Input
-                            id="lastName"
-                            required
-                            value={formData.lastName}
-                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          />
+                          {[
+                            "Luxury Condo",
+                            "Waterfront Property",
+                            "Single-Family Home",
+                            "Investment/Rental Property"
+                          ].map(option => (
+                            <div key={option} className="flex items-center space-x-2">
+                              <input
+                                type="checkbox"
+                                id={`property-${option}`}
+                                checked={formData.propertyTypes.includes(option)}
+                                onChange={() => handleCheckboxChange('propertyTypes', option)}
+                                className="rounded border-gray-300"
+                              />
+                              <Label htmlFor={`property-${option}`} className="font-normal cursor-pointer">
+                                {option}
+                              </Label>
+                            </div>
+                          ))}
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id="property-other"
+                              checked={formData.propertyTypes.includes('Other')}
+                              onChange={() => handleCheckboxChange('propertyTypes', 'Other')}
+                              className="rounded border-gray-300"
+                            />
+                            <Label htmlFor="property-other" className="font-normal cursor-pointer">
+                              Other:
+                            </Label>
+                            <Input
+                              value={formData.propertyOther}
+                              onChange={(e) => setFormData(prev => ({ ...prev, propertyOther: e.target.value }))}
+                              placeholder="Please specify"
+                              className="flex-1"
+                            />
+                          </div>
                         </div>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        />
+
+                      {/* Question 2: Property Location */}
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold">2. Where is the property located?</Label>
+                        <div className="space-y-2">
+                          <div className="space-y-2">
+                            <Label htmlFor="city">City/Neighborhood</Label>
+                            <Input
+                              id="city"
+                              value={formData.city}
+                              onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="address">Address (optional)</Label>
+                            <Input
+                              id="address"
+                              value={formData.address}
+                              onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        />
+
+                      {/* Question 3: Estimated Value */}
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold">3. What is the estimated value of your property?</Label>
+                        <div className="space-y-2">
+                          {[
+                            "$250,000 – $400,000",
+                            "$405,000 – $750,000",
+                            "$750,000 – $1,500,000",
+                            "$1,500,000+",
+                            "Not sure – I'd like a professional opinion"
+                          ].map(option => (
+                            <div key={option} className="flex items-center space-x-2">
+                              <input
+                                type="radio"
+                                id={`value-${option}`}
+                                name="estimatedValue"
+                                checked={formData.estimatedValue === option}
+                                onChange={() => handleRadioChange('estimatedValue', option)}
+                                className="border-gray-300"
+                              />
+                              <Label htmlFor={`value-${option}`} className="font-normal cursor-pointer">
+                                {option}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Question 4: Timeline */}
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold">4. When are you planning to sell?</Label>
+                        <div className="space-y-2">
+                          {[
+                            "Immediately",
+                            "In 3–6 months",
+                            "In 6+ months",
+                            "Just exploring my options"
+                          ].map(option => (
+                            <div key={option} className="flex items-center space-x-2">
+                              <input
+                                type="radio"
+                                id={`timeline-${option}`}
+                                name="timeline"
+                                checked={formData.timeline === option}
+                                onChange={() => handleRadioChange('timeline', option)}
+                                className="border-gray-300"
+                              />
+                              <Label htmlFor={`timeline-${option}`} className="font-normal cursor-pointer">
+                                {option}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Question 5: Contact Preference */}
+                      <div className="space-y-3">
+                        <Label className="text-base font-semibold">5. How would you prefer to connect with us?</Label>
+                        <div className="space-y-2">
+                          {[
+                            "Please email me the Seller's Guide",
+                            "I'd like to schedule a home valuation or consultation call",
+                            "I'd like both"
+                          ].map(option => (
+                            <div key={option} className="flex items-center space-x-2">
+                              <input
+                                type="checkbox"
+                                id={`contact-${option}`}
+                                checked={formData.contactPreference.includes(option)}
+                                onChange={() => handleCheckboxChange('contactPreference', option)}
+                                className="rounded border-gray-300"
+                              />
+                              <Label htmlFor={`contact-${option}`} className="font-normal cursor-pointer">
+                                {option}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Contact Information */}
+                      <div className="space-y-4 pt-4 border-t">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Name *</Label>
+                          <Input
+                            id="name"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone *</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                          />
+                        </div>
                       </div>
 
                       <Button 
@@ -282,7 +448,7 @@ const SellerGuide = () => {
                         size="lg"
                       >
                         <ClipboardList className="mr-2 h-4 w-4" />
-                        Send Me My Free Guide
+                        Submit & Get the Guide
                       </Button>
 
                       <p className="text-xs text-muted-foreground text-center">

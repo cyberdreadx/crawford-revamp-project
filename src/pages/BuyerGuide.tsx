@@ -15,7 +15,11 @@ const BuyerGuide = () => {
     name: "",
     email: "",
     phone: "",
-    message: ""
+    propertyTypes: [] as string[],
+    priceRange: "",
+    relocation: "",
+    timeline: "",
+    contactPreference: [] as string[],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -24,11 +28,24 @@ const BuyerGuide = () => {
     toast.success("Thank you! We'll be in touch shortly.");
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+  const handleCheckboxChange = (field: string, value: string) => {
+    setFormData(prev => {
+      const currentValues = prev[field as keyof typeof prev] as string[];
+      const isChecked = currentValues.includes(value);
+      return {
+        ...prev,
+        [field]: isChecked 
+          ? currentValues.filter(v => v !== value)
+          : [...currentValues, value]
+      };
     });
+  };
+
+  const handleRadioChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleDownload = () => {
@@ -149,56 +166,176 @@ const BuyerGuide = () => {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
+                    {/* Question 1: Property Type */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">1. What type of property are you looking for?</Label>
+                      <p className="text-sm text-muted-foreground">Select all that apply</p>
                       <div className="space-y-2">
-                        <Label htmlFor="name">Full Name *</Label>
+                        {[
+                          "Condo",
+                          "Waterfront Property",
+                          "Single-Family Home",
+                          "Investment Property",
+                          "Not sure yet – open to options"
+                        ].map(option => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id={`property-${option}`}
+                              checked={formData.propertyTypes.includes(option)}
+                              onChange={() => handleCheckboxChange('propertyTypes', option)}
+                              className="rounded border-gray-300"
+                            />
+                            <Label htmlFor={`property-${option}`} className="font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question 2: Price Range */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">2. What is your ideal price range?</Label>
+                      <div className="space-y-2">
+                        {[
+                          "$250,000 – $400,000",
+                          "$405,000 – $750,000",
+                          "$750,000 – $1,500,000",
+                          "$1,500,000+",
+                          "Open to discussing options"
+                        ].map(option => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              id={`price-${option}`}
+                              name="priceRange"
+                              checked={formData.priceRange === option}
+                              onChange={() => handleRadioChange('priceRange', option)}
+                              className="border-gray-300"
+                            />
+                            <Label htmlFor={`price-${option}`} className="font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question 3: Relocation */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">3. Are you planning to relocate or invest from out of town?</Label>
+                      <div className="space-y-2">
+                        {[
+                          "Yes, I'm relocating",
+                          "Yes, I'm investing from another city/country",
+                          "No, I'm local to the area"
+                        ].map(option => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              id={`relocation-${option}`}
+                              name="relocation"
+                              checked={formData.relocation === option}
+                              onChange={() => handleRadioChange('relocation', option)}
+                              className="border-gray-300"
+                            />
+                            <Label htmlFor={`relocation-${option}`} className="font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question 4: Timeline */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">4. When are you looking to make a purchase?</Label>
+                      <div className="space-y-2">
+                        {[
+                          "As soon as possible",
+                          "Within 3–6 months",
+                          "6+ months",
+                          "Just exploring for now"
+                        ].map(option => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              id={`timeline-${option}`}
+                              name="timeline"
+                              checked={formData.timeline === option}
+                              onChange={() => handleRadioChange('timeline', option)}
+                              className="border-gray-300"
+                            />
+                            <Label htmlFor={`timeline-${option}`} className="font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question 5: Contact Preference */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">5. How would you prefer to connect with us?</Label>
+                      <div className="space-y-2">
+                        {[
+                          "Please email me the Buyer's Guide",
+                          "I'd like to schedule a 15-minute discovery call",
+                          "I'd like both"
+                        ].map(option => (
+                          <div key={option} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id={`contact-${option}`}
+                              checked={formData.contactPreference.includes(option)}
+                              onChange={() => handleCheckboxChange('contactPreference', option)}
+                              className="rounded border-gray-300"
+                            />
+                            <Label htmlFor={`contact-${option}`} className="font-normal cursor-pointer">
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div className="space-y-4 pt-4 border-t">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name *</Label>
                         <Input
                           id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
                           required
+                          value={formData.name}
+                          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                           placeholder="John Doe"
                         />
                       </div>
+                      
                       <div className="space-y-2">
                         <Label htmlFor="email">Email *</Label>
                         <Input
                           id="email"
-                          name="email"
                           type="email"
-                          value={formData.email}
-                          onChange={handleChange}
                           required
+                          value={formData.email}
+                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           placeholder="john@example.com"
                         />
                       </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="(727) 555-0123"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message">What are your home buying goals? *</Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        placeholder="Example: Looking for a 3-bedroom home in downtown St. Pete, move-in ready, budget around $500k..."
-                        rows={4}
-                      />
-                      <p className="text-xs text-muted-foreground">The more details you share, the better we can personalize your guide.</p>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                          placeholder="(727) 555-0123"
+                        />
+                      </div>
                     </div>
 
                     <div className="bg-coral-light/10 rounded-lg p-4 border border-coral-accent/20">
@@ -217,7 +354,7 @@ const BuyerGuide = () => {
 
                     <Button type="submit" className="w-full bg-gradient-gold text-navy-deep hover:opacity-90 font-semibold shadow-button" size="lg">
                       <Download className="w-5 h-5 mr-2" />
-                      Send Me My Free Guide
+                      Submit & Get the Guide
                     </Button>
                     
                     <p className="text-xs text-center text-muted-foreground">
