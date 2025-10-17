@@ -81,11 +81,11 @@ const Hero = () => {
       {/* Background Image Carousel */}
       <div className="absolute inset-0 w-full h-full">
         {currentImages.map((image, index) => <div key={image.id || index} className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}>
-            <img src={image.image_url} alt={image.title || 'Hero Image'} className="w-full h-full object-cover" loading={index < 3 ? 'eager' : 'lazy'} />
-            {/* Overlay gradient for text visibility */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
+            <img src={image.image_url} alt={image.title || 'Hero Image'} className="w-full h-full object-cover brightness-110" loading={index < 3 ? 'eager' : 'lazy'} />
+            {/* Lighter overlay gradient for text visibility */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/15 to-black/25"></div>
             {/* Crawford Team overlay with seafoam color */}
-            <div className="absolute inset-0 bg-[#7BBCB0]/40 mix-blend-overlay"></div>
+            <div className="absolute inset-0 bg-[#7BBCB0]/20 mix-blend-overlay"></div>
           </div>)}
       </div>
 
