@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -134,7 +134,10 @@ const Admin = () => {
         .order('display_order');
 
       if (error) throw error;
-      setHeroImages(data || []);
+      
+      startTransition(() => {
+        setHeroImages(data || []);
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -197,7 +200,9 @@ const Admin = () => {
         };
       }) || [];
 
-      setUsers(usersWithRoles);
+      startTransition(() => {
+        setUsers(usersWithRoles);
+      });
     } catch (error: any) {
       toast({
         title: "Error",

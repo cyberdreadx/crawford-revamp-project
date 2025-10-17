@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { Plus, Edit, Trash2, Upload, Star, Home, Building, Crown, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,7 +66,10 @@ const PropertyManagement = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProperties(data || []);
+      
+      startTransition(() => {
+        setProperties(data || []);
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -95,7 +98,9 @@ const PropertyManagement = () => {
         return acc;
       }, {});
       
-      setAllPropertyImages(imagesByProperty);
+      startTransition(() => {
+        setAllPropertyImages(imagesByProperty);
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -122,7 +127,9 @@ const PropertyManagement = () => {
         description: "Property deleted successfully!"
       });
 
-      fetchProperties();
+      startTransition(() => {
+        fetchProperties();
+      });
     } catch (error: any) {
       toast({
         title: "Error",
