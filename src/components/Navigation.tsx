@@ -104,7 +104,7 @@ const Navigation = () => {
                             Luxury Portfolio
                           </Link>
                           <Link to="/blog" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
-                            Market Insights
+                            Blog
                           </Link>
                         </> : <>
                           <Link to="/listings" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
@@ -197,7 +197,7 @@ const Navigation = () => {
                                   Luxury Portfolio
                                 </Link>
                                 <Link to="/blog" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
-                                  Market Insights
+                                  Blog
                                 </Link>
                               </> : <>
                                 <Link to="/listings" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
