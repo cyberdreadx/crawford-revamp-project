@@ -40,11 +40,11 @@ const Testimonials = () => {
 
   const renderStars = (rating: number) => {
     return (
-      <div className="flex gap-1 justify-center mb-4">
+      <div className="flex gap-2 justify-center mb-6">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`h-5 w-5 ${
+            className={`h-7 w-7 ${
               star <= rating
                 ? 'fill-accent text-accent'
                 : 'text-muted-foreground/30'
@@ -60,50 +60,50 @@ const Testimonials = () => {
   }
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-32 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Client Testimonials</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-20">
+          <h2 className="text-6xl font-bold mb-6">Client Testimonials</h2>
+          <p className="text-muted-foreground text-2xl max-w-3xl mx-auto">
             Hear what our clients have to say about their experience working with us
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {testimonials.map((testimonial) => (
             <Card
               key={testimonial.id}
               className="border-border hover:shadow-lg transition-all duration-300"
             >
-              <CardContent className="p-8">
-                <Quote className="h-10 w-10 text-accent/20 mb-4" />
+              <CardContent className="p-12">
+                <Quote className="h-16 w-16 text-accent/20 mb-6" />
                 
                 {testimonial.rating && renderStars(testimonial.rating)}
 
-                <p className="text-foreground mb-6 italic leading-relaxed">
+                <p className="text-foreground text-xl mb-8 italic leading-relaxed">
                   "{testimonial.content}"
                 </p>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   {testimonial.image_url ? (
                     <img
                       src={testimonial.image_url}
                       alt={testimonial.name}
-                      className="w-14 h-14 rounded-full object-cover border-2 border-accent/20"
+                      className="w-20 h-20 rounded-full object-cover border-2 border-accent/20"
                     />
                   ) : (
-                    <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center border-2 border-accent/20">
-                      <span className="text-xl font-bold text-accent">
+                    <div className="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center border-2 border-accent/20">
+                      <span className="text-3xl font-bold text-accent">
                         {testimonial.name.charAt(0)}
                       </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-semibold text-foreground">
+                    <p className="font-semibold text-foreground text-xl">
                       {testimonial.name}
                     </p>
                     {(testimonial.title || testimonial.company) && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-base text-muted-foreground">
                         {[testimonial.title, testimonial.company]
                           .filter(Boolean)
                           .join(' • ')}
