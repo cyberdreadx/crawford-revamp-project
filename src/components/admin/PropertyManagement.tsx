@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Upload, Star, Home, Building, Crown, Waves, Bot } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, Star, Home, Building, Crown, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { PropertyForm } from './PropertyForm';
 import { PropertyCard } from './PropertyCard';
-import DossierUpload from './DossierUpload';
 import APIKeyStatus from './APIKeyStatus';
 
 interface Property {
@@ -45,7 +44,6 @@ const PropertyManagement = () => {
   const [allPropertyImages, setAllPropertyImages] = useState<{ [key: string]: PropertyImage[] }>({});
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDossierDialogOpen, setIsDossierDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -186,29 +184,6 @@ const PropertyManagement = () => {
           <p className="text-muted-foreground">Organized by luxury categories</p>
         </div>
         <div className="flex gap-2">
-          <Dialog open={isDossierDialogOpen} onOpenChange={setIsDossierDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="gap-2">
-                <Bot className="h-4 w-4" />
-                AI Dossier Upload
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Upload Property Dossier</DialogTitle>
-              </DialogHeader>
-              <DossierUpload 
-                onPropertyCreated={(property) => {
-                  fetchProperties();
-                  setIsDossierDialogOpen(false);
-                  toast({
-                    title: "Success!",
-                    description: `Property "${property.title}" created successfully from dossier!`
-                  });
-                }}
-              />
-            </DialogContent>
-          </Dialog>
           <Button onClick={() => openDialog()} className="gap-2">
             <Plus className="h-4 w-4" />
             Add Property
