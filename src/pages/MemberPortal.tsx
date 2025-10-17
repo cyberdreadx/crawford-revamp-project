@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, Mail, Phone, Calendar, LogOut } from 'lucide-react';
+import { Loader2, User, Mail, Phone, Calendar, LogOut, Shield } from 'lucide-react';
 
 interface Profile {
   id: string;
@@ -22,6 +22,7 @@ interface Profile {
 const MemberPortal = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -33,7 +34,26 @@ const MemberPortal = () => {
     }
 
     fetchProfile();
+    checkAdminRole();
   }, [user, navigate]);
+
+  const checkAdminRole = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .rpc('has_role', { 
+          _user_id: user.id, 
+          _role: 'admin' 
+        });
+
+      if (!error) {
+        setIsAdmin(data || false);
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+    }
+  };
 
   const fetchProfile = async () => {
     if (!user) return;
@@ -166,6 +186,14 @@ const MemberPortal = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
+              {isAdmin && (
+                <Button variant="default" className="w-full justify-start" asChild>
+                  <a href="/admin">
+                    <Shield className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </a>
+                </Button>
+              )}
               <Button variant="outline" className="w-full justify-start" asChild>
                 <a href="/listings">View Properties</a>
               </Button>
