@@ -1,5 +1,5 @@
 import { useState, useEffect, startTransition } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,7 @@ import Dashboard from '@/components/admin/Dashboard';
 import ContentManager from '@/components/admin/ContentManager';
 import AnalyticsPanel from '@/components/admin/AnalyticsPanel';
 import BlogManagement from '@/components/admin/BlogManagement';
+import TestimonialManagement from '@/components/admin/TestimonialManagement';
 
 interface HeroImage {
   id: string;
@@ -506,7 +507,7 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-8">
+          <TabsList className="grid w-full grid-cols-9">
             <TabsTrigger value="dashboard" className="gap-2">
               <Monitor className="h-4 w-4" />
               Dashboard
@@ -518,6 +519,10 @@ const Admin = () => {
             <TabsTrigger value="blog" className="gap-2">
               <FileText className="h-4 w-4" />
               Blog
+            </TabsTrigger>
+            <TabsTrigger value="testimonials" className="gap-2">
+              <Star className="h-4 w-4" />
+              Testimonials
             </TabsTrigger>
             <TabsTrigger value="content" className="gap-2">
               <Globe className="h-4 w-4" />
@@ -551,6 +556,10 @@ const Admin = () => {
 
           <TabsContent value="blog" className="space-y-6">
             <BlogManagement />
+          </TabsContent>
+
+          <TabsContent value="testimonials" className="space-y-6">
+            <TestimonialManagement />
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">
