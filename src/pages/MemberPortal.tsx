@@ -197,11 +197,11 @@ const MemberPortal = () => {
               <Button variant="outline" className="w-full justify-start" asChild>
                 <Link to="/listings">View Properties</Link>
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="/#contact">Contact Team</a>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/#contact')}>
+                Contact Team
               </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="/#services">Our Services</a>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/#services')}>
+                Our Services
               </Button>
             </CardContent>
           </Card>
