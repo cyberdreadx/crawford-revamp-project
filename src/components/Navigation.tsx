@@ -134,7 +134,7 @@ const Navigation = () => {
           <div className="hidden lg:flex items-center space-x-4">
             {/* Social Media Icons */}
             <div className="flex items-center space-x-3">
-              <a href="https://www.facebook.com/thecrawfordteamstpete" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
+              <a href="https://www.facebook.com/yourcrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
                 <Facebook className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
               <a href="https://www.instagram.com/thecrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
