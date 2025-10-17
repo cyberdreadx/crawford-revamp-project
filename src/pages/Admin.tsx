@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useState, useEffect, startTransition } from 'react';
+=======
+import { useState, useEffect, Suspense, lazy } from 'react';
+>>>>>>> 6697d14bb787529bfca8778b5b6445ea6311b727
 import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -13,11 +17,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import PropertyManagement from '@/components/admin/PropertyManagement';
+const PropertyManagement = lazy(() => import('@/components/admin/PropertyManagement'));
 import Dashboard from '@/components/admin/Dashboard';
 import ContentManager from '@/components/admin/ContentManager';
 import AnalyticsPanel from '@/components/admin/AnalyticsPanel';
-import BlogManagement from '@/components/admin/BlogManagement';
+const BlogManagement = lazy(() => import('@/components/admin/BlogManagement'));
 
 interface HeroImage {
   id: string;
@@ -56,7 +60,7 @@ const Admin = () => {
   const [googleDriveFolderId, setGoogleDriveFolderId] = useState('');
   const [totalFiles, setTotalFiles] = useState(0);
   const [currentFile, setCurrentFile] = useState(0);
-  const [activeSection, setActiveSection] = useState('properties');
+  const [activeSection, setActiveSection] = useState('dashboard');
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
