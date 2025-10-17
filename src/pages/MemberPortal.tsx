@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -188,14 +188,14 @@ const MemberPortal = () => {
             <CardContent className="space-y-3">
               {isAdmin && (
                 <Button variant="default" className="w-full justify-start" asChild>
-                  <a href="/admin">
+                  <Link to="/admin">
                     <Shield className="mr-2 h-4 w-4" />
                     Admin Dashboard
-                  </a>
+                  </Link>
                 </Button>
               )}
               <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="/listings">View Properties</a>
+                <Link to="/listings">View Properties</Link>
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
                 <a href="/#contact">Contact Team</a>
