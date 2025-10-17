@@ -137,7 +137,7 @@ const Navigation = () => {
               <a href="https://www.facebook.com/yourcrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
                 <Facebook className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
-              <a href="https://www.instagram.com/thecrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
+              <a href="https://www.instagram.com/yourcrawfordteam" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
                 <Instagram className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
               </a>
               <a href="https://www.youtube.com/channel/UCDH71KGcZhC7tgeFkr22_Hw" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border hover:border-accent hover:bg-accent/10 transition-all duration-200 group">
