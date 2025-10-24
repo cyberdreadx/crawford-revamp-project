@@ -32,7 +32,6 @@ const Index = () => {
         <Properties />
         <Services />
         <Contact />
-        <Testimonials />
       </main>
       
       {/* Keller Williams Attribution */}
