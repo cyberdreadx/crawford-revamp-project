@@ -60,7 +60,7 @@ const Testimonials = () => {
   }
 
   return (
-    <section className="py-32 bg-background">
+    <section className="py-32 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <h2 className="text-6xl font-bold mb-6">Client Testimonials</h2>
@@ -69,7 +69,7 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-1 gap-12 max-w-4xl mx-auto">
           {testimonials.map((testimonial) => (
             <Card
               key={testimonial.id}
