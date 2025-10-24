@@ -27,6 +27,12 @@ const Hero = () => {
       behavior: "smooth"
     });
   };
+  
+  const scrollToSchedule = () => {
+    document.querySelector("#schedule-consultation")?.scrollIntoView({
+      behavior: "smooth"
+    });
+  };
   useEffect(() => {
     const fetchHeroImages = async () => {
       setLoading(true);
@@ -246,10 +252,12 @@ const Hero = () => {
             }} whileTap={{
               scale: 0.95
             }} className="w-full sm:w-auto">
-                <Button size="lg" asChild className="w-full bg-white text-[#7BBCB0] hover:bg-white/90 font-semibold px-6 py-6 text-base rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300">
-                  <a href="https://calendly.com/yourcrawfordteam/30min" target="_blank" rel="noopener noreferrer">
-                    Book a Consultation
-                  </a>
+                <Button 
+                  size="lg" 
+                  onClick={scrollToSchedule}
+                  className="w-full bg-white text-[#7BBCB0] hover:bg-white/90 font-semibold px-6 py-6 text-base rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+                >
+                  Book a Consultation
                 </Button>
               </motion.div>
             </motion.div>
