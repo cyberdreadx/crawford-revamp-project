@@ -161,12 +161,12 @@ const Contact = () => {
     {
       name: "Aline",
       calendlyUrl: "https://calendly.com/aline-yourcrawfordteam/30min",
-      description: "Senior Real Estate Specialist"
+      description: "Luxury Property Expert"
     },
     {
       name: "Monica", 
       calendlyUrl: "https://calendly.com/monica-yourcrawfordteam/30min",
-      description: "Luxury Property Expert"
+      description: "Senior Real Estate Specialist"
     },
     {
       name: "Sabra",
