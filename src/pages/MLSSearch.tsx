@@ -67,14 +67,14 @@ const MLSSearch = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <Badge variant="secondary" className="mb-4 px-4 py-2">
-                MLS Search
+                Map Search
               </Badge>
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Search All MLS Listings
+                Search by Map
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Access the complete database of available properties across the Tampa Bay area. 
-                Real-time listings updated directly from the MLS.
+                Explore properties visually on an interactive map. 
+                Find your perfect location in the Tampa Bay area.
               </p>
             </div>
             <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
