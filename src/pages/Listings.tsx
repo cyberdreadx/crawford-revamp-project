@@ -596,7 +596,7 @@ const Listings = () => {
                       className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors"
                       onClick={() => navigate(`/property/${property.id}`)}
                     >
-                      View Full Dossier
+                      View Full Listing
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </CardContent>
