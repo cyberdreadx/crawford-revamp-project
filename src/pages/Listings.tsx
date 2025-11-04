@@ -476,18 +476,22 @@ const Listings = () => {
       </section>
 
       {/* IDX Property Search Section */}
-      <section className="py-12 bg-background">
+      <section className="py-20 bg-gradient-subtle">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-4">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                MLS Search
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Search All MLS Listings
               </h2>
-              <p className="text-muted-foreground">
-                Access the complete database of available properties in the area
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Access the complete database of available properties across the Tampa Bay area. 
+                Real-time listings updated directly from the MLS.
               </p>
             </div>
-            <div className="bg-card rounded-lg border overflow-hidden" style={{ minHeight: '800px' }}>
+            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden" style={{ minHeight: '800px' }}>
               <iframe 
                 src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
                 width="100%" 
@@ -498,6 +502,11 @@ const Listings = () => {
                 title="IDX Property Search"
                 className="w-full"
               />
+            </div>
+            <div className="text-center mt-8">
+              <p className="text-sm text-muted-foreground">
+                Powered by MLS Matrix • Updated in Real-Time
+              </p>
             </div>
           </div>
         </div>
