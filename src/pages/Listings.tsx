@@ -491,17 +491,28 @@ const Listings = () => {
                 Real-time listings updated directly from the MLS.
               </p>
             </div>
-            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden" style={{ minHeight: '800px' }}>
-              <iframe 
-                src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
-                width="100%" 
-                height="800px" 
-                frameBorder="0" 
-                marginWidth={0}
-                marginHeight={0}
-                title="IDX Property Search"
-                className="w-full"
-              />
+            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
+              <div className="w-full h-[600px] md:h-[800px] min-h-[600px] md:min-h-[800px] relative">
+                <iframe 
+                  src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
+                  className="absolute inset-0 w-full h-full border-0"
+                  frameBorder="0" 
+                  marginWidth={0}
+                  marginHeight={0}
+                  scrolling="yes"
+                  title="IDX Property Search"
+                  allowFullScreen
+                  referrerPolicy="origin"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    overflow: 'auto',
+                    isolation: 'isolate'
+                  }}
+                />
+              </div>
             </div>
             <div className="text-center mt-8">
               <p className="text-sm text-muted-foreground">
