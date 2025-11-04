@@ -475,54 +475,6 @@ const Listings = () => {
         </div>
       </section>
 
-      {/* IDX Property Search Section */}
-      <section className="py-20 bg-gradient-subtle">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-4 px-4 py-2">
-                MLS Search
-              </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Search All MLS Listings
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Access the complete database of available properties across the Tampa Bay area. 
-                Real-time listings updated directly from the MLS.
-              </p>
-            </div>
-            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
-              <div className="w-full h-[600px] md:h-[800px] min-h-[600px] md:min-h-[800px] relative">
-                <iframe 
-                  src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
-                  className="absolute inset-0 w-full h-full border-0"
-                  frameBorder="0" 
-                  marginWidth={0}
-                  marginHeight={0}
-                  scrolling="yes"
-                  title="IDX Property Search"
-                  allowFullScreen
-                  referrerPolicy="origin"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    overflow: 'auto',
-                    isolation: 'isolate'
-                  }}
-                />
-              </div>
-            </div>
-            <div className="text-center mt-8">
-              <p className="text-sm text-muted-foreground">
-                Powered by MLS Matrix • Updated in Real-Time
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Properties Grid */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-6 lg:px-8">
@@ -643,7 +595,62 @@ const Listings = () => {
                 <p className="text-muted-foreground">You've viewed all {filteredProperties.length} properties</p>
               </div>
             )}
+          </div>
+        </div>
+      </section>
 
+      {/* IDX Property Search Section */}
+      <section className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-4 px-4 py-2">
+                MLS Search
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+                Search All MLS Listings
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                Access the complete database of available properties across the Tampa Bay area. 
+                Real-time listings updated directly from the MLS.
+              </p>
+            </div>
+            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
+              <div className="w-full h-[600px] md:h-[800px] min-h-[600px] md:min-h-[800px] relative">
+                <iframe 
+                  src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
+                  className="absolute inset-0 w-full h-full border-0"
+                  frameBorder="0" 
+                  marginWidth={0}
+                  marginHeight={0}
+                  scrolling="yes"
+                  title="IDX Property Search"
+                  allowFullScreen
+                  referrerPolicy="origin"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    overflow: 'auto',
+                    isolation: 'isolate'
+                  }}
+                />
+              </div>
+            </div>
+            <div className="text-center mt-8">
+              <p className="text-sm text-muted-foreground">
+                Powered by MLS Matrix • Updated in Real-Time
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
             {/* Contact CTA */}
             <div className="text-center mt-16 bg-gradient-subtle rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-foreground mb-4">

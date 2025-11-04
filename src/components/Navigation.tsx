@@ -110,11 +110,9 @@ const Navigation = () => {
                           <Link to="/listings" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Our Listings
                           </Link>
-                          <button onClick={() => {
-                      alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                    }} className="block w-full text-left px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
+                          <Link to="/mls-search" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Search All Listings
-                          </button>
+                          </Link>
                         </>}
                     </div>
                   </div>
@@ -203,12 +201,9 @@ const Navigation = () => {
                                 <Link to="/listings" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
                                   Our Listings
                                 </Link>
-                                <button onClick={() => {
-                            alert("MLS Search functionality coming soon! We'll integrate with your MLS system.");
-                            setIsOpen(false);
-                          }} className="flex items-center py-2 px-3 text-sm font-medium text-left rounded-lg hover:bg-accent/10 hover:text-accent transition-colors w-full">
+                                <Link to="/mls-search" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
                                   Search All Listings
-                                </button>
+                                </Link>
                               </>}
                           </div>
                         </div> : item.href === "/" && item.section && !isHomePage ? <a key={item.name} href={`/${item.section}`} onClick={() => setIsOpen(false)} className="flex items-center py-3 px-3 text-base font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
