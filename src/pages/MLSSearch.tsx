@@ -14,7 +14,7 @@ const MLSSearch = () => {
       <Navigation />
       
       {/* IDX Property Search Section */}
-      <section className="py-20 bg-gradient-subtle">
+      <section id="list-search" className="py-20 bg-gradient-subtle">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -62,7 +62,7 @@ const MLSSearch = () => {
       </section>
 
       {/* Second IDX Property Search Section */}
-      <section className="py-20 bg-background">
+      <section id="map-search" className="py-20 bg-background">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
