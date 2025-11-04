@@ -280,7 +280,7 @@ const Properties = () => {
               transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
               viewport={{ once: true }}
             >
-              Exclusive Listings
+              Our Listings
             </motion.h2>
           </div>
 
