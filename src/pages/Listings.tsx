@@ -462,22 +462,43 @@ const Listings = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="house">House</SelectItem>
                         <SelectItem value="condo">Condo</SelectItem>
+                        <SelectItem value="house">House</SelectItem>
                         <SelectItem value="estate">Estate</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-
-                {/* Results Count */}
-                <div className="mt-4 pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {filteredProperties.length} of {properties.length} properties
-                  </p>
-                </div>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* IDX Property Search Section */}
+      <section className="py-12 bg-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-foreground mb-4">
+                Search All MLS Listings
+              </h2>
+              <p className="text-muted-foreground">
+                Access the complete database of available properties in the area
+              </p>
+            </div>
+            <div className="bg-card rounded-lg border overflow-hidden" style={{ minHeight: '800px' }}>
+              <iframe 
+                src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
+                width="100%" 
+                height="800px" 
+                frameBorder="0" 
+                marginWidth={0}
+                marginHeight={0}
+                title="IDX Property Search"
+                className="w-full"
+              />
+            </div>
           </div>
         </div>
       </section>
