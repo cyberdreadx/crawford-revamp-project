@@ -1,5 +1,5 @@
 import { useState, useEffect, startTransition } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +19,7 @@ import ContentManager from '@/components/admin/ContentManager';
 import AnalyticsPanel from '@/components/admin/AnalyticsPanel';
 import BlogManagement from '@/components/admin/BlogManagement';
 import TestimonialManagement from '@/components/admin/TestimonialManagement';
+import ContactSubmissionsManagement from '@/components/admin/ContactSubmissionsManagement';
 
 interface HeroImage {
   id: string;
@@ -507,7 +508,7 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-9">
+          <TabsList className="grid w-full grid-cols-10">
             <TabsTrigger value="dashboard" className="gap-2">
               <Monitor className="h-4 w-4" />
               Dashboard
@@ -523,6 +524,10 @@ const Admin = () => {
             <TabsTrigger value="testimonials" className="gap-2">
               <Star className="h-4 w-4" />
               Testimonials
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="gap-2">
+              <Mail className="h-4 w-4" />
+              Contact
             </TabsTrigger>
             <TabsTrigger value="content" className="gap-2">
               <Globe className="h-4 w-4" />
@@ -560,6 +565,10 @@ const Admin = () => {
 
           <TabsContent value="testimonials" className="space-y-6">
             <TestimonialManagement />
+          </TabsContent>
+
+          <TabsContent value="contact" className="space-y-6">
+            <ContactSubmissionsManagement />
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">
