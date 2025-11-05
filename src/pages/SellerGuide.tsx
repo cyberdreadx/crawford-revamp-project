@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Download, CheckCircle2, Clock, Shield, TrendingUp, Camera, Users, FileCheck, DollarSign, Home } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const SellerGuide = () => {
   const [formData, setFormData] = useState({
@@ -22,10 +23,68 @@ const SellerGuide = () => {
     contactPreference: [] as string[],
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    toast.success("Thank you! We'll be in touch shortly.");
+    
+    try {
+      const message = `
+Seller's Guide Request
+
+Property Types: ${formData.propertyTypes.join(', ')}${formData.propertyOther ? ` (Other: ${formData.propertyOther})` : ''}
+Location: ${formData.city || 'Not specified'}${formData.address ? ` - ${formData.address}` : ''}
+Estimated Value: ${formData.estimatedValue || 'Not specified'}
+Timeline: ${formData.timeline || 'Not specified'}
+Contact Preference: ${formData.contactPreference.join(', ') || 'Not specified'}
+      `.trim();
+
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          property_type: 'Seller\'s Guide Request',
+          message: message,
+        });
+
+      if (dbError) throw dbError;
+
+      // Send email notification
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          propertyType: 'Seller\'s Guide Request',
+          message: message,
+        },
+      });
+
+      if (emailError) {
+        console.error('Email error:', emailError);
+        // Continue even if email fails - data is saved
+      }
+
+      toast.success("Thank you! We'll be in touch shortly with your Seller's Guide.");
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        propertyTypes: [],
+        propertyOther: "",
+        city: "",
+        address: "",
+        estimatedValue: "",
+        timeline: "",
+        contactPreference: [],
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error("There was a problem submitting your request. Please try again.");
+    }
   };
 
   const handleCheckboxChange = (field: string, value: string) => {

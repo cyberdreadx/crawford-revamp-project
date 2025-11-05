@@ -9,6 +9,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Download, Home, FileText, CheckCircle2, XCircle, Clock, DollarSign, TrendingUp, Shield } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const BuyerGuide = () => {
   const [formData, setFormData] = useState({
@@ -22,10 +23,69 @@ const BuyerGuide = () => {
     contactPreference: [] as string[],
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    toast.success("Thank you! We'll be in touch shortly.");
+    
+    try {
+      const message = `
+Buyer's Guide Request
+
+Property Types: ${formData.propertyTypes.join(', ') || 'Not specified'}
+Price Range: ${formData.priceRange || 'Not specified'}
+Relocation: ${formData.relocation || 'Not specified'}
+Timeline: ${formData.timeline || 'Not specified'}
+Contact Preference: ${formData.contactPreference.join(', ') || 'Not specified'}
+      `.trim();
+
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          property_type: 'Buyer\'s Guide Request',
+          message: message,
+        });
+
+      if (dbError) throw dbError;
+
+      // Send email notification
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          propertyType: 'Buyer\'s Guide Request',
+          message: message,
+        },
+      });
+
+      if (emailError) {
+        console.error('Email error:', emailError);
+        // Continue even if email fails - data is saved
+      }
+
+      toast.success("Thank you! We'll be in touch shortly with your Buyer's Guide.");
+      
+      // Trigger PDF download
+      handleDownload();
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        propertyTypes: [],
+        priceRange: "",
+        relocation: "",
+        timeline: "",
+        contactPreference: [],
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error("There was a problem submitting your request. Please try again.");
+    }
   };
 
   const handleCheckboxChange = (field: string, value: string) => {
