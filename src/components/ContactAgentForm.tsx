@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Mail, Phone, User } from 'lucide-react';
 import { contactSchema } from '@/lib/validation';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ContactAgentFormProps {
   propertyTitle: string;
@@ -31,9 +32,34 @@ const ContactAgentForm = ({ propertyTitle, propertyId, agentName }: ContactAgent
       // Validate input
       const validatedData = contactSchema.parse(formData);
       
-      // Here you would integrate with your email service or CRM
-      // For now, we'll simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          property_type: propertyTitle,
+          message: formData.message,
+        });
+
+      if (dbError) throw dbError;
+
+      // Send email notification
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          propertyType: propertyTitle,
+          message: formData.message,
+        },
+      });
+
+      if (emailError) {
+        console.error('Email error:', emailError);
+        // Continue even if email fails - data is saved
+      }
       
       toast.success("Your inquiry has been sent!", {
         description: `${agentName || 'Our agent'} will contact you within 24 hours.`
