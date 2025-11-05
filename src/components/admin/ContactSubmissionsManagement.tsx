@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Mail, Phone, Calendar, MessageSquare } from 'lucide-react';
+import { Mail, Phone, Calendar, MessageSquare, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -57,6 +58,56 @@ const ContactSubmissionsManagement = () => {
     });
   };
 
+  const exportToCSV = () => {
+    if (submissions.length === 0) {
+      toast({
+        title: "No Data",
+        description: "No contact submissions to export",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Define CSV headers
+    const headers = ['Date', 'Name', 'Email', 'Phone', 'Property Type', 'Message'];
+    
+    // Convert submissions to CSV rows
+    const csvRows = submissions.map(sub => [
+      formatDate(sub.created_at),
+      sub.name,
+      sub.email,
+      sub.phone || '',
+      sub.property_type || '',
+      sub.message.replace(/"/g, '""') // Escape quotes in message
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...csvRows.map(row => 
+        row.map(cell => `"${cell}"`).join(',')
+      )
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `contact-submissions-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Success",
+      description: `Exported ${submissions.length} contact submissions to CSV`
+    });
+  };
+
   if (isLoading) {
     return (
       <Card>
@@ -74,9 +125,20 @@ const ContactSubmissionsManagement = () => {
           <h2 className="text-2xl font-bold">Contact Submissions</h2>
           <p className="text-muted-foreground">View all contact form submissions</p>
         </div>
-        <Badge variant="secondary" className="text-lg px-4 py-2">
-          {submissions.length} Total
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Button 
+            onClick={exportToCSV} 
+            variant="outline"
+            className="gap-2"
+            disabled={submissions.length === 0}
+          >
+            <Download className="h-4 w-4" />
+            Export to CSV
+          </Button>
+          <Badge variant="secondary" className="text-lg px-4 py-2">
+            {submissions.length} Total
+          </Badge>
+        </div>
       </div>
 
       <Card>
