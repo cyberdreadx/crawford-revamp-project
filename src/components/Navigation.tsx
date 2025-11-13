@@ -107,9 +107,7 @@ const Navigation = () => {
                             Blog
                           </Link>
                         </> : <>
-                          <Link to="/listings" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
-                            Our Listings
-                          </Link>
+                          <Link to="/listings" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">Featured Listings</Link>
                           <Link to="/mls-search" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Search All Listings
                           </Link>
