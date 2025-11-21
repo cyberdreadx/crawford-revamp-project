@@ -110,7 +110,7 @@ const ContactSubmissionsManagement = () => {
 
   const displaySubmissions = getDisplaySubmissions();
 
-  const exportToCSV = () => {
+  const exportToCSV = (contactsOnly: boolean = false) => {
     if (submissions.length === 0) {
       toast({
         title: "No Data",
@@ -120,44 +120,78 @@ const ContactSubmissionsManagement = () => {
       return;
     }
 
-    // Define CSV headers
-    const headers = ['Date', 'Name', 'Email', 'Phone', 'Property Type', 'Message'];
-    
-    // Convert submissions to CSV rows
-    const csvRows = submissions.map(sub => [
-      formatDate(sub.created_at),
-      sub.name,
-      sub.email,
-      sub.phone || '',
-      sub.property_type || '',
-      sub.message.replace(/"/g, '""') // Escape quotes in message
-    ]);
+    const dataToExport = showUniqueOnly ? displaySubmissions : submissions;
 
-    // Combine headers and rows
-    const csvContent = [
-      headers.join(','),
-      ...csvRows.map(row => 
-        row.map(cell => `"${cell}"`).join(',')
-      )
-    ].join('\n');
+    if (contactsOnly) {
+      // Export only contact information
+      const headers = ['Name', 'Email', 'Phone'];
+      
+      const csvRows = dataToExport.map(sub => [
+        sub.name,
+        sub.email,
+        sub.phone || ''
+      ]);
 
-    // Create blob and download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    
-    link.setAttribute('href', url);
-    link.setAttribute('download', `contact-submissions-${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const csvContent = [
+        headers.join(','),
+        ...csvRows.map(row => 
+          row.map(cell => `"${cell}"`).join(',')
+        )
+      ].join('\n');
 
-    toast({
-      title: "Success",
-      description: `Exported ${submissions.length} contact submissions to CSV`
-    });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `contacts-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast({
+        title: "Success",
+        description: `Exported ${dataToExport.length} contacts to CSV`
+      });
+    } else {
+      // Export full data
+      const headers = ['Date', 'Name', 'Email', 'Phone', 'Property Type', 'Message'];
+      
+      const csvRows = dataToExport.map(sub => [
+        formatDate(sub.created_at),
+        sub.name,
+        sub.email,
+        sub.phone || '',
+        sub.property_type || '',
+        sub.message.replace(/"/g, '""')
+      ]);
+
+      const csvContent = [
+        headers.join(','),
+        ...csvRows.map(row => 
+          row.map(cell => `"${cell}"`).join(',')
+        )
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `contact-submissions-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast({
+        title: "Success",
+        description: `Exported ${dataToExport.length} contact submissions to CSV`
+      });
+    }
   };
 
   if (isLoading) {
@@ -191,13 +225,22 @@ const ContactSubmissionsManagement = () => {
             </label>
           </div>
           <Button 
-            onClick={exportToCSV} 
+            onClick={() => exportToCSV(true)} 
             variant="outline"
             className="gap-2"
             disabled={submissions.length === 0}
           >
             <Download className="h-4 w-4" />
-            Export to CSV
+            Export Contacts
+          </Button>
+          <Button 
+            onClick={() => exportToCSV(false)} 
+            variant="outline"
+            className="gap-2"
+            disabled={submissions.length === 0}
+          >
+            <Download className="h-4 w-4" />
+            Export Full Data
           </Button>
           <Badge variant="secondary" className="text-lg px-4 py-2">
             {displaySubmissions.length} {showUniqueOnly ? 'Unique' : 'Total'}
