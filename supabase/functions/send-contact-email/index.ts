@@ -63,7 +63,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to the admin/agent
     const emailResponse = await resend.emails.send({
-      from: "Crawford Team <onboarding@resend.dev>",
+      from: "Crawford Team <hello@yourcrawfordteam.com>",
       to: ["yourcrawfordteam@gmail.com"],
       subject: `New Contact Form Submission from ${safeName}`,
       html: `
