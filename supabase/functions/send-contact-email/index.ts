@@ -61,27 +61,6 @@ const handler = async (req: Request): Promise<Response> => {
     const safePropertyType = propertyType ? escapeHtml(propertyType) : undefined;
     const safeMessage = escapeHtml(message);
 
-    // Get the origin from the request to construct the PDF URL
-    const origin = new URL(req.url).origin.replace('functions.supabase.co', 'supabase.co');
-    const pdfUrl = `${origin}/guides/sellers-guide.pdf`;
-
-    console.log("Fetching seller's guide PDF from:", pdfUrl);
-
-    // Fetch the seller's guide PDF
-    let pdfBase64: string | undefined;
-    try {
-      const pdfResponse = await fetch(pdfUrl);
-      if (pdfResponse.ok) {
-        const pdfBuffer = await pdfResponse.arrayBuffer();
-        pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
-        console.log("PDF fetched and encoded successfully");
-      } else {
-        console.warn("Could not fetch PDF, will send email without attachment");
-      }
-    } catch (pdfError) {
-      console.warn("Error fetching PDF:", pdfError);
-    }
-
     // Send email to the admin/agent
     const adminEmailResponse = await resend.emails.send({
       from: "Crawford Team <hello@yourcrawfordteam.com>",
@@ -100,16 +79,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Admin notification email sent successfully:", adminEmailResponse);
 
-    // Send thank you email with PDF to the customer
-    const customerEmailData: any = {
+    // Send thank you email with flip book link to the customer
+    const customerEmailResponse = await resend.emails.send({
       from: "Crawford Team <hello@yourcrawfordteam.com>",
       to: [safeEmail],
-      subject: "Thank You for Your Interest - Seller's Guide Enclosed",
+      subject: "Thank You for Your Interest - Seller's Guide",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Thank You, ${safeName}!</h2>
           <p>We've received your inquiry and appreciate your interest in working with the Crawford Team.</p>
-          <p>As requested, please find our comprehensive Seller's Guide attached to this email. This guide contains valuable information about:</p>
+          <p>Click the button below to access our comprehensive Seller's Guide. This interactive guide contains valuable information about:</p>
           <ul>
             <li>Preparing your home for sale</li>
             <li>Understanding the selling process</li>
@@ -117,6 +96,12 @@ const handler = async (req: Request): Promise<Response> => {
             <li>Marketing your property</li>
             <li>And much more!</li>
           </ul>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://heyzine.com/flip-book/338c9a8ced.html#page/1" 
+               style="background-color: #0066cc; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+              View Your Seller's Guide
+            </a>
+          </div>
           <p>One of our team members will be in touch with you shortly to discuss your needs in more detail.</p>
           <p>If you have any immediate questions, please don't hesitate to reach out to us.</p>
           <br>
@@ -126,19 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
           📧 Email: <a href="mailto:yourcrawfordteam@gmail.com">yourcrawfordteam@gmail.com</a></p>
         </div>
       `,
-    };
-
-    // Add PDF attachment if successfully fetched
-    if (pdfBase64) {
-      customerEmailData.attachments = [
-        {
-          filename: "Crawford-Team-Sellers-Guide.pdf",
-          content: pdfBase64,
-        },
-      ];
-    }
-
-    const customerEmailResponse = await resend.emails.send(customerEmailData);
+    });
 
     console.log("Customer thank you email sent successfully:", customerEmailResponse);
 
