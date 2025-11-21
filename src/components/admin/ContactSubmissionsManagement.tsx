@@ -20,6 +20,9 @@ interface ContactSubmission {
 const ContactSubmissionsManagement = () => {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showUniqueOnly, setShowUniqueOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<'date' | 'email' | 'name'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -57,6 +60,55 @@ const ContactSubmissionsManagement = () => {
       minute: '2-digit'
     });
   };
+
+  const handleSort = (column: 'date' | 'email' | 'name') => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('desc');
+    }
+  };
+
+  const getDisplaySubmissions = () => {
+    let displayData = [...submissions];
+
+    // Sort data
+    displayData.sort((a, b) => {
+      let comparison = 0;
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+        case 'email':
+          comparison = a.email.localeCompare(b.email);
+          break;
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+      }
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    // Filter unique emails if enabled
+    if (showUniqueOnly) {
+      const uniqueEmails = new Map<string, ContactSubmission>();
+      displayData.forEach(sub => {
+        if (!uniqueEmails.has(sub.email)) {
+          uniqueEmails.set(sub.email, sub);
+        }
+      });
+      displayData = Array.from(uniqueEmails.values());
+    }
+
+    return displayData;
+  };
+
+  const getSubmissionCountByEmail = (email: string) => {
+    return submissions.filter(sub => sub.email === email).length;
+  };
+
+  const displaySubmissions = getDisplaySubmissions();
 
   const exportToCSV = () => {
     if (submissions.length === 0) {
@@ -126,6 +178,18 @@ const ContactSubmissionsManagement = () => {
           <p className="text-muted-foreground">View all contact form submissions</p>
         </div>
         <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="unique-emails"
+              checked={showUniqueOnly}
+              onChange={(e) => setShowUniqueOnly(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            <label htmlFor="unique-emails" className="text-sm cursor-pointer">
+              Show unique emails only
+            </label>
+          </div>
           <Button 
             onClick={exportToCSV} 
             variant="outline"
@@ -136,7 +200,7 @@ const ContactSubmissionsManagement = () => {
             Export to CSV
           </Button>
           <Badge variant="secondary" className="text-lg px-4 py-2">
-            {submissions.length} Total
+            {displaySubmissions.length} {showUniqueOnly ? 'Unique' : 'Total'}
           </Badge>
         </div>
       </div>
@@ -146,22 +210,52 @@ const ContactSubmissionsManagement = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Contact</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleSort('date')}
+                >
+                  <div className="flex items-center gap-2">
+                    Date
+                    {sortBy === 'date' && (
+                      <span className="text-xs">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                    )}
+                  </div>
+                </TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleSort('name')}
+                >
+                  <div className="flex items-center gap-2">
+                    Name
+                    {sortBy === 'name' && (
+                      <span className="text-xs">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                    )}
+                  </div>
+                </TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-muted/50"
+                  onClick={() => handleSort('email')}
+                >
+                  <div className="flex items-center gap-2">
+                    Contact
+                    {sortBy === 'email' && (
+                      <span className="text-xs">{sortOrder === 'asc' ? '↑' : '↓'}</span>
+                    )}
+                  </div>
+                </TableHead>
                 <TableHead>Property Type</TableHead>
                 <TableHead>Message</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {submissions.length === 0 ? (
+              {displaySubmissions.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                     No contact submissions yet
                   </TableCell>
                 </TableRow>
               ) : (
-                submissions.map((submission) => (
+                displaySubmissions.map((submission) => (
                   <TableRow key={submission.id}>
                     <TableCell className="whitespace-nowrap">
                       <div className="flex items-center gap-2 text-sm">
@@ -177,6 +271,11 @@ const ContactSubmissionsManagement = () => {
                           <a href={`mailto:${submission.email}`} className="hover:underline">
                             {submission.email}
                           </a>
+                          {showUniqueOnly && getSubmissionCountByEmail(submission.email) > 1 && (
+                            <Badge variant="secondary" className="text-xs">
+                              {getSubmissionCountByEmail(submission.email)}x
+                            </Badge>
+                          )}
                         </div>
                         {submission.phone && (
                           <div className="flex items-center gap-2">
