@@ -122,7 +122,7 @@ const handler = async (req: Request): Promise<Response> => {
           <br>
           <p>Best regards,<br>
           <strong>The Crawford Team</strong><br>
-          📞 Phone: <a href="tel:8136497653">(813) 649-7653</a><br>
+          📞 Phone: <a href="tel:7275991944">(727) 599-1944</a><br>
           📧 Email: <a href="mailto:yourcrawfordteam@gmail.com">yourcrawfordteam@gmail.com</a></p>
         </div>
       `,
