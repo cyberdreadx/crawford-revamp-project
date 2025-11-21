@@ -79,27 +79,46 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Admin notification email sent successfully:", adminEmailResponse);
 
+    // Determine which guide to send based on property type
+    const isBuyerGuide = safePropertyType?.includes("Buyer");
+    const guideUrl = isBuyerGuide 
+      ? "https://heyzine.com/flip-book/b550731b4e.html"
+      : "https://heyzine.com/flip-book/338c9a8ced.html#page/1";
+    const guideType = isBuyerGuide ? "Buyer's" : "Seller's";
+    
+    const guideContent = isBuyerGuide ? `
+      <ul>
+        <li>Preparing your finances and getting preapproved</li>
+        <li>Understanding the home buying process</li>
+        <li>Finding the perfect property</li>
+        <li>Making competitive offers</li>
+        <li>And much more!</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Preparing your home for sale</li>
+        <li>Understanding the selling process</li>
+        <li>Pricing strategies</li>
+        <li>Marketing your property</li>
+        <li>And much more!</li>
+      </ul>
+    `;
+
     // Send thank you email with flip book link to the customer
     const customerEmailResponse = await resend.emails.send({
       from: "Crawford Team <hello@yourcrawfordteam.com>",
       to: [safeEmail],
-      subject: "Thank You for Your Interest - Seller's Guide",
+      subject: `Thank You for Your Interest - ${guideType} Guide`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Thank You, ${safeName}!</h2>
           <p>We've received your inquiry and appreciate your interest in working with the Crawford Team.</p>
-          <p>Click the button below to access our comprehensive Seller's Guide. This interactive guide contains valuable information about:</p>
-          <ul>
-            <li>Preparing your home for sale</li>
-            <li>Understanding the selling process</li>
-            <li>Pricing strategies</li>
-            <li>Marketing your property</li>
-            <li>And much more!</li>
-          </ul>
+          <p>Click the button below to access our comprehensive ${guideType} Guide. This interactive guide contains valuable information about:</p>
+          ${guideContent}
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://heyzine.com/flip-book/338c9a8ced.html#page/1" 
+            <a href="${guideUrl}" 
                style="background-color: #0066cc; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-              View Your Seller's Guide
+              View Your ${guideType} Guide
             </a>
           </div>
           <p>One of our team members will be in touch with you shortly to discuss your needs in more detail.</p>
