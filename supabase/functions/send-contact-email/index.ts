@@ -61,8 +61,29 @@ const handler = async (req: Request): Promise<Response> => {
     const safePropertyType = propertyType ? escapeHtml(propertyType) : undefined;
     const safeMessage = escapeHtml(message);
 
+    // Get the origin from the request to construct the PDF URL
+    const origin = new URL(req.url).origin.replace('functions.supabase.co', 'supabase.co');
+    const pdfUrl = `${origin}/guides/sellers-guide.pdf`;
+
+    console.log("Fetching seller's guide PDF from:", pdfUrl);
+
+    // Fetch the seller's guide PDF
+    let pdfBase64: string | undefined;
+    try {
+      const pdfResponse = await fetch(pdfUrl);
+      if (pdfResponse.ok) {
+        const pdfBuffer = await pdfResponse.arrayBuffer();
+        pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
+        console.log("PDF fetched and encoded successfully");
+      } else {
+        console.warn("Could not fetch PDF, will send email without attachment");
+      }
+    } catch (pdfError) {
+      console.warn("Error fetching PDF:", pdfError);
+    }
+
     // Send email to the admin/agent
-    const emailResponse = await resend.emails.send({
+    const adminEmailResponse = await resend.emails.send({
       from: "Crawford Team <hello@yourcrawfordteam.com>",
       to: ["yourcrawfordteam@gmail.com"],
       subject: `New Contact Form Submission from ${safeName}`,
@@ -77,9 +98,54 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Admin notification email sent successfully:", adminEmailResponse);
 
-    return new Response(JSON.stringify(emailResponse), {
+    // Send thank you email with PDF to the customer
+    const customerEmailData: any = {
+      from: "Crawford Team <hello@yourcrawfordteam.com>",
+      to: [safeEmail],
+      subject: "Thank You for Your Interest - Seller's Guide Enclosed",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Thank You, ${safeName}!</h2>
+          <p>We've received your inquiry and appreciate your interest in working with the Crawford Team.</p>
+          <p>As requested, please find our comprehensive Seller's Guide attached to this email. This guide contains valuable information about:</p>
+          <ul>
+            <li>Preparing your home for sale</li>
+            <li>Understanding the selling process</li>
+            <li>Pricing strategies</li>
+            <li>Marketing your property</li>
+            <li>And much more!</li>
+          </ul>
+          <p>One of our team members will be in touch with you shortly to discuss your needs in more detail.</p>
+          <p>If you have any immediate questions, please don't hesitate to reach out to us.</p>
+          <br>
+          <p>Best regards,<br>
+          <strong>The Crawford Team</strong><br>
+          📞 Phone: <a href="tel:8136497653">(813) 649-7653</a><br>
+          📧 Email: <a href="mailto:yourcrawfordteam@gmail.com">yourcrawfordteam@gmail.com</a></p>
+        </div>
+      `,
+    };
+
+    // Add PDF attachment if successfully fetched
+    if (pdfBase64) {
+      customerEmailData.attachments = [
+        {
+          filename: "Crawford-Team-Sellers-Guide.pdf",
+          content: pdfBase64,
+        },
+      ];
+    }
+
+    const customerEmailResponse = await resend.emails.send(customerEmailData);
+
+    console.log("Customer thank you email sent successfully:", customerEmailResponse);
+
+    return new Response(JSON.stringify({ 
+      adminEmail: adminEmailResponse,
+      customerEmail: customerEmailResponse 
+    }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
