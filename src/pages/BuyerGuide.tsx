@@ -66,10 +66,7 @@ Contact Preference: ${formData.contactPreference.join(', ') || 'Not specified'}
         // Continue even if email fails - data is saved
       }
 
-      toast.success("Thank you! We'll be in touch shortly with your Buyer's Guide.");
-      
-      // Trigger PDF download
-      handleDownload();
+      toast.success("Thank you! Check your email for your Buyer's Guide.");
       
       // Reset form
       setFormData({
