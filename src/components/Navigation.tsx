@@ -103,6 +103,9 @@ const Navigation = () => {
                           <Link to="/luxury" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Luxury Portfolio
                           </Link>
+                          <Link to="/luxury-survey" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
+                            Luxury Survey
+                          </Link>
                           <Link to="/blog" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Blog
                           </Link>
@@ -191,6 +194,9 @@ const Navigation = () => {
                             {item.isResources ? <>
                                 <Link to="/luxury" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
                                   Luxury Portfolio
+                                </Link>
+                                <Link to="/luxury-survey" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
+                                  Luxury Survey
                                 </Link>
                                 <Link to="/blog" onClick={() => setIsOpen(false)} className="flex items-center py-2 px-3 text-sm font-medium rounded-lg hover:bg-accent/10 hover:text-accent transition-colors">
                                   Blog

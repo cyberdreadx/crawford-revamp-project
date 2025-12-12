@@ -135,7 +135,7 @@ export default function LuxurySurvey() {
 
     try {
       // Save to database
-      const { error: dbError } = await supabase.from("luxury_surveys").insert({
+      const { data: insertedData, error: dbError } = await supabase.from("luxury_surveys").insert({
         name: formData.name,
         email: formData.email,
         phone: formData.phone || null,
@@ -148,7 +148,7 @@ export default function LuxurySurvey() {
         preferred_locations: formData.preferredLocations,
         timeline: formData.timeline || null,
         contact_preference: formData.contactPreference,
-      });
+      }).select().single();
 
       if (dbError) throw dbError;
 
@@ -176,24 +176,13 @@ export default function LuxurySurvey() {
 
       toast({
         title: "Survey Submitted!",
-        description: "Thank you for completing the Luxury Survey. We'll be in touch soon.",
+        description: "Generating your personalized property match report...",
       });
 
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        serviceTypes: [],
-        advisorQualities: [],
-        propertyTypes: [],
-        lifestylePreferences: [],
-        valueFactors: [],
-        priceRange: "",
-        preferredLocations: [],
-        timeline: "",
-        contactPreference: [],
-      });
+      // Redirect to match report with the survey ID
+      if (insertedData?.id) {
+        navigate(`/match-report?surveyId=${insertedData.id}`);
+      }
 
     } catch (error: any) {
       console.error("Submission error:", error);
