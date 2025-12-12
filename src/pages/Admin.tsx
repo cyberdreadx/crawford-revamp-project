@@ -1,5 +1,5 @@
 import { useState, useEffect, startTransition } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star, Mail } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star, Mail, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +20,7 @@ import AnalyticsPanel from '@/components/admin/AnalyticsPanel';
 import BlogManagement from '@/components/admin/BlogManagement';
 import TestimonialManagement from '@/components/admin/TestimonialManagement';
 import ContactSubmissionsManagement from '@/components/admin/ContactSubmissionsManagement';
+import LuxurySurveyManagement from '@/components/admin/LuxurySurveyManagement';
 
 interface HeroImage {
   id: string;
@@ -508,7 +509,7 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-10">
+          <TabsList className="grid w-full grid-cols-11">
             <TabsTrigger value="dashboard" className="gap-2">
               <Monitor className="h-4 w-4" />
               Dashboard
@@ -528,6 +529,10 @@ const Admin = () => {
             <TabsTrigger value="contact" className="gap-2">
               <Mail className="h-4 w-4" />
               Contact
+            </TabsTrigger>
+            <TabsTrigger value="luxury-surveys" className="gap-2">
+              <ClipboardList className="h-4 w-4" />
+              Surveys
             </TabsTrigger>
             <TabsTrigger value="content" className="gap-2">
               <Globe className="h-4 w-4" />
@@ -569,6 +574,11 @@ const Admin = () => {
 
           <TabsContent value="contact" className="space-y-6">
             <ContactSubmissionsManagement />
+          </TabsContent>
+
+          <TabsContent value="luxury-surveys" className="space-y-6">
+            <h2 className="text-2xl font-bold">Luxury Survey Submissions</h2>
+            <LuxurySurveyManagement />
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">
