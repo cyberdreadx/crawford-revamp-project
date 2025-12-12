@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Listings from "./pages/Listings";
 import MLSSearch from "./pages/MLSSearch";
 import LuxuryProperties from "./pages/LuxuryProperties";
+import LuxurySurvey from "./pages/LuxurySurvey";
 import PropertyDetail from "./pages/PropertyDetail";
 import Blog from "./pages/Blog";
 import BuyerGuide from "./pages/BuyerGuide";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/listings" element={<Listings />} />
             <Route path="/mls-search" element={<MLSSearch />} />
             <Route path="/luxury" element={<LuxuryProperties />} />
+            <Route path="/luxury-survey" element={<LuxurySurvey />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<Blog />} />
             <Route path="/guides/buyer" element={<BuyerGuide />} />

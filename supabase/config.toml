@@ -1,1 +1,16 @@
 project_id = "kzeexseyjejxmaifdktm"
+
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.sync-hero-images]
+verify_jwt = false
+
+[functions.sync-property-images]
+verify_jwt = false
+
+[functions.test-openai-key]
+verify_jwt = false
+
+[functions.send-luxury-survey-email]
+verify_jwt = false

@@ -128,6 +128,57 @@ export type Database = {
         }
         Relationships: []
       }
+      luxury_surveys: {
+        Row: {
+          advisor_qualities: string[] | null
+          contact_preference: string[] | null
+          created_at: string
+          email: string
+          id: string
+          lifestyle_preferences: string[] | null
+          name: string
+          phone: string | null
+          preferred_locations: string[] | null
+          price_range: string | null
+          property_types: string[] | null
+          service_types: string[] | null
+          timeline: string | null
+          value_factors: string[] | null
+        }
+        Insert: {
+          advisor_qualities?: string[] | null
+          contact_preference?: string[] | null
+          created_at?: string
+          email: string
+          id?: string
+          lifestyle_preferences?: string[] | null
+          name: string
+          phone?: string | null
+          preferred_locations?: string[] | null
+          price_range?: string | null
+          property_types?: string[] | null
+          service_types?: string[] | null
+          timeline?: string | null
+          value_factors?: string[] | null
+        }
+        Update: {
+          advisor_qualities?: string[] | null
+          contact_preference?: string[] | null
+          created_at?: string
+          email?: string
+          id?: string
+          lifestyle_preferences?: string[] | null
+          name?: string
+          phone?: string | null
+          preferred_locations?: string[] | null
+          price_range?: string | null
+          property_types?: string[] | null
+          service_types?: string[] | null
+          timeline?: string | null
+          value_factors?: string[] | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
