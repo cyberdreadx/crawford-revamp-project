@@ -134,8 +134,12 @@ export default function LuxurySurvey() {
     setIsSubmitting(true);
 
     try {
+      // Generate ID client-side since we can't select after insert (no SELECT permission for anon)
+      const surveyId = crypto.randomUUID();
+      
       // Save to database
-      const { data: insertedData, error: dbError } = await supabase.from("luxury_surveys").insert({
+      const { error: dbError } = await supabase.from("luxury_surveys").insert({
+        id: surveyId,
         name: formData.name,
         email: formData.email,
         phone: formData.phone || null,
@@ -148,7 +152,7 @@ export default function LuxurySurvey() {
         preferred_locations: formData.preferredLocations,
         timeline: formData.timeline || null,
         contact_preference: formData.contactPreference,
-      }).select().single();
+      });
 
       if (dbError) throw dbError;
 
@@ -180,9 +184,7 @@ export default function LuxurySurvey() {
       });
 
       // Redirect to match report with the survey ID
-      if (insertedData?.id) {
-        navigate(`/match-report?surveyId=${insertedData.id}`);
-      }
+      navigate(`/match-report?surveyId=${surveyId}`);
 
     } catch (error: any) {
       console.error("Submission error:", error);
