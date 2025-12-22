@@ -94,6 +94,7 @@ const CONTACT_PREFERENCES = [
 export default function LuxurySurvey() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -156,35 +157,23 @@ export default function LuxurySurvey() {
 
       if (dbError) throw dbError;
 
-      // Send email notifications
-      const { error: emailError } = await supabase.functions.invoke("send-luxury-survey-email", {
-        body: {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          serviceTypes: formData.serviceTypes,
-          advisorQualities: formData.advisorQualities,
-          propertyTypes: formData.propertyTypes,
-          lifestylePreferences: formData.lifestylePreferences,
-          valueFactors: formData.valueFactors,
-          priceRange: formData.priceRange,
-          preferredLocations: formData.preferredLocations,
-          timeline: formData.timeline,
-          contactPreference: formData.contactPreference,
-        },
+      // Generate and email the report
+      const { error: reportError } = await supabase.functions.invoke("generate-and-email-report", {
+        body: { surveyId },
       });
 
-      if (emailError) {
-        console.error("Email error:", emailError);
+      if (reportError) {
+        console.error("Report generation error:", reportError);
+        // Still show success to user - the survey was saved
       }
 
       toast({
-        title: "Survey Submitted!",
-        description: "Generating your personalized property match report...",
+        title: "Survey Submitted Successfully!",
+        description: "Your personalized property match report will be emailed to you shortly.",
       });
 
-      // Redirect to match report with the survey ID
-      navigate(`/match-report?surveyId=${surveyId}`);
+      // Show confirmation page instead of redirecting to report
+      setIsSubmitted(true);
 
     } catch (error: any) {
       console.error("Submission error:", error);
@@ -198,6 +187,66 @@ export default function LuxurySurvey() {
     }
   };
 
+  // Show confirmation after submission
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4 max-w-2xl text-center">
+            <div className="bg-accent/10 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-8">
+              <svg className="w-12 h-12 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              Thank You!
+            </h1>
+            <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
+              Your personalized Luxury Property Match Report is being generated and will be sent to <strong>{formData.email}</strong> within the next few minutes.
+            </p>
+            
+            <Card className="mb-8 text-left">
+              <CardHeader>
+                <CardTitle className="text-lg">What Happens Next?</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-muted-foreground">
+                <div className="flex items-start gap-3">
+                  <span className="bg-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm flex-shrink-0">1</span>
+                  <p>Our AI analyzes your preferences against available luxury properties</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="bg-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm flex-shrink-0">2</span>
+                  <p>You'll receive a comprehensive match report via email with property recommendations</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="bg-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-sm flex-shrink-0">3</span>
+                  <p>A Crawford Team advisor will reach out to discuss your personalized results</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button onClick={() => navigate('/mls-search')} variant="default">
+                Browse MLS Listings
+              </Button>
+              <Button onClick={() => navigate('/luxury')} variant="outline">
+                View Luxury Properties
+              </Button>
+              <Button onClick={() => navigate('/')} variant="ghost">
+                Return Home
+              </Button>
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -209,7 +258,7 @@ export default function LuxurySurvey() {
               Luxury Survey
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Tell us about your luxury real estate goals. Your responses will help us create a personalized Luxury Match Report tailored to your lifestyle and preferences.
+              Tell us about your luxury real estate goals. Your responses will help us create a personalized Luxury Match Report that will be emailed directly to you.
             </p>
           </div>
 
