@@ -236,44 +236,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Sabra Charpentier */}
-            <motion.div initial={{
-            opacity: 0,
-            y: 50
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.4
-          }} viewport={{
-            once: true
-          }}>
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div className="lg:order-2 relative">
-                  <div className="max-w-lg mx-auto lg:mx-0">
-                    <img src="/lovable-uploads/606fc2f7-c96c-420f-b90d-41d5d6c7cdb8.png" alt="Sabra Charpentier" className="w-full h-auto object-cover rounded-lg shadow-elegant" />
-                  </div>
-                </div>
-                <div className="lg:order-1 space-y-6">
-                  <div>
-                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Sabra Charpentier</h3>
-                    <Badge variant="secondary" className="text-lg px-6 py-2 bg-[#7bbcb0]">Realtor & Investor Specialist</Badge>
-                  </div>
-                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                    <p>
-                      Sabra Charpentier is a licensed Realtor serving and specializing in St Petersburg, Florida, and has been a licensed Realtor with Keller Williams for a total of 10 years. Throughout those years, Sabra has found her niche with first time home buyers and investors.
-                    </p>
-                    <p>
-                      Sabra is passionate about bringing knowledge and financial literacy into the experience, while connecting them to their dream homes. She brings a unique blend of energy, emotional intelligence, and competitive spirit to the real estate market.
-                    </p>
-                    <p>
-                      As a former athlete, Sabra understands the importance of determination, discipline and teamwork- qualities that apply to every client interaction. Beyond her professional expertise, she is deeply committed to her community.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
           </div>
 
           {/* Achievement Stats */}
