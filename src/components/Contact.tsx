@@ -169,11 +169,6 @@ const Contact = () => {
       description: "Senior Real Estate Specialist"
     },
     {
-      name: "Sabra",
-      calendlyUrl: "https://calendly.com/sabra-ssgroup/30min", 
-      description: "Investment Property Consultant"
-    },
-    {
       name: "Ashley",
       calendlyUrl: "https://calendly.com/ash-eidam/30-minute-general-real-estate-consultation",
       description: "General Real Estate Advisor"
