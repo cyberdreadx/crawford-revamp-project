@@ -20,3 +20,9 @@ verify_jwt = false
 
 [functions.generate-and-email-report]
 verify_jwt = false
+
+[functions.test-mls-connection]
+verify_jwt = false
+
+[functions.sync-mls-properties]
+verify_jwt = false
