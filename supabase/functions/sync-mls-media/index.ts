@@ -105,6 +105,15 @@ Deno.serve(async (req) => {
         const properties: MLSProperty[] = data.value || [];
         
         console.log(`Received ${properties.length} properties with media data`);
+        
+        // Debug: Log first property's raw media data to understand the structure
+        if (properties.length > 0) {
+          const firstProp = properties[0];
+          console.log(`First property ${firstProp.ListingId} raw Media:`, JSON.stringify(firstProp.Media?.slice(0, 3) || 'NO MEDIA ARRAY'));
+          if (firstProp.Media && firstProp.Media.length > 0) {
+            console.log(`Media categories found:`, [...new Set(firstProp.Media.map(m => m.MediaCategory))]);
+          }
+        }
 
         // Process each property's media
         for (const property of properties) {
@@ -115,12 +124,13 @@ Deno.serve(async (req) => {
           const mediaList = property.Media || [];
           
           // Filter to only photos and sort by Order
+          // Try both 'Photo' and 'image' as MLS APIs vary
           const photos = mediaList
-            .filter(m => m.MediaCategory === 'Photo')
+            .filter(m => m.MediaCategory === 'Photo' || m.MediaCategory === 'Image' || m.MediaCategory === 'photo' || m.MediaCategory === 'image')
             .sort((a, b) => (a.Order || 0) - (b.Order || 0));
 
           if (photos.length === 0) {
-            console.log(`No photos for listing ${listingId}`);
+            console.log(`No photos for listing ${listingId} (total media items: ${mediaList.length})`);
             continue;
           }
 
