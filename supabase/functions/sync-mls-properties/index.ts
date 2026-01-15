@@ -77,8 +77,12 @@ serve(async (req) => {
     const top = Math.min(limit, 5000); // MLS Grid max is 5000 per request
     let hasMore = true;
 
-    // Build filter for incremental sync
-    let filter = '';
+    // Build filter - always exclude Closed/Sold properties
+    // Active statuses we want: Active, Active Under Contract, Pending, Coming Soon
+    const activeStatusFilter = "StandardStatus eq 'Active' or StandardStatus eq 'Active Under Contract' or StandardStatus eq 'Pending' or StandardStatus eq 'Coming Soon'";
+    
+    let filter = `&$filter=(${activeStatusFilter})`;
+    
     if (syncType === 'incremental') {
       // Get last successful sync timestamp
       const { data: lastSync } = await supabase
@@ -90,10 +94,12 @@ serve(async (req) => {
         .single();
 
       if (lastSync?.completed_at) {
-        filter = `&$filter=ModificationTimestamp gt ${lastSync.completed_at}`;
+        filter = `&$filter=(${activeStatusFilter}) and ModificationTimestamp gt ${lastSync.completed_at}`;
         console.log('Incremental sync from:', lastSync.completed_at);
       }
     }
+    
+    console.log('Using filter:', filter);
 
     // Fetch properties with pagination
     while (hasMore && allProperties.length < limit) {
