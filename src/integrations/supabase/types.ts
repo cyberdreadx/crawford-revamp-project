@@ -179,6 +179,45 @@ export type Database = {
         }
         Relationships: []
       }
+      mls_sync_log: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          errors: Json | null
+          id: string
+          records_created: number | null
+          records_processed: number | null
+          records_updated: number | null
+          started_at: string
+          status: string
+          sync_type: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          errors?: Json | null
+          id?: string
+          records_created?: number | null
+          records_processed?: number | null
+          records_updated?: number | null
+          started_at?: string
+          status?: string
+          sync_type?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          errors?: Json | null
+          id?: string
+          records_created?: number | null
+          records_processed?: number | null
+          records_updated?: number | null
+          started_at?: string
+          status?: string
+          sync_type?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -229,13 +268,25 @@ export type Database = {
           bathrooms: number
           bedrooms: number
           created_at: string
+          days_on_market: number | null
           description: string | null
           flood_zone: string | null
           id: string
           is_featured: boolean | null
+          is_mls_listing: boolean | null
           key_features: string[] | null
+          latitude: number | null
           lifestyle_events: string[] | null
+          listing_agent_mls_id: string | null
+          listing_id: string | null
+          listing_office_mls_id: string | null
           location: string
+          longitude: number | null
+          mls_raw_data: Json | null
+          mls_status: string | null
+          modification_timestamp: string | null
+          original_list_price: number | null
+          originating_system_name: string | null
           price: number
           property_type: string
           sqft: number
@@ -245,6 +296,7 @@ export type Database = {
           title: string
           unit_features: string[] | null
           updated_at: string
+          virtual_tour_url: string | null
           year_built: number | null
         }
         Insert: {
@@ -257,13 +309,25 @@ export type Database = {
           bathrooms: number
           bedrooms: number
           created_at?: string
+          days_on_market?: number | null
           description?: string | null
           flood_zone?: string | null
           id?: string
           is_featured?: boolean | null
+          is_mls_listing?: boolean | null
           key_features?: string[] | null
+          latitude?: number | null
           lifestyle_events?: string[] | null
+          listing_agent_mls_id?: string | null
+          listing_id?: string | null
+          listing_office_mls_id?: string | null
           location: string
+          longitude?: number | null
+          mls_raw_data?: Json | null
+          mls_status?: string | null
+          modification_timestamp?: string | null
+          original_list_price?: number | null
+          originating_system_name?: string | null
           price: number
           property_type?: string
           sqft: number
@@ -273,6 +337,7 @@ export type Database = {
           title: string
           unit_features?: string[] | null
           updated_at?: string
+          virtual_tour_url?: string | null
           year_built?: number | null
         }
         Update: {
@@ -285,13 +350,25 @@ export type Database = {
           bathrooms?: number
           bedrooms?: number
           created_at?: string
+          days_on_market?: number | null
           description?: string | null
           flood_zone?: string | null
           id?: string
           is_featured?: boolean | null
+          is_mls_listing?: boolean | null
           key_features?: string[] | null
+          latitude?: number | null
           lifestyle_events?: string[] | null
+          listing_agent_mls_id?: string | null
+          listing_id?: string | null
+          listing_office_mls_id?: string | null
           location?: string
+          longitude?: number | null
+          mls_raw_data?: Json | null
+          mls_status?: string | null
+          modification_timestamp?: string | null
+          original_list_price?: number | null
+          originating_system_name?: string | null
           price?: number
           property_type?: string
           sqft?: number
@@ -301,6 +378,7 @@ export type Database = {
           title?: string
           unit_features?: string[] | null
           updated_at?: string
+          virtual_tour_url?: string | null
           year_built?: number | null
         }
         Relationships: []

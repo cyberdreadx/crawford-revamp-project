@@ -1,5 +1,5 @@
 import { useState, useEffect, startTransition } from 'react';
-import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star, Mail, ClipboardList } from 'lucide-react';
+import { Settings, Users, BarChart3, Shield, Globe, Database, Home, Upload, X, Image, Monitor, RefreshCw, FileText, Star, Mail, ClipboardList, Wifi } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +21,7 @@ import BlogManagement from '@/components/admin/BlogManagement';
 import TestimonialManagement from '@/components/admin/TestimonialManagement';
 import ContactSubmissionsManagement from '@/components/admin/ContactSubmissionsManagement';
 import LuxurySurveyManagement from '@/components/admin/LuxurySurveyManagement';
+import MLSSyncPanel from '@/components/admin/MLSSyncPanel';
 
 interface HeroImage {
   id: string;
@@ -509,7 +510,7 @@ const Admin = () => {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-11">
+          <TabsList className="grid w-full grid-cols-12">
             <TabsTrigger value="dashboard" className="gap-2">
               <Monitor className="h-4 w-4" />
               Dashboard
@@ -517,6 +518,10 @@ const Admin = () => {
             <TabsTrigger value="properties" className="gap-2">
               <Home className="h-4 w-4" />
               Properties
+            </TabsTrigger>
+            <TabsTrigger value="mls-sync" className="gap-2">
+              <Wifi className="h-4 w-4" />
+              MLS Sync
             </TabsTrigger>
             <TabsTrigger value="blog" className="gap-2">
               <FileText className="h-4 w-4" />
@@ -540,7 +545,7 @@ const Admin = () => {
             </TabsTrigger>
             <TabsTrigger value="hero" className="gap-2">
               <Image className="h-4 w-4" />
-              Hero Images
+              Hero
             </TabsTrigger>
             <TabsTrigger value="users" className="gap-2" disabled={!isAdmin}>
               <Users className="h-4 w-4" />
@@ -562,6 +567,12 @@ const Admin = () => {
 
           <TabsContent value="properties" className="space-y-6">
             <PropertyManagement />
+          </TabsContent>
+
+          <TabsContent value="mls-sync" className="space-y-6">
+            <h2 className="text-2xl font-bold">MLS Grid Integration</h2>
+            <p className="text-muted-foreground">Connect to MLS Grid to sync property listings from Stellar MLS.</p>
+            <MLSSyncPanel />
           </TabsContent>
 
           <TabsContent value="blog" className="space-y-6">
