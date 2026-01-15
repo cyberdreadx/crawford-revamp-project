@@ -82,7 +82,8 @@ Deno.serve(async (req) => {
       const filter = filterParts.join(' or ');
       
       // Use Property endpoint with $expand=Media (required for MLS Grid v2)
-      const propertyUrl = `${mlsBaseUrl}/Property?$filter=${filter}&$expand=Media&$select=ListingId`;
+      // Note: Don't use $select with $expand as it excludes the expanded data
+      const propertyUrl = `${mlsBaseUrl}/Property?$filter=${filter}&$expand=Media`;
       
       console.log(`Fetching media batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(listingIds.length/batchSize)}`);
       
