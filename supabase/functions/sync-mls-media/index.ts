@@ -7,13 +7,14 @@ const corsHeaders = {
 
 interface MLSMedia {
   MediaKey: string;
-  ResourceRecordKeyNumeric: string;
   MediaURL: string;
   Order: number;
   MediaCategory: string;
-  ImageWidth?: number;
-  ImageHeight?: number;
-  ShortDescription?: string;
+}
+
+interface MLSProperty {
+  ListingId: string;
+  Media?: MLSMedia[];
 }
 
 Deno.serve(async (req) => {
@@ -65,28 +66,28 @@ Deno.serve(async (req) => {
       }
     });
 
-    // Build filter for Media endpoint - fetch media for all our listing IDs
     const listingIds = Array.from(listingIdMap.keys());
     
     let totalMediaSynced = 0;
     let propertiesWithMedia = 0;
     const errors: string[] = [];
 
-    // Process in batches of 10 properties to avoid overwhelming the API
-    const batchSize = 10;
+    // Process in batches of 20 properties using $expand=Media on Property endpoint
+    const batchSize = 20;
     for (let i = 0; i < listingIds.length; i += batchSize) {
       const batch = listingIds.slice(i, i + batchSize);
       
-      // Build OData filter for batch
-      const filterParts = batch.map(id => `ResourceRecordKeyNumeric eq '${id}'`);
+      // Build OData filter for batch - use $expand=Media to get media with properties
+      const filterParts = batch.map(id => `ListingId eq '${id}'`);
       const filter = filterParts.join(' or ');
       
-      const mediaUrl = `${mlsBaseUrl}/Media?$filter=(${filter}) and MediaCategory eq 'Photo'&$orderby=Order&$top=500`;
+      // Use Property endpoint with $expand=Media (required for MLS Grid v2)
+      const propertyUrl = `${mlsBaseUrl}/Property?$filter=${filter}&$expand=Media&$select=ListingId`;
       
       console.log(`Fetching media batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(listingIds.length/batchSize)}`);
       
       try {
-        const response = await fetch(mediaUrl, {
+        const response = await fetch(propertyUrl, {
           headers: {
             'Authorization': `Bearer ${mlsAccessToken}`,
             'Accept': 'application/json',
@@ -95,33 +96,33 @@ Deno.serve(async (req) => {
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error(`MLS Grid Media API error: ${response.status} - ${errorText}`);
+          console.error(`MLS Grid API error: ${response.status} - ${errorText}`);
           errors.push(`Batch ${Math.floor(i/batchSize) + 1}: API error ${response.status}`);
           continue;
         }
 
         const data = await response.json();
-        const mediaItems: MLSMedia[] = data.value || [];
+        const properties: MLSProperty[] = data.value || [];
         
-        console.log(`Received ${mediaItems.length} media items for batch`);
-
-        // Group media by listing_id
-        const mediaByListing = new Map<string, MLSMedia[]>();
-        mediaItems.forEach(media => {
-          const listingId = media.ResourceRecordKeyNumeric;
-          if (!mediaByListing.has(listingId)) {
-            mediaByListing.set(listingId, []);
-          }
-          mediaByListing.get(listingId)!.push(media);
-        });
+        console.log(`Received ${properties.length} properties with media data`);
 
         // Process each property's media
-        for (const [listingId, mediaList] of mediaByListing) {
+        for (const property of properties) {
+          const listingId = property.ListingId;
           const propertyId = listingIdMap.get(listingId);
           if (!propertyId) continue;
 
-          // Sort by Order
-          mediaList.sort((a, b) => (a.Order || 0) - (b.Order || 0));
+          const mediaList = property.Media || [];
+          
+          // Filter to only photos and sort by Order
+          const photos = mediaList
+            .filter(m => m.MediaCategory === 'Photo')
+            .sort((a, b) => (a.Order || 0) - (b.Order || 0));
+
+          if (photos.length === 0) {
+            console.log(`No photos for listing ${listingId}`);
+            continue;
+          }
 
           // Delete existing images for this property
           const { error: deleteError } = await supabase
@@ -136,7 +137,7 @@ Deno.serve(async (req) => {
           }
 
           // Insert new images
-          const imagesToInsert = mediaList.map((media, index) => ({
+          const imagesToInsert = photos.map((media, index) => ({
             property_id: propertyId,
             image_url: media.MediaURL,
             is_primary: index === 0,
@@ -153,6 +154,7 @@ Deno.serve(async (req) => {
             continue;
           }
 
+          console.log(`Synced ${imagesToInsert.length} images for listing ${listingId}`);
           totalMediaSynced += imagesToInsert.length;
           propertiesWithMedia++;
         }
