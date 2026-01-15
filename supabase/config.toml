@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.sync-mls-properties]
 verify_jwt = false
+
+[functions.sync-mls-media]
+verify_jwt = false

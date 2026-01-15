@@ -17,7 +17,8 @@ import {
   WifiOff,
   Database,
   AlertTriangle,
-  Play
+  Play,
+  Image
 } from "lucide-react";
 
 interface SyncLog {
@@ -50,14 +51,17 @@ export default function MLSSyncPanel() {
   const [isTestingConnection, setIsTestingConnection] = useState(false);
   const [connectionResult, setConnectionResult] = useState<ConnectionTestResult | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isSyncingMedia, setIsSyncingMedia] = useState(false);
   const [syncLogs, setSyncLogs] = useState<SyncLog[]>([]);
   const [loadingLogs, setLoadingLogs] = useState(true);
   const [mlsListingCount, setMlsListingCount] = useState(0);
   const [syncLimit, setSyncLimit] = useState(100);
+  const [mediaStats, setMediaStats] = useState<{ propertiesWithImages: number; totalImages: number } | null>(null);
 
   useEffect(() => {
     fetchSyncLogs();
     fetchMlsListingCount();
+    fetchMediaStats();
   }, []);
 
   const fetchSyncLogs = async () => {
@@ -88,6 +92,52 @@ export default function MLSSyncPanel() {
       setMlsListingCount(count || 0);
     } catch (error) {
       console.error('Error fetching MLS listing count:', error);
+    }
+  };
+
+  const fetchMediaStats = async () => {
+    try {
+      // Get count of MLS properties that have images
+      const { data, error } = await supabase
+        .from('property_images')
+        .select('property_id, properties!inner(is_mls_listing)')
+        .eq('properties.is_mls_listing', true);
+
+      if (error) throw error;
+      
+      const uniqueProperties = new Set(data?.map(d => d.property_id) || []);
+      setMediaStats({
+        propertiesWithImages: uniqueProperties.size,
+        totalImages: data?.length || 0,
+      });
+    } catch (error) {
+      console.error('Error fetching media stats:', error);
+    }
+  };
+
+  const runMediaSync = async () => {
+    setIsSyncingMedia(true);
+
+    try {
+      toast.info('Starting media sync for all MLS properties...');
+
+      const { data, error } = await supabase.functions.invoke('sync-mls-media');
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast.success(
+          `Media sync complete: ${data.totalMediaSynced} images for ${data.propertiesWithMedia} properties`
+        );
+        fetchMediaStats();
+      } else {
+        toast.error(data.error || 'Media sync failed');
+      }
+    } catch (error: any) {
+      console.error('Media sync error:', error);
+      toast.error('Failed to sync media: ' + error.message);
+    } finally {
+      setIsSyncingMedia(false);
     }
   };
 
@@ -295,6 +345,52 @@ export default function MLSSyncPanel() {
 
           <p className="text-sm text-muted-foreground">
             Full sync fetches all properties. Incremental sync only fetches properties modified since the last sync.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Media Sync */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Image className="h-5 w-5" />
+            Media Sync
+          </CardTitle>
+          <CardDescription>
+            Sync property photos from MLS Grid. 
+            {mediaStats && (
+              <> Currently: <strong>{mediaStats.totalImages}</strong> images for <strong>{mediaStats.propertiesWithImages}</strong> of <strong>{mlsListingCount}</strong> MLS properties</>
+            )}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={runMediaSync} 
+              disabled={isSyncingMedia || mlsListingCount === 0}
+            >
+              {isSyncingMedia ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Syncing Media...
+                </>
+              ) : (
+                <>
+                  <Image className="mr-2 h-4 w-4" />
+                  Sync All Media
+                </>
+              )}
+            </Button>
+
+            {mlsListingCount === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Sync properties first before syncing media.
+              </p>
+            )}
+          </div>
+
+          <p className="text-sm text-muted-foreground">
+            Fetches and syncs all photos for MLS properties from the MLS Grid Media API.
           </p>
         </CardContent>
       </Card>
