@@ -19,6 +19,64 @@ interface MLSProperty {
   Media?: MLSMedia[];
 }
 
+// Helper to download image and upload to Supabase Storage
+async function downloadAndStoreImage(
+  supabase: any,
+  mlsAccessToken: string,
+  imageUrl: string,
+  listingId: string,
+  imageIndex: number
+): Promise<string | null> {
+  try {
+    // Download from MLS Grid with auth
+    const response = await fetch(imageUrl, {
+      headers: {
+        'Authorization': `Bearer ${mlsAccessToken}`,
+        'Accept': 'image/*',
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to download image for ${listingId}: ${response.status}`);
+      return null;
+    }
+
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const imageData = await response.arrayBuffer();
+    
+    // Determine file extension from content type
+    let ext = 'jpg';
+    if (contentType.includes('png')) ext = 'png';
+    else if (contentType.includes('gif')) ext = 'gif';
+    else if (contentType.includes('webp')) ext = 'webp';
+
+    const fileName = `mls/${listingId}/${imageIndex}.${ext}`;
+
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('property-images')
+      .upload(fileName, imageData, {
+        contentType,
+        upsert: true, // Overwrite if exists
+      });
+
+    if (uploadError) {
+      console.error(`Failed to upload image for ${listingId}: ${uploadError.message}`);
+      return null;
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('property-images')
+      .getPublicUrl(fileName);
+
+    return urlData?.publicUrl || null;
+  } catch (error: any) {
+    console.error(`Error processing image for ${listingId}: ${error.message}`);
+    return null;
+  }
+}
+
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -39,6 +97,22 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Ensure the storage bucket exists
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const bucketExists = buckets?.some((b: any) => b.name === 'property-images');
+    
+    if (!bucketExists) {
+      const { error: createError } = await supabase.storage.createBucket('property-images', {
+        public: true,
+        fileSizeLimit: 10485760, // 10MB
+      });
+      if (createError && !createError.message.includes('already exists')) {
+        console.error('Failed to create bucket:', createError.message);
+      } else {
+        console.log('Created property-images bucket');
+      }
+    }
 
     // Get all MLS properties that need media synced
     const { data: mlsProperties, error: propsError } = await supabase
@@ -74,8 +148,8 @@ Deno.serve(async (req) => {
     let propertiesWithMedia = 0;
     const errors: string[] = [];
 
-    // Process in batches of 20 properties
-    const batchSize = 20;
+    // Process in batches of 10 properties (smaller to avoid rate limits)
+    const batchSize = 10;
     for (let i = 0; i < listingIds.length; i += batchSize) {
       const batch = listingIds.slice(i, i + batchSize);
       
@@ -134,12 +208,43 @@ Deno.serve(async (req) => {
             const anyMedia = mediaList.filter(m => m.MediaURL).slice(0, 1);
             if (anyMedia.length > 0) {
               photos.push(anyMedia[0]);
-              console.log(`Using fallback media for ${listingId}: ${anyMedia[0].MediaURL?.substring(0, 50)}...`);
+              console.log(`Using fallback media for ${listingId}`);
             }
           }
 
           if (photos.length === 0) {
             console.log(`No photos for listing ${listingId} (total media: ${mediaList.length})`);
+            continue;
+          }
+
+          // Download and store each image
+          const imagesToInsert: any[] = [];
+          
+          for (let imgIndex = 0; imgIndex < photos.length; imgIndex++) {
+            const media = photos[imgIndex];
+            const storedUrl = await downloadAndStoreImage(
+              supabase,
+              mlsAccessToken,
+              media.MediaURL,
+              listingId,
+              imgIndex
+            );
+
+            if (storedUrl) {
+              imagesToInsert.push({
+                property_id: propertyId,
+                image_url: storedUrl,
+                is_primary: imgIndex === 0,
+                display_order: media.Order || imgIndex,
+              });
+            }
+            
+            // Small delay between image downloads to avoid rate limits
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+
+          if (imagesToInsert.length === 0) {
+            console.log(`No images stored for ${listingId}`);
             continue;
           }
 
@@ -153,14 +258,7 @@ Deno.serve(async (req) => {
             console.error(`Error deleting existing images for ${listingId}: ${deleteError.message}`);
           }
 
-          // Insert new images (storing MLS Grid URLs directly)
-          const imagesToInsert = photos.map((media, index) => ({
-            property_id: propertyId,
-            image_url: media.MediaURL,
-            is_primary: index === 0,
-            display_order: media.Order || index,
-          }));
-
+          // Insert new images with Supabase Storage URLs
           const { error: insertError } = await supabase
             .from('property_images')
             .insert(imagesToInsert);
@@ -180,8 +278,8 @@ Deno.serve(async (req) => {
         errors.push(`Batch ${Math.floor(i/batchSize) + 1}: ${batchError.message}`);
       }
 
-      // Small delay between batches
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Delay between batches to avoid rate limits (500ms)
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     console.log(`Media sync complete: ${totalMediaSynced} images for ${propertiesWithMedia} properties`);
