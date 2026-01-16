@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import { Search, Bed, Bath, Square, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Bed, Bath, Square, MapPin, ChevronLeft, ChevronRight, List, Map } from "lucide-react";
+
+// Lazy load the map component to avoid loading Leaflet on initial page load
+const MLSMapView = lazy(() => import("./MLSMapView"));
 
 interface MLSListing {
   id: string;
@@ -21,6 +24,8 @@ interface MLSListing {
   property_type: string;
   status: string;
   listing_id: string | null;
+  latitude: number | null;
+  longitude: number | null;
   property_images: { image_url: string; is_primary: boolean }[];
 }
 
@@ -32,6 +37,7 @@ const MLSListings = () => {
   const [priceRange, setPriceRange] = useState("all");
   const [bedrooms, setBedrooms] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
   const { data: listings, isLoading, error } = useQuery({
     queryKey: ["mls-listings"],
@@ -49,6 +55,8 @@ const MLSListings = () => {
           property_type,
           status,
           listing_id,
+          latitude,
+          longitude,
           property_images (
             image_url,
             is_primary
@@ -179,17 +187,58 @@ const MLSListings = () => {
           </Select>
         </div>
 
-        <div className="mt-4 text-sm text-muted-foreground">
-          {isLoading ? (
-            <Skeleton className="h-4 w-32" />
-          ) : (
-            <span>{filteredListings.length} properties found</span>
-          )}
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            {isLoading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              <span>{filteredListings.length} properties found</span>
+            )}
+          </div>
+          
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className="h-8 px-3"
+            >
+              <List className="h-4 w-4 mr-1.5" />
+              List
+            </Button>
+            <Button
+              variant={viewMode === "map" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("map")}
+              className="h-8 px-3"
+            >
+              <Map className="h-4 w-4 mr-1.5" />
+              Map
+            </Button>
+          </div>
         </div>
       </div>
 
+      {/* Map View */}
+      {viewMode === "map" && (
+        <Suspense fallback={
+          <div className="w-full h-[600px] bg-muted/30 rounded-lg flex items-center justify-center">
+            <div className="text-muted-foreground">Loading map...</div>
+          </div>
+        }>
+          <MLSMapView 
+            listings={filteredListings.map(l => ({
+              ...l,
+              primaryImage: l.property_images?.find(img => img.is_primary)?.image_url || l.property_images?.[0]?.image_url
+            }))} 
+            isLoading={isLoading} 
+          />
+        </Suspense>
+      )}
+
       {/* Listings Grid */}
-      {isLoading ? (
+      {viewMode === "list" && isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
             <Card key={i} className="overflow-hidden">
@@ -202,7 +251,7 @@ const MLSListings = () => {
             </Card>
           ))}
         </div>
-      ) : paginatedListings.length === 0 ? (
+      ) : viewMode === "list" && paginatedListings.length === 0 ? (
         <div className="text-center py-16">
           <p className="text-lg text-muted-foreground">No properties match your search criteria.</p>
           <Button 
@@ -219,7 +268,7 @@ const MLSListings = () => {
             Clear Filters
           </Button>
         </div>
-      ) : (
+      ) : viewMode === "list" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {paginatedListings.map((listing) => (
             <Link key={listing.id} to={`/property/${listing.id}`}>
@@ -286,10 +335,10 @@ const MLSListings = () => {
             </Link>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
+      {/* Pagination - only show in list view */}
+      {viewMode === "list" && totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 pt-6">
           <Button
             variant="outline"
