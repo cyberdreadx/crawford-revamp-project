@@ -107,14 +107,14 @@ const MLSListings = () => {
 
   const getPropertyImage = (listing: MLSListing) => {
     const primaryImage = listing.property_images?.find((img) => img.is_primary);
-    const imageUrl = primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
+    const rawUrl = primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
     
-    // Debug: log first few listings
-    if (listing.listing_id && !imageUrl.includes('placeholder')) {
-      console.log(`Image for ${listing.listing_id}:`, imageUrl.substring(0, 80));
+    // If it's an MLS Grid URL, proxy it through our edge function to add auth
+    if (rawUrl.includes('mlsgrid.com')) {
+      return `https://kzeexseyjejxmaifdktm.supabase.co/functions/v1/proxy-mls-image?url=${encodeURIComponent(rawUrl)}`;
     }
     
-    return imageUrl;
+    return rawUrl;
   };
 
   const getStatusBadge = (status: string) => {
