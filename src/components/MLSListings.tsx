@@ -259,18 +259,27 @@ const MLSListings = () => {
                     <span className="line-clamp-1">{listing.location}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Bed className="h-4 w-4" />
-                      <span>{listing.bedrooms} bd</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Bath className="h-4 w-4" />
-                      <span>{listing.bathrooms} ba</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Square className="h-4 w-4" />
-                      <span>{listing.sqft.toLocaleString()} sqft</span>
-                    </div>
+                    {listing.bedrooms > 0 && (
+                      <div className="flex items-center gap-1">
+                        <Bed className="h-4 w-4" />
+                        <span>{listing.bedrooms} bd</span>
+                      </div>
+                    )}
+                    {listing.bathrooms > 0 && (
+                      <div className="flex items-center gap-1">
+                        <Bath className="h-4 w-4" />
+                        <span>{listing.bathrooms} ba</span>
+                      </div>
+                    )}
+                    {listing.sqft > 0 && (
+                      <div className="flex items-center gap-1">
+                        <Square className="h-4 w-4" />
+                        <span>{listing.sqft.toLocaleString()} sqft</span>
+                      </div>
+                    )}
+                    {listing.bedrooms === 0 && listing.bathrooms === 0 && listing.sqft === 0 && (
+                      <span className="text-muted-foreground/60">Details not available</span>
+                    )}
                   </div>
                 </CardContent>
               </Card>
