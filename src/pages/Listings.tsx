@@ -146,14 +146,17 @@ const Listings = () => {
       
       if (user) {
         // Admin users get full property data including agent contact
+        // Only show manual listings (non-MLS)
         const result = await supabase
           .from('properties')
           .select('*')
+          .or('is_mls_listing.is.null,is_mls_listing.eq.false')
           .order('created_at', { ascending: false });
         propertiesData = result.data;
         propertiesError = result.error;
       } else {
         // Non-admin users get property data WITHOUT agent email/phone
+        // Only show manual listings (non-MLS)
         const result = await supabase
           .from('properties')
           .select(`
@@ -161,6 +164,7 @@ const Listings = () => {
             year_built, status, description, key_features, taxes, flood_zone,
             is_featured, created_at, updated_at, property_type
           `)
+          .or('is_mls_listing.is.null,is_mls_listing.eq.false')
           .order('created_at', { ascending: false });
         propertiesData = result.data;
         propertiesError = result.error;
@@ -334,15 +338,15 @@ const Listings = () => {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-4 px-4 py-2">
-              All Properties
+              Crawford Realty Group
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-              Browse All Available Listings
+              Our Listings
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Explore our complete portfolio of properties across St. Petersburg, 
-              New Port Richey, Holiday, and Dunnellon. From investment opportunities 
-              to dream homes, find your perfect match.
+              Exclusive properties represented by Crawford Realty Group. 
+              For the complete MLS database, visit our{" "}
+              <a href="/mls-search" className="text-primary hover:underline">MLS Search</a> page.
             </p>
             
             {/* Filter Toggle */}
