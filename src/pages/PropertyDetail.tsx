@@ -149,7 +149,7 @@ const PropertyDetail = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Button 
             variant="ghost" 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/listings')}
             className="gap-2 hover:bg-primary/10"
           >
             <ArrowLeft className="h-4 w-4" />
