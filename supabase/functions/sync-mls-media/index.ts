@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
 
           const mediaList = property.Media || [];
           
-          // Filter to only photos and sort by Order
+          // Filter to only photos and get ONLY the first one (primary image)
           const photos = mediaList
             .filter(m => {
               const mediaType = (m.MediaType || '').toLowerCase();
@@ -199,7 +199,7 @@ Deno.serve(async (req) => {
               return isImage || isCategoryPhoto;
             })
             .sort((a, b) => (a.Order || 0) - (b.Order || 0))
-            .slice(0, 10); // Limit to first 10 images per property
+            .slice(0, 1); // Only keep the PRIMARY image to save storage
 
           if (photos.length === 0) {
             console.log(`No photos for listing ${listingId}`);
