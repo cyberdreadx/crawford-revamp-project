@@ -107,14 +107,7 @@ const MLSListings = () => {
 
   const getPropertyImage = (listing: MLSListing) => {
     const primaryImage = listing.property_images?.find((img) => img.is_primary);
-    const rawUrl = primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
-    
-    // If it's an MLS Grid URL, proxy it through our edge function to add auth
-    if (rawUrl.includes('mlsgrid.com')) {
-      return `https://kzeexseyjejxmaifdktm.supabase.co/functions/v1/proxy-mls-image?url=${encodeURIComponent(rawUrl)}`;
-    }
-    
-    return rawUrl;
+    return primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
   };
 
   const getStatusBadge = (status: string) => {
