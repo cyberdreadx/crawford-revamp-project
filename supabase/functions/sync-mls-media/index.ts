@@ -9,7 +9,9 @@ interface MLSMedia {
   MediaKey: string;
   MediaURL: string;
   Order: number;
-  MediaCategory: string;
+  MediaCategory?: string;
+  MediaType?: string; // MLS Grid uses MediaType (e.g., "jpg", "png")
+  LongDescription?: string;
 }
 
 interface MLSProperty {
@@ -133,11 +135,18 @@ Deno.serve(async (req) => {
           }
           
           // Filter to only photos and sort by Order
-          // Accept any category that looks like a photo
+          // MLS Grid uses MediaType (jpg, png, etc) instead of MediaCategory
           const photos = mediaList
             .filter(m => {
+              // Check MediaType for image formats
+              const mediaType = (m.MediaType || '').toLowerCase();
+              const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(mediaType);
+              
+              // Also check MediaCategory if present
               const cat = (m.MediaCategory || '').toLowerCase();
-              return cat === 'photo' || cat === 'image' || cat.includes('photo') || cat.includes('image');
+              const isCategoryPhoto = cat === 'photo' || cat === 'image' || cat.includes('photo');
+              
+              return isImage || isCategoryPhoto;
             })
             .sort((a, b) => (a.Order || 0) - (b.Order || 0));
 
