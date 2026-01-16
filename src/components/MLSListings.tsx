@@ -107,7 +107,15 @@ const MLSListings = () => {
 
   const getPropertyImage = (listing: MLSListing) => {
     const primaryImage = listing.property_images?.find((img) => img.is_primary);
-    return primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
+    const imageUrl = primaryImage?.image_url || listing.property_images?.[0]?.image_url;
+    
+    // Only return valid Supabase Storage URLs, not expired MLS Grid URLs
+    if (imageUrl && imageUrl.includes('supabase')) {
+      return imageUrl;
+    }
+    
+    // Return placeholder for expired/invalid MLS Grid URLs
+    return "/placeholder.svg";
   };
 
   const getStatusBadge = (status: string) => {
