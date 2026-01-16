@@ -107,7 +107,14 @@ const MLSListings = () => {
 
   const getPropertyImage = (listing: MLSListing) => {
     const primaryImage = listing.property_images?.find((img) => img.is_primary);
-    return primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
+    const imageUrl = primaryImage?.image_url || listing.property_images?.[0]?.image_url || "/placeholder.svg";
+    
+    // Debug: log first few listings
+    if (listing.listing_id && !imageUrl.includes('placeholder')) {
+      console.log(`Image for ${listing.listing_id}:`, imageUrl.substring(0, 80));
+    }
+    
+    return imageUrl;
   };
 
   const getStatusBadge = (status: string) => {
