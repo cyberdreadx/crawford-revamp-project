@@ -158,6 +158,13 @@ serve(async (req) => {
     // Process each property
     for (const mlsProp of allProperties) {
       try {
+        // Skip test listings
+        const address = (mlsProp.UnparsedAddress || '').toLowerCase();
+        const remarks = (mlsProp.PublicRemarks || '').toLowerCase();
+        if (address.includes('test') || remarks.includes('test listing') || remarks.includes('do not show')) {
+          console.log(`Skipping test listing: ${mlsProp.ListingId}`);
+          continue;
+        }
         // Map MLS property to our schema
         const propertyData = {
           listing_id: mlsProp.ListingId,
