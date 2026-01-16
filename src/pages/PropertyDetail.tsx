@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, Phone, Mail, MapPin, Bed, Bath, Square, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Phone, Mail, MapPin, Bed, Bath, Square, Calendar, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import ContactAgentForm from '@/components/ContactAgentForm';
-
+import Navigation from '@/components/Navigation';
 interface PropertyImage {
   id: string;
   image_url: string;
@@ -40,6 +40,7 @@ interface Property {
 
 const PropertyDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [property, setProperty] = useState<Property | null>(null);
   const [images, setImages] = useState<PropertyImage[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -140,7 +141,23 @@ const PropertyDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 pt-[64px]">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+      <Navigation />
+      
+      {/* Back Button */}
+      <div className="pt-[64px]">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate(-1)}
+            className="gap-2 hover:bg-primary/10"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Listings
+          </Button>
+        </div>
+      </div>
+
       {/* Hero Section with Image */}
       <div className="relative h-[70vh] overflow-hidden">
         {currentImage && (

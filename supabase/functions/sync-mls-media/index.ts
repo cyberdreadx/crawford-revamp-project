@@ -239,8 +239,8 @@ Deno.serve(async (req) => {
               });
             }
             
-            // Small delay between image downloads to avoid rate limits
-            await new Promise(resolve => setTimeout(resolve, 100));
+            // 500ms delay between image downloads to respect MLS Grid 2 RPS limit
+            await new Promise(resolve => setTimeout(resolve, 500));
           }
 
           if (imagesToInsert.length === 0) {
@@ -278,8 +278,8 @@ Deno.serve(async (req) => {
         errors.push(`Batch ${Math.floor(i/batchSize) + 1}: ${batchError.message}`);
       }
 
-      // Delay between batches to avoid rate limits (500ms)
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // 1 second delay between batches to respect MLS Grid rate limits
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     console.log(`Media sync complete: ${totalMediaSynced} images for ${propertiesWithMedia} properties`);
