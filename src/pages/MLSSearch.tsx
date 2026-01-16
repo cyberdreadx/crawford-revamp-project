@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import MLSListings from "@/components/MLSListings";
 
 const MLSSearch = () => {
   // Scroll to top when component mounts
@@ -61,7 +62,7 @@ const MLSSearch = () => {
         </div>
       </section>
 
-      {/* IDX List Search Section */}
+      {/* MLS Listings Section */}
       <section id="list-search" className="py-20 bg-background">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
@@ -74,35 +75,15 @@ const MLSSearch = () => {
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                 Access the complete database of available properties across the Tampa Bay area. 
-                Real-time listings updated directly from the MLS.
+                Real-time listings synced directly from Stellar MLS.
               </p>
             </div>
-            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
-              <div className="w-full h-[600px] md:h-[800px] min-h-[600px] md:min-h-[800px] relative">
-                <iframe 
-                  src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=989270e7" 
-                  className="absolute inset-0 w-full h-full border-0"
-                  frameBorder="0" 
-                  marginWidth={0}
-                  marginHeight={0}
-                  scrolling="yes"
-                  title="IDX Property List Search"
-                  allowFullScreen
-                  referrerPolicy="origin"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    overflow: 'auto',
-                    isolation: 'isolate'
-                  }}
-                />
-              </div>
-            </div>
+            
+            <MLSListings />
+            
             <div className="text-center mt-8">
               <p className="text-sm text-muted-foreground">
-                Powered by MLS Matrix • Updated in Real-Time
+                Powered by Stellar MLS • Updated in Real-Time
               </p>
             </div>
           </div>
