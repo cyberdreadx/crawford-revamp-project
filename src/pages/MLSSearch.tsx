@@ -14,68 +14,20 @@ const MLSSearch = () => {
     <div className="min-h-screen pt-[64px]">
       <Navigation />
       
-      {/* IDX Map Search Section */}
-      <section id="map-search" className="py-20 bg-gradient-subtle">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-4 px-4 py-2">
-                Map Search
-              </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Search by Map
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Explore properties visually on an interactive map. 
-                Find your perfect location in the Tampa Bay area.
-              </p>
-            </div>
-            <div className="bg-card rounded-2xl shadow-elegant border-2 overflow-hidden relative isolate">
-              <div className="w-full h-[600px] md:h-[800px] min-h-[600px] md:min-h-[800px] relative">
-                <iframe 
-                  src="https://stellar.mlsmatrix.com/Matrix/public/IDX.aspx?idx=6b8f70e6" 
-                  className="absolute inset-0 w-full h-full border-0"
-                  frameBorder="0" 
-                  marginWidth={0}
-                  marginHeight={0}
-                  scrolling="yes"
-                  title="IDX Property Map Search"
-                  allowFullScreen
-                  referrerPolicy="origin"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '100%',
-                    border: 'none',
-                    overflow: 'auto',
-                    isolation: 'isolate'
-                  }}
-                />
-              </div>
-            </div>
-            <div className="text-center mt-8">
-              <p className="text-sm text-muted-foreground">
-                Powered by MLS Matrix • Updated in Real-Time
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* MLS Listings Section */}
-      <section id="list-search" className="py-20 bg-background">
+      <section id="mls-search" className="py-20 bg-gradient-subtle">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <Badge variant="secondary" className="mb-4 px-4 py-2">
                 MLS Search
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
                 Search All MLS Listings
-              </h2>
+              </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
                 Access the complete database of available properties across the Tampa Bay area. 
-                Real-time listings synced directly from Stellar MLS.
+                Real-time listings synced directly from Stellar MLS. Toggle between list and map view.
               </p>
             </div>
             

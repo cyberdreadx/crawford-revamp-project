@@ -1,17 +1,16 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Bed, Bath, Square } from "lucide-react";
 
-// Fix for default marker icons in Leaflet with Vite
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+// Custom marker icon using inline SVG data URL (avoids CDN issues)
+const customIcon = new L.Icon({
+  iconUrl: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSI0MSIgdmlld0JveD0iMCAwIDI1IDQxIj48cGF0aCBmaWxsPSIjMmE4MWNiIiBkPSJNMTIuNSAwQzUuNTk2IDAgMCA1LjU5NiAwIDEyLjVjMCA5LjM3NSAxMi41IDI4LjUgMTIuNSAyOC41czEyLjUtMTkuMTI1IDEyLjUtMjguNUMyNSA1LjU5NiAxOS40MDQgMCAxMi41IDB6Ii8+PGNpcmNsZSBmaWxsPSIjZmZmIiBjeD0iMTIuNSIgY3k9IjEyLjUiIHI9IjUiLz48L3N2Zz4=",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
 });
 
 interface MLSListing {
@@ -53,7 +52,6 @@ const FitBounds = ({ listings }: { listings: MLSListing[] }) => {
 };
 
 const MLSMapView = ({ listings, isLoading }: MLSMapViewProps) => {
-  const mapRef = useRef<L.Map>(null);
   
   // Filter listings with valid coordinates
   const listingsWithCoords = listings.filter(l => l.latitude && l.longitude);
@@ -92,12 +90,20 @@ const MLSMapView = ({ listings, isLoading }: MLSMapViewProps) => {
 
   return (
     <div className="w-full h-[600px] rounded-lg overflow-hidden border-2 border-border">
+      <style>{`
+        .leaflet-container { height: 100%; width: 100%; }
+        .leaflet-control-zoom { border: none !important; }
+        .leaflet-control-zoom a { background: hsl(var(--card)) !important; color: hsl(var(--foreground)) !important; border: 1px solid hsl(var(--border)) !important; }
+        .leaflet-control-zoom a:hover { background: hsl(var(--muted)) !important; }
+        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; }
+        .leaflet-popup-content { margin: 8px; }
+      `}</style>
       <MapContainer
-        ref={mapRef}
         center={defaultCenter}
         zoom={10}
         className="w-full h-full"
         scrollWheelZoom={true}
+        style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -109,6 +115,7 @@ const MLSMapView = ({ listings, isLoading }: MLSMapViewProps) => {
           <Marker
             key={listing.id}
             position={[listing.latitude!, listing.longitude!]}
+            icon={customIcon}
           >
             <Popup minWidth={280} maxWidth={320}>
               <Card className="border-0 shadow-none">
