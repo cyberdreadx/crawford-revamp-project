@@ -7,6 +7,60 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Parse price range from survey to min/max values
+function parsePriceRange(priceRange: string | null): { min: number; max: number } {
+  if (!priceRange) return { min: 0, max: Infinity };
+  
+  const ranges: Record<string, { min: number; max: number }> = {
+    '$750,000 - $1.2M': { min: 750000, max: 1200000 },
+    '$1.2M - $2.5M': { min: 1200000, max: 2500000 },
+    '$2.5M - $5M': { min: 2500000, max: 5000000 },
+    '$5M - $10M': { min: 5000000, max: 10000000 },
+    '$10M+': { min: 10000000, max: Infinity },
+    'Open / based on value': { min: 0, max: Infinity },
+  };
+  
+  return ranges[priceRange] || { min: 0, max: Infinity };
+}
+
+// Map location preferences to search keywords
+function getLocationKeywords(locations: string[] | null): string[] {
+  if (!locations || locations.length === 0) return [];
+  
+  const locationMap: Record<string, string[]> = {
+    'Downtown St. Petersburg': ['ST PETERSBURG', 'DOWNTOWN', 'DTSP'],
+    'Snell Isle': ['SNELL ISLE', 'SNELL'],
+    'Old Northeast': ['OLD NORTHEAST', 'ONE'],
+    'Kenwood': ['KENWOOD', 'HISTORIC KENWOOD'],
+    'Beach communities': ['BEACH', 'PASS-A-GRILLE', 'TREASURE ISLAND', 'ST PETE BEACH', 'MADEIRA BEACH', 'INDIAN ROCKS'],
+    'Tampa': ['TAMPA'],
+    'Clearwater': ['CLEARWATER'],
+    'Open to recommendations': [],
+  };
+  
+  const keywords: string[] = [];
+  for (const loc of locations) {
+    const mapped = locationMap[loc];
+    if (mapped) keywords.push(...mapped);
+  }
+  
+  return keywords;
+}
+
+// Get valid image URL (only Supabase Storage URLs, not expired MLS URLs)
+function getValidImageUrl(property: any, supabaseUrl: string): string | null {
+  const primaryImage = property.property_images?.find((img: any) => img.is_primary)?.image_url;
+  const firstImage = property.property_images?.[0]?.image_url;
+  const imageUrl = primaryImage || firstImage;
+  
+  // Only return Supabase Storage URLs
+  if (imageUrl && imageUrl.includes('supabase')) {
+    return imageUrl;
+  }
+  
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -47,35 +101,110 @@ serve(async (req) => {
     }
 
     console.log('Survey found:', survey.name, survey.email);
+    console.log('Survey preferences:', {
+      priceRange: survey.price_range,
+      locations: survey.preferred_locations,
+      propertyTypes: survey.property_types,
+    });
 
-    // Fetch all luxury properties
-    const { data: properties, error: propertiesError } = await supabase
+    // Parse price range for filtering
+    const { min: minPrice, max: maxPrice } = parsePriceRange(survey.price_range);
+    const locationKeywords = getLocationKeywords(survey.preferred_locations);
+    
+    console.log('Filter criteria:', { minPrice, maxPrice, locationKeywords });
+
+    // Fetch ALL properties (MLS + featured) with images
+    const { data: allProperties, error: propertiesError } = await supabase
       .from('properties')
       .select(`
         *,
-        property_images (image_url, is_primary)
+        property_images (image_url, is_primary, display_order)
       `)
-      .eq('is_featured', true);
+      .order('price', { ascending: false });
 
     if (propertiesError) {
       console.error('Error fetching properties:', propertiesError);
     }
 
-    // Build AI prompt with survey data and properties
+    console.log('Total properties fetched:', allProperties?.length || 0);
+
+    // Filter properties based on survey preferences
+    let matchedProperties = (allProperties || []).filter((p: any) => {
+      // Price filter
+      const price = p.price || 0;
+      const priceMatch = price >= minPrice && (maxPrice === Infinity || price <= maxPrice);
+      
+      // Status filter - only active listings
+      const activeStatuses = ['Active', 'Active Under Contract', 'Coming Soon', 'For Sale', null];
+      const statusMatch = activeStatuses.includes(p.mls_status) || activeStatuses.includes(p.status);
+      
+      // Location filter (if specified)
+      let locationMatch = true;
+      if (locationKeywords.length > 0) {
+        const propertyLocation = (p.location || '').toUpperCase();
+        locationMatch = locationKeywords.some(keyword => propertyLocation.includes(keyword.toUpperCase()));
+      }
+      
+      return priceMatch && statusMatch && locationMatch;
+    });
+
+    console.log('Properties after filtering:', matchedProperties.length);
+
+    // If no matches with all filters, relax location filter
+    if (matchedProperties.length < 3 && locationKeywords.length > 0) {
+      console.log('Relaxing location filter due to low matches');
+      matchedProperties = (allProperties || []).filter((p: any) => {
+        const price = p.price || 0;
+        const priceMatch = price >= minPrice && (maxPrice === Infinity || price <= maxPrice);
+        const activeStatuses = ['Active', 'Active Under Contract', 'Coming Soon', 'For Sale', null];
+        const statusMatch = activeStatuses.includes(p.mls_status) || activeStatuses.includes(p.status);
+        return priceMatch && statusMatch;
+      });
+      console.log('Properties after relaxed filtering:', matchedProperties.length);
+    }
+
+    // If still no matches, fall back to featured properties + top priced
+    if (matchedProperties.length === 0) {
+      console.log('No price matches, falling back to featured + top listings');
+      matchedProperties = (allProperties || [])
+        .filter((p: any) => p.is_featured || p.price >= 500000)
+        .slice(0, 10);
+    }
+
+    // Sort by relevance: featured first, then by price
+    matchedProperties.sort((a: any, b: any) => {
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      return (b.price || 0) - (a.price || 0);
+    });
+
+    // Limit to top 10 matches
+    const topMatches = matchedProperties.slice(0, 10);
+    
+    console.log('Top matches for AI:', topMatches.map((p: any) => ({
+      title: p.title,
+      price: p.price,
+      location: p.location,
+      is_mls: p.is_mls_listing,
+      is_featured: p.is_featured,
+    })));
+
+    // Build AI prompt with survey data and filtered properties
     const systemPrompt = `You are a luxury real estate advisor for The Crawford Team in St. Petersburg, Florida. 
 Your role is to analyze client preferences and match them with available luxury properties, providing personalized recommendations.
 
-You have access to the client's survey responses and current luxury property listings. 
+You have access to the client's survey responses and ${topMatches.length} pre-filtered property listings that match their criteria.
 Generate a comprehensive, personalized property match report that includes:
 
 1. **Client Profile Summary**: Summarize their preferences, lifestyle needs, and priorities
-2. **Market Insights**: Brief overview of the St. Petersburg luxury market relevant to their criteria
-3. **Top Property Matches**: Analyze each property against their preferences and rank them with match scores (0-100%)
-4. **Personalized Recommendations**: Specific advice based on their timeline, budget, and preferences
+2. **Market Insights**: Brief overview of the St. Petersburg luxury market relevant to their criteria (price range: ${survey.price_range || 'flexible'})
+3. **Top Property Matches**: Analyze each property against their preferences, explain WHY each property is a good match. Include specific match scores (0-100%) based on alignment with their stated preferences.
+4. **Personalized Recommendations**: Specific advice based on their timeline (${survey.timeline || 'not specified'}), budget, and preferences
 5. **Next Steps**: Actionable recommendations for their property search
 
 Be specific, professional, and provide genuine value. Use markdown formatting.
-Keep the report concise but comprehensive - aim for about 800-1000 words.`;
+Keep the report concise but comprehensive - aim for about 800-1000 words.
+Reference actual properties by name and explain specific features that match their lifestyle preferences.`;
 
     const userPrompt = `
 ## Client Survey Responses
@@ -94,23 +223,27 @@ Keep the report concise but comprehensive - aim for about 800-1000 words.`;
 **Timeline:** ${survey.timeline || 'Not specified'}
 **Contact Preference:** ${survey.contact_preference?.join(', ') || 'Not specified'}
 
-## Available Luxury Properties
+## Pre-Filtered Property Matches (${topMatches.length} listings matching criteria)
 
-${properties?.map((p: any) => `
-### ${p.title}
+${topMatches.map((p: any, index: number) => `
+### ${index + 1}. ${p.title}
+- **Listing ID:** ${p.listing_id || 'Featured Listing'}
 - **Location:** ${p.location}
 - **Price:** $${p.price?.toLocaleString()}
+- **Status:** ${p.mls_status || p.status || 'Active'}
 - **Type:** ${p.property_type}
 - **Bedrooms:** ${p.bedrooms} | **Bathrooms:** ${p.bathrooms}
-- **Square Feet:** ${p.sqft?.toLocaleString()}
+- **Square Feet:** ${p.sqft?.toLocaleString() || 'N/A'}
 - **Year Built:** ${p.year_built || 'N/A'}
+- **Days on Market:** ${p.days_on_market || 'New Listing'}
 - **Key Features:** ${p.key_features?.join(', ') || 'N/A'}
 - **Amenities:** ${p.amenities?.join(', ') || 'N/A'}
 - **Lifestyle Events:** ${p.lifestyle_events?.join(', ') || 'N/A'}
-- **Description:** ${p.description || 'N/A'}
-`).join('\n') || 'No properties currently available'}
+- **Description:** ${p.description?.substring(0, 500) || 'Contact for details'}
+${p.is_mls_listing ? '- **Source:** MLS Grid (Live Listing)' : '- **Source:** Featured Property'}
+`).join('\n') || 'No properties currently matching your criteria. Our team will reach out with personalized recommendations.'}
 
-Please generate a comprehensive property match report for this client.`;
+Please generate a comprehensive property match report for this client, specifically referencing these properties and explaining why each is a good match for their stated preferences.`;
 
     console.log('Sending request to Lovable AI...');
 
@@ -155,21 +288,41 @@ Please generate a comprehensive property match report for this client.`;
     // Convert markdown to HTML for email
     const reportHtml = convertMarkdownToHtml(report);
 
-    // Build property cards HTML
-    const propertyCardsHtml = properties?.slice(0, 5).map((p: any) => {
-      const primaryImage = p.property_images?.find((img: any) => img.is_primary)?.image_url || p.property_images?.[0]?.image_url;
+    // Build property cards HTML with valid images only
+    const propertyCardsHtml = topMatches.slice(0, 6).map((p: any) => {
+      const imageUrl = getValidImageUrl(p, supabaseUrl);
+      const statusColor = p.mls_status === 'Active' ? '#10b981' : 
+                         p.mls_status === 'Active Under Contract' ? '#f59e0b' : 
+                         p.mls_status === 'Coming Soon' ? '#3b82f6' : '#6b7280';
+      const statusLabel = p.mls_status || p.status || 'Active';
+      const propertyUrl = `https://www.yourcrawfordteam.com/property/${p.id}`;
+      
       return `
-        <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
-          ${primaryImage ? `<img src="${primaryImage}" alt="${p.title}" style="width: 100%; height: 200px; object-fit: cover;" />` : ''}
+        <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 16px; background: #fff;">
+          ${imageUrl ? `<img src="${imageUrl}" alt="${p.title}" style="width: 100%; height: 180px; object-fit: cover;" />` : 
+            `<div style="width: 100%; height: 180px; background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); display: flex; align-items: center; justify-content: center;">
+              <span style="color: #fff; font-size: 14px; text-align: center; padding: 20px;">${p.title}</span>
+            </div>`}
           <div style="padding: 16px;">
-            <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">${p.title}</h3>
-            <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 14px;">${p.location}</p>
-            <p style="margin: 0; color: #0d9488; font-size: 18px; font-weight: bold;">$${p.price?.toLocaleString()}</p>
-            <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">${p.bedrooms} bed • ${p.bathrooms} bath • ${p.sqft?.toLocaleString()} sqft</p>
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+              <h3 style="margin: 0; color: #1f2937; font-size: 16px; flex: 1;">${p.title}</h3>
+              <span style="background: ${statusColor}; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 12px; white-space: nowrap; margin-left: 8px;">${statusLabel}</span>
+            </div>
+            <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">${p.location}</p>
+            <p style="margin: 0 0 8px 0; color: #0d9488; font-size: 20px; font-weight: bold;">$${p.price?.toLocaleString()}</p>
+            <p style="margin: 0 0 12px 0; color: #6b7280; font-size: 13px;">${p.bedrooms} bed • ${p.bathrooms} bath • ${p.sqft?.toLocaleString() || 'N/A'} sqft</p>
+            ${p.listing_id ? `<p style="margin: 0 0 12px 0; color: #9ca3af; font-size: 11px;">MLS# ${p.listing_id}</p>` : ''}
+            <a href="${propertyUrl}" style="display: inline-block; background-color: #0d9488; color: #ffffff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 13px;">View Details</a>
           </div>
         </div>
       `;
     }).join('') || '';
+
+    // Determine email subject based on match count
+    const matchCount = topMatches.length;
+    const emailSubject = matchCount > 0 
+      ? `Your Personalized Match Report: ${matchCount} Properties Found - ${survey.name}`
+      : `Your Luxury Property Match Report - ${survey.name}`;
 
     // Send email to the user
     const emailHtml = `
@@ -187,12 +340,13 @@ Please generate a comprehensive property match report for this client.`;
               <h1 style="color: #0d9488; font-size: 28px; margin: 0 0 8px 0;">The Crawford Team</h1>
               <h2 style="color: #1f2937; font-size: 24px; margin: 0 0 16px 0;">Your Luxury Property Match Report</h2>
               <p style="color: #6b7280; font-size: 14px; margin: 0;">Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+              ${matchCount > 0 ? `<p style="color: #0d9488; font-size: 16px; margin: 12px 0 0 0; font-weight: bold;">${matchCount} Properties Matched to Your Criteria</p>` : ''}
             </div>
 
             <!-- Greeting -->
             <div style="margin-bottom: 30px;">
               <p style="font-size: 16px;">Dear ${survey.name},</p>
-              <p style="font-size: 16px; color: #4b5563;">Thank you for completing our Luxury Survey! Based on your responses, our AI has analyzed your preferences and matched you with properties that best fit your lifestyle and investment goals.</p>
+              <p style="font-size: 16px; color: #4b5563;">Thank you for completing our Luxury Survey! Based on your responses${survey.price_range ? ` (budget: ${survey.price_range})` : ''}, our AI has analyzed your preferences and matched you with ${matchCount > 0 ? `${matchCount} properties` : 'our luxury listings'} that best fit your lifestyle and investment goals.</p>
             </div>
 
             <!-- Report Content -->
@@ -200,10 +354,10 @@ Please generate a comprehensive property match report for this client.`;
               ${reportHtml}
             </div>
 
-            <!-- Featured Properties -->
-            ${properties && properties.length > 0 ? `
+            <!-- Matched Properties -->
+            ${topMatches.length > 0 ? `
               <div style="margin-bottom: 40px;">
-                <h2 style="color: #0d9488; font-size: 22px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Featured Properties</h2>
+                <h2 style="color: #0d9488; font-size: 22px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Your Property Matches</h2>
                 ${propertyCardsHtml}
               </div>
             ` : ''}
@@ -212,7 +366,7 @@ Please generate a comprehensive property match report for this client.`;
             <div style="background-color: #f0fdfa; border-radius: 8px; padding: 24px; margin-bottom: 40px; text-align: center;">
               <h3 style="color: #0d9488; margin: 0 0 12px 0;">Explore All Available Properties</h3>
               <p style="color: #4b5563; margin: 0 0 16px 0; font-size: 14px;">
-                Search our complete MLS database for real-time listings across the Tampa Bay area.
+                Search our complete MLS database with ${allProperties?.length || 0}+ real-time listings across the Tampa Bay area.
               </p>
               <a href="https://www.yourcrawfordteam.com/mls-search" style="display: inline-block; background-color: #0d9488; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">Search MLS Listings</a>
             </div>
@@ -243,7 +397,7 @@ Please generate a comprehensive property match report for this client.`;
     const { error: userEmailError } = await resend.emails.send({
       from: "The Crawford Team <onboarding@resend.dev>",
       to: [survey.email],
-      subject: `Your Personalized Luxury Property Match Report - ${survey.name}`,
+      subject: emailSubject,
       html: emailHtml,
     });
 
@@ -254,7 +408,7 @@ Please generate a comprehensive property match report for this client.`;
 
     console.log('Email sent successfully to:', survey.email);
 
-    // Also send a copy to the team
+    // Also send a copy to the team with more details
     const { error: teamEmailError } = await resend.emails.send({
       from: "The Crawford Team <onboarding@resend.dev>",
       to: ["hello@yourcrawfordteam.com"],
@@ -265,7 +419,15 @@ Please generate a comprehensive property match report for this client.`;
         <p><strong>Email:</strong> ${survey.email}</p>
         <p><strong>Phone:</strong> ${survey.phone || 'Not provided'}</p>
         <p><strong>Price Range:</strong> ${survey.price_range || 'Not specified'}</p>
+        <p><strong>Preferred Locations:</strong> ${survey.preferred_locations?.join(', ') || 'Not specified'}</p>
+        <p><strong>Property Types:</strong> ${survey.property_types?.join(', ') || 'Not specified'}</p>
         <p><strong>Timeline:</strong> ${survey.timeline || 'Not specified'}</p>
+        <p><strong>Properties Matched:</strong> ${matchCount}</p>
+        <hr />
+        <h3>Matched Properties</h3>
+        <ul>
+          ${topMatches.map((p: any) => `<li>${p.title} - $${p.price?.toLocaleString()} (${p.location})</li>`).join('')}
+        </ul>
         <hr />
         <h3>Generated Report</h3>
         ${reportHtml}
@@ -279,7 +441,8 @@ Please generate a comprehensive property match report for this client.`;
 
     return new Response(JSON.stringify({ 
       success: true,
-      message: "Report generated and emailed successfully"
+      message: "Report generated and emailed successfully",
+      matchCount: matchCount,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
