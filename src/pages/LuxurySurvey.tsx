@@ -95,6 +95,8 @@ export default function LuxurySurvey() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionProgress, setSubmissionProgress] = useState(0);
+  const [submissionStep, setSubmissionStep] = useState("");
   
   const [formData, setFormData] = useState({
     name: "",
@@ -133,10 +135,15 @@ export default function LuxurySurvey() {
     }
 
     setIsSubmitting(true);
+    setSubmissionProgress(10);
+    setSubmissionStep("Preparing your survey...");
 
     try {
       // Generate ID client-side since we can't select after insert (no SELECT permission for anon)
       const surveyId = crypto.randomUUID();
+      
+      setSubmissionProgress(25);
+      setSubmissionStep("Saving your preferences...");
       
       // Save to database
       const { error: dbError } = await supabase.from("luxury_surveys").insert({
@@ -157,15 +164,24 @@ export default function LuxurySurvey() {
 
       if (dbError) throw dbError;
 
+      setSubmissionProgress(50);
+      setSubmissionStep("Analyzing property matches...");
+
       // Generate and email the report
       const { error: reportError } = await supabase.functions.invoke("generate-and-email-report", {
         body: { surveyId },
       });
 
+      setSubmissionProgress(90);
+      setSubmissionStep("Sending your personalized report...");
+
       if (reportError) {
         console.error("Report generation error:", reportError);
         // Still show success to user - the survey was saved
       }
+      
+      setSubmissionProgress(100);
+      setSubmissionStep("Complete!");
 
       toast({
         title: "Survey Submitted Successfully!",
@@ -493,13 +509,28 @@ export default function LuxurySurvey() {
               </CardContent>
             </Card>
 
+            {isSubmitting && (
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{submissionStep}</span>
+                  <span className="font-medium">{submissionProgress}%</span>
+                </div>
+                <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary">
+                  <div 
+                    className="h-full bg-primary transition-all duration-500 ease-out"
+                    style={{ width: `${submissionProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <Button
               type="submit"
               size="lg"
               className="w-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting..." : "Submit Survey"}
+              {isSubmitting ? "Processing..." : "Submit Survey"}
             </Button>
           </form>
         </div>
