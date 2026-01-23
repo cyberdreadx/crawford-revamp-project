@@ -395,7 +395,7 @@ Please generate a comprehensive property match report for this client, specifica
 
     // Send email to user
     const { error: userEmailError } = await resend.emails.send({
-      from: "The Crawford Team <onboarding@resend.dev>",
+      from: "The Crawford Team <hello@yourcrawfordteam.com>",
       to: [survey.email],
       subject: emailSubject,
       html: emailHtml,
@@ -410,7 +410,7 @@ Please generate a comprehensive property match report for this client, specifica
 
     // Also send a copy to the team with more details
     const { error: teamEmailError } = await resend.emails.send({
-      from: "The Crawford Team <onboarding@resend.dev>",
+      from: "The Crawford Team <hello@yourcrawfordteam.com>",
       to: ["hello@yourcrawfordteam.com"],
       subject: `New Luxury Survey Match Report Generated - ${survey.name}`,
       html: `
