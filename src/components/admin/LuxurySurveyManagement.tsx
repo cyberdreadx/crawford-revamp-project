@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Download, ChevronUp, ChevronDown, Eye } from "lucide-react";
+import { Download, ChevronUp, ChevronDown, Eye, Mail, RefreshCw, CheckCircle, XCircle, Clock } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -35,6 +35,10 @@ interface LuxurySurvey {
   preferred_locations: string[];
   timeline: string | null;
   contact_preference: string[];
+  email_status: string | null;
+  email_sent_at: string | null;
+  email_error: string | null;
+  matched_properties_count: number | null;
 }
 
 type SortField = 'created_at' | 'name' | 'email';
@@ -47,6 +51,7 @@ export default function LuxurySurveyManagement() {
   const [sortBy, setSortBy] = useState<SortField>('created_at');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedSurvey, setSelectedSurvey] = useState<LuxurySurvey | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -82,6 +87,62 @@ export default function LuxurySurveyManagement() {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const resendReport = async (surveyId: string) => {
+    setResendingId(surveyId);
+    try {
+      const { error } = await supabase.functions.invoke("generate-and-email-report", {
+        body: { surveyId },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Match report resent successfully",
+      });
+      
+      // Refresh surveys to get updated status
+      fetchSurveys();
+    } catch (error: any) {
+      console.error("Error resending report:", error);
+      toast({
+        title: "Error",
+        description: "Failed to resend report",
+        variant: "destructive",
+      });
+    } finally {
+      setResendingId(null);
+    }
+  };
+
+  const getEmailStatusBadge = (survey: LuxurySurvey) => {
+    const status = survey.email_status || 'pending';
+    
+    switch (status) {
+      case 'sent':
+        return (
+          <Badge className="bg-primary text-primary-foreground gap-1">
+            <CheckCircle className="h-3 w-3" />
+            Sent
+          </Badge>
+        );
+      case 'failed':
+        return (
+          <Badge variant="destructive" className="gap-1">
+            <XCircle className="h-3 w-3" />
+            Failed
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="secondary" className="gap-1">
+            <Clock className="h-3 w-3" />
+            Pending
+          </Badge>
+        );
+    }
   };
 
   const handleSort = (field: SortField) => {
@@ -246,8 +307,8 @@ export default function LuxurySurveyManagement() {
                 Email <SortIcon field="email" />
               </TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Price Range</TableHead>
-              <TableHead>Timeline</TableHead>
+              <TableHead>Email Status</TableHead>
+              <TableHead>Matches</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -270,16 +331,49 @@ export default function LuxurySurveyManagement() {
                     )}
                   </TableCell>
                   <TableCell>{survey.phone || "—"}</TableCell>
-                  <TableCell>{survey.price_range || "—"}</TableCell>
-                  <TableCell>{survey.timeline || "—"}</TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedSurvey(survey)}
-                    >
-                      <Eye className="h-4 w-4 mr-1" /> View
-                    </Button>
+                    <div className="flex flex-col gap-1">
+                      {getEmailStatusBadge(survey)}
+                      {survey.email_status === 'sent' && survey.email_sent_at && (
+                        <span className="text-xs text-muted-foreground">
+                          {formatDate(survey.email_sent_at)}
+                        </span>
+                      )}
+                      {survey.email_status === 'failed' && survey.email_error && (
+                        <span className="text-xs text-destructive truncate max-w-[150px]" title={survey.email_error}>
+                          {survey.email_error}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {survey.matched_properties_count != null ? (
+                      <Badge variant="outline">{survey.matched_properties_count}</Badge>
+                    ) : "—"}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedSurvey(survey)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => resendReport(survey.id)}
+                        disabled={resendingId === survey.id}
+                        title="Resend match report"
+                      >
+                        {resendingId === survey.id ? (
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Mail className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -302,6 +396,20 @@ export default function LuxurySurveyManagement() {
                 <div><strong>Date:</strong> {formatDate(selectedSurvey.created_at)}</div>
                 <div><strong>Price Range:</strong> {selectedSurvey.price_range || "—"}</div>
                 <div><strong>Timeline:</strong> {selectedSurvey.timeline || "—"}</div>
+                <div className="col-span-2 flex items-center gap-2">
+                  <strong>Email Status:</strong> 
+                  {getEmailStatusBadge(selectedSurvey)}
+                  {selectedSurvey.matched_properties_count != null && (
+                    <span className="text-muted-foreground">
+                      ({selectedSurvey.matched_properties_count} properties matched)
+                    </span>
+                  )}
+                </div>
+                {selectedSurvey.email_status === 'failed' && selectedSurvey.email_error && (
+                  <div className="col-span-2 text-destructive text-sm">
+                    <strong>Error:</strong> {selectedSurvey.email_error}
+                  </div>
+                )}
               </div>
 
               <div>
