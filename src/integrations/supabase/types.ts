@@ -134,8 +134,12 @@ export type Database = {
           contact_preference: string[] | null
           created_at: string
           email: string
+          email_error: string | null
+          email_sent_at: string | null
+          email_status: string | null
           id: string
           lifestyle_preferences: string[] | null
+          matched_properties_count: number | null
           name: string
           phone: string | null
           preferred_locations: string[] | null
@@ -150,8 +154,12 @@ export type Database = {
           contact_preference?: string[] | null
           created_at?: string
           email: string
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string | null
           id?: string
           lifestyle_preferences?: string[] | null
+          matched_properties_count?: number | null
           name: string
           phone?: string | null
           preferred_locations?: string[] | null
@@ -166,8 +174,12 @@ export type Database = {
           contact_preference?: string[] | null
           created_at?: string
           email?: string
+          email_error?: string | null
+          email_sent_at?: string | null
+          email_status?: string | null
           id?: string
           lifestyle_preferences?: string[] | null
+          matched_properties_count?: number | null
           name?: string
           phone?: string | null
           preferred_locations?: string[] | null

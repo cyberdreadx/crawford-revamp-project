@@ -403,10 +403,32 @@ Please generate a comprehensive property match report for this client, specifica
 
     if (userEmailError) {
       console.error("Error sending user email:", userEmailError);
+      
+      // Update survey with failed status
+      await supabase
+        .from('luxury_surveys')
+        .update({
+          email_status: 'failed',
+          email_error: userEmailError.message || 'Failed to send email',
+          matched_properties_count: matchCount,
+        })
+        .eq('id', surveyId);
+      
       throw new Error("Failed to send email to user");
     }
 
     console.log('Email sent successfully to:', survey.email);
+
+    // Update survey with success status
+    await supabase
+      .from('luxury_surveys')
+      .update({
+        email_status: 'sent',
+        email_sent_at: new Date().toISOString(),
+        email_error: null,
+        matched_properties_count: matchCount,
+      })
+      .eq('id', surveyId);
 
     // Also send a copy to the team with more details
     const { error: teamEmailError } = await resend.emails.send({
@@ -449,6 +471,27 @@ Please generate a comprehensive property match report for this client, specifica
 
   } catch (error) {
     console.error('Error generating/emailing match report:', error);
+    
+    // Update survey with failed status if we have the surveyId
+    try {
+      const { surveyId } = await req.clone().json();
+      if (surveyId) {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        await supabase
+          .from('luxury_surveys')
+          .update({
+            email_status: 'failed',
+            email_error: error.message || 'Unknown error',
+          })
+          .eq('id', surveyId);
+      }
+    } catch (e) {
+      console.error('Could not update survey status:', e);
+    }
+    
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
