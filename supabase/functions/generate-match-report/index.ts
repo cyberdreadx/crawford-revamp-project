@@ -58,6 +58,7 @@ Generate a comprehensive, personalized property match report that includes:
 1. **Client Profile Summary**: Summarize their preferences, lifestyle needs, and priorities
 2. **Market Insights**: Brief overview of the St. Petersburg luxury market relevant to their criteria
 3. **Top Property Matches**: Analyze each property against their preferences and rank them with match scores (0-100%)
+   - After listing the properties, include this disclaimer: "*This report is limited to a certain amount of inventory. For access to the full market inventory, schedule a consultation with our team.*"
 4. **Personalized Recommendations**: Specific advice based on their timeline, budget, and preferences
 5. **Next Steps**: Actionable recommendations for their property search
 
