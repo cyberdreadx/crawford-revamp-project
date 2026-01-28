@@ -6,6 +6,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Rate limiting helper - enforces max 1 RPS to stay well under MLS Grid's 2 RPS limit
+const rateLimitDelay = async (ms: number = 1100) => {
+  await new Promise(resolve => setTimeout(resolve, ms));
+};
+
 interface MLSProperty {
   ListingId: string;
   ListPrice?: number;
@@ -138,8 +143,8 @@ serve(async (req) => {
     const filter = `&$filter=${filterParts.join(' and ')}`;
     console.log('Filter:', filter);
 
-    // Use smaller batch for faster processing
-    const batchSize = 200;
+    // Use smaller batch size to reduce request frequency
+    const batchSize = 100; // Reduced from 200 to 100
     let skip = startOffset;
     let totalFetched = 0;
     let recordsCreated = 0;
@@ -154,6 +159,9 @@ serve(async (req) => {
     while (hasMore && recordsMatched < limit) {
       const url = `${mlsGridBaseUrl}/Property?$top=${batchSize}&$skip=${skip}${filter}`;
       console.log(`Batch at skip=${skip}, matched so far: ${recordsMatched}`);
+
+      // Rate limit: wait 1.1s before each API request to ensure < 1 RPS
+      await rateLimitDelay(1100);
 
       const response = await fetch(url, {
         headers: {
