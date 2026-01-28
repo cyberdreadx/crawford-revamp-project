@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Edit, Trash2, Star, MapPin, Bed, Bath, Square, Calendar, Cloud, Loader2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
 interface Property {
   id: string;
   title: string;
@@ -48,6 +47,7 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
   const [isSyncing, setIsSyncing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
   const primaryImage = images.find(img => img.is_primary) || images[0];
@@ -101,6 +101,106 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
       });
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const totalFiles = files.length;
+      let uploadedCount = 0;
+      const newImages: { property_id: string; image_url: string; is_primary: boolean; display_order: number }[] = [];
+
+      for (const file of Array.from(files)) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          toast({
+            title: "Invalid file",
+            description: `${file.name} is not an image file`,
+            variant: "destructive"
+          });
+          continue;
+        }
+
+        // Create unique filename
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${property.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        // Upload to Supabase storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('property-images')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          toast({
+            title: "Upload failed",
+            description: `Failed to upload ${file.name}: ${uploadError.message}`,
+            variant: "destructive"
+          });
+          continue;
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+          .from('property-images')
+          .getPublicUrl(fileName);
+
+        newImages.push({
+          property_id: property.id,
+          image_url: urlData.publicUrl,
+          is_primary: images.length === 0 && uploadedCount === 0, // First image is primary if no existing images
+          display_order: images.length + uploadedCount + 1
+        });
+
+        uploadedCount++;
+        setUploadProgress(Math.round((uploadedCount / totalFiles) * 100));
+      }
+
+      // Insert image records into database
+      if (newImages.length > 0) {
+        const { error: insertError } = await supabase
+          .from('property_images')
+          .insert(newImages);
+
+        if (insertError) {
+          console.error('Database insert error:', insertError);
+          toast({
+            title: "Error",
+            description: "Failed to save image records to database",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: `Uploaded ${newImages.length} image${newImages.length > 1 ? 's' : ''} successfully`,
+          });
+          // Refresh the page to show new images
+          window.location.reload();
+        }
+      }
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Error",
+        description: "An error occurred during upload",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(null);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -193,11 +293,20 @@ export const PropertyCard = ({ property, images, onEdit, onDelete, featured }: P
           
           {/* Image management buttons */}
           <div className="absolute bottom-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              accept="image/*"
+              multiple
+              className="hidden"
+            />
             <Button
               size="sm"
               variant="outline"
               className="h-8 bg-white/90 hover:bg-white backdrop-blur-sm text-xs px-2"
               disabled={isUploading}
+              onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-3 w-3 mr-1" />
               {isUploading ? `${uploadProgress}%` : 'Upload'}
