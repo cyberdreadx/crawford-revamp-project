@@ -77,6 +77,11 @@ async function downloadAndStoreImage(
   }
 }
 
+// Rate limiting helper - enforces max 1 RPS to stay well under MLS Grid's 2 RPS limit
+const rateLimitDelay = async (ms: number = 1100) => {
+  await new Promise(resolve => setTimeout(resolve, ms));
+};
+
 Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -86,13 +91,13 @@ Deno.serve(async (req) => {
   try {
     // Parse request body for batch parameters
     let startOffset = 0;
-    let limit = 100; // Process 100 properties per call (safer for timeouts)
+    let limit = 50; // Reduced from 100 to 50 properties per call for safer rate limiting
     
     if (req.method === 'POST') {
       try {
         const body = await req.json();
         startOffset = body.startOffset || 0;
-        limit = Math.min(body.limit || 100, 200); // Cap at 200
+        limit = Math.min(body.limit || 50, 100); // Cap at 100 (reduced from 200)
       } catch {
         // No body, use defaults
       }
@@ -189,8 +194,8 @@ Deno.serve(async (req) => {
     let propertiesWithMedia = 0;
     const errors: string[] = [];
 
-    // Process in batches of 10 properties (smaller to avoid rate limits)
-    const batchSize = 10;
+    // Process in batches of 5 properties (reduced from 10 for stricter rate limiting)
+    const batchSize = 5;
     for (let i = 0; i < listingIds.length; i += batchSize) {
       const batch = listingIds.slice(i, i + batchSize);
       
@@ -203,6 +208,9 @@ Deno.serve(async (req) => {
       console.log(`Fetching media batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(listingIds.length/batchSize)}`);
       
       try {
+        // Rate limit: wait 1.1s before each API request to ensure < 1 RPS
+        await rateLimitDelay(1100);
+        
         const response = await fetch(propertyUrl, {
           headers: {
             'Authorization': `Bearer ${mlsAccessToken}`,
@@ -280,8 +288,8 @@ Deno.serve(async (req) => {
               });
             }
             
-            // 500ms delay between image downloads to respect MLS Grid 2 RPS limit
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // 1.1s delay between image downloads to stay well under MLS Grid 2 RPS limit
+            await rateLimitDelay(1100);
           }
 
           if (imagesToInsert.length === 0) {
@@ -319,8 +327,8 @@ Deno.serve(async (req) => {
         errors.push(`Batch ${Math.floor(i/batchSize) + 1}: ${batchError.message}`);
       }
 
-      // 1 second delay between batches to respect MLS Grid rate limits
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 2s delay between batches for additional safety margin
+      await rateLimitDelay(2000);
     }
 
     console.log(`Media sync complete: ${totalMediaSynced} images for ${propertiesWithMedia} properties`);
