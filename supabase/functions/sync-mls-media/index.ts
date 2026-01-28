@@ -84,6 +84,20 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Parse request body for batch parameters
+    let startOffset = 0;
+    let limit = 100; // Process 100 properties per call (safer for timeouts)
+    
+    if (req.method === 'POST') {
+      try {
+        const body = await req.json();
+        startOffset = body.startOffset || 0;
+        limit = Math.min(body.limit || 100, 200); // Cap at 200
+      } catch {
+        // No body, use defaults
+      }
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const mlsBaseUrl = Deno.env.get('MLS_GRID_BASE_URL');
@@ -114,29 +128,56 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Get all MLS properties that need media synced
+    // Get MLS properties that DON'T have images yet (skip already synced)
     const { data: mlsProperties, error: propsError } = await supabase
       .from('properties')
-      .select('id, listing_id, title')
+      .select(`
+        id, 
+        listing_id, 
+        title,
+        property_images(id)
+      `)
       .eq('is_mls_listing', true)
-      .not('listing_id', 'is', null);
+      .not('listing_id', 'is', null)
+      .order('listing_id', { ascending: true })
+      .range(startOffset, startOffset + limit - 1);
 
     if (propsError) {
       throw new Error(`Failed to fetch MLS properties: ${propsError.message}`);
     }
 
-    if (!mlsProperties || mlsProperties.length === 0) {
+    // Filter to only properties without images
+    const propertiesNeedingImages = (mlsProperties || []).filter(
+      (p: any) => !p.property_images || p.property_images.length === 0
+    );
+
+    if (propertiesNeedingImages.length === 0) {
+      // Check if there are more properties to process
+      const { count } = await supabase
+        .from('properties')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_mls_listing', true)
+        .not('listing_id', 'is', null);
+      
+      const hasMore = (count || 0) > startOffset + limit;
+      
       return new Response(
-        JSON.stringify({ success: true, message: 'No MLS properties to sync media for', synced: 0 }),
+        JSON.stringify({ 
+          success: true, 
+          message: 'No properties needing images in this batch', 
+          synced: 0,
+          nextOffset: hasMore ? startOffset + limit : null,
+          totalMlsProperties: count
+        }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Found ${mlsProperties.length} MLS properties to sync media for`);
+    console.log(`Processing ${propertiesNeedingImages.length} properties needing images (offset: ${startOffset})`);
 
-    // Create a map of listing_id -> property_id
+    // Create a map of listing_id -> property_id (only for properties needing images)
     const listingIdMap = new Map<string, string>();
-    mlsProperties.forEach(prop => {
+    propertiesNeedingImages.forEach((prop: any) => {
       if (prop.listing_id) {
         listingIdMap.set(prop.listing_id, prop.id);
       }
@@ -284,12 +325,24 @@ Deno.serve(async (req) => {
 
     console.log(`Media sync complete: ${totalMediaSynced} images for ${propertiesWithMedia} properties`);
 
+    // Calculate next offset for resumable syncs
+    const { count: totalCount } = await supabase
+      .from('properties')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_mls_listing', true)
+      .not('listing_id', 'is', null);
+    
+    const hasMore = (totalCount || 0) > startOffset + limit;
+
     return new Response(
       JSON.stringify({
         success: true,
         totalMediaSynced,
         propertiesWithMedia,
-        totalProperties: mlsProperties.length,
+        processedInBatch: propertiesNeedingImages.length,
+        startOffset,
+        nextOffset: hasMore ? startOffset + limit : null,
+        totalMlsProperties: totalCount,
         errors: errors.length > 0 ? errors : undefined,
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
