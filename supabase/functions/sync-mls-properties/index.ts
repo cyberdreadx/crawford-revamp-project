@@ -29,6 +29,56 @@ interface MLSProperty {
   ListOfficeMlsId?: string;
   ModificationTimestamp?: string;
   OriginatingSystemName?: string;
+  CountyOrParish?: string;
+}
+
+function mapPropertyType(mlsType?: string): string {
+  if (!mlsType) return 'House';
+  const typeMap: Record<string, string> = {
+    'Residential': 'House',
+    'Single Family Residence': 'House',
+    'Condominium': 'Condo',
+    'Condo': 'Condo',
+    'Townhouse': 'Townhouse',
+    'Land': 'Land',
+    'Commercial': 'Commercial',
+    'Multi Family': 'Multi-Family',
+    'Manufactured Home': 'House',
+  };
+  return typeMap[mlsType] || 'House';
+}
+
+function mapStatus(mlsStatus?: string): string {
+  if (!mlsStatus) return 'For Sale';
+  const statusMap: Record<string, string> = {
+    'Active': 'For Sale',
+    'Active Under Contract': 'Pending',
+    'Pending': 'Pending',
+    'Closed': 'Sold',
+    'Sold': 'Sold',
+    'Coming Soon': 'Coming Soon',
+    'Withdrawn': 'Off Market',
+    'Expired': 'Off Market',
+    'Canceled': 'Off Market',
+  };
+  return statusMap[mlsStatus] || 'For Sale';
+}
+
+function passesFilters(prop: MLSProperty, minPrice?: number, maxPrice?: number, county?: string): boolean {
+  const price = prop.ListPrice || 0;
+  if (minPrice && price < minPrice) return false;
+  if (maxPrice && price > maxPrice) return false;
+  if (county) {
+    const propCounty = (prop.CountyOrParish || '').toUpperCase();
+    if (!propCounty.includes(county.toUpperCase())) return false;
+  }
+  return true;
+}
+
+function isTestListing(prop: MLSProperty): boolean {
+  const address = (prop.UnparsedAddress || '').toLowerCase();
+  const remarks = (prop.PublicRemarks || '').toLowerCase();
+  return address.includes('test') || remarks.includes('test listing') || remarks.includes('do not show');
 }
 
 serve(async (req) => {
@@ -44,7 +94,15 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   try {
-    const { syncType = 'full', limit = 100 } = await req.json().catch(() => ({}));
+    const { 
+      syncType = 'full', 
+      limit = 100,
+      minPrice,
+      maxPrice,
+      county,
+      propertyTypes,
+      startOffset = 0  // Allow resuming from a specific offset
+    } = await req.json().catch(() => ({}));
 
     if (!mlsGridToken || !mlsGridBaseUrl) {
       return new Response(
@@ -53,8 +111,7 @@ serve(async (req) => {
       );
     }
 
-    // Create sync log entry
-    const { data: syncLog, error: syncLogError } = await supabase
+    const { data: syncLog } = await supabase
       .from('mls_sync_log')
       .insert({
         sync_type: syncType,
@@ -64,47 +121,39 @@ serve(async (req) => {
       .select()
       .single();
 
-    if (syncLogError) {
-      console.error('Error creating sync log:', syncLogError);
-    }
-
     const syncLogId = syncLog?.id;
+    const hasLocalFilters = minPrice || maxPrice || county;
 
-    console.log(`Starting ${syncType} sync with limit ${limit}`);
+    console.log(`Sync starting - limit: ${limit}, minPrice: ${minPrice}, county: ${county}, offset: ${startOffset}`);
 
-    let allProperties: MLSProperty[] = [];
-    let skip = 0;
-    const top = Math.min(limit, 5000); // MLS Grid max is 5000 per request
-    let hasMore = true;
-
-    // Build filter - always exclude Closed/Sold properties
-    // Active statuses we want: Active, Active Under Contract, Pending, Coming Soon
+    // Build API filter
     const activeStatusFilter = "StandardStatus eq 'Active' or StandardStatus eq 'Active Under Contract' or StandardStatus eq 'Pending' or StandardStatus eq 'Coming Soon'";
+    const filterParts: string[] = [`(${activeStatusFilter})`];
     
-    let filter = `&$filter=(${activeStatusFilter})`;
-    
-    if (syncType === 'incremental') {
-      // Get last successful sync timestamp
-      const { data: lastSync } = await supabase
-        .from('mls_sync_log')
-        .select('completed_at')
-        .eq('status', 'completed')
-        .order('completed_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (lastSync?.completed_at) {
-        filter = `&$filter=(${activeStatusFilter}) and ModificationTimestamp gt ${lastSync.completed_at}`;
-        console.log('Incremental sync from:', lastSync.completed_at);
-      }
+    if (propertyTypes?.length > 0) {
+      const typeFilters = propertyTypes.map((t: string) => `PropertyType eq '${t}'`).join(' or ');
+      filterParts.push(`(${typeFilters})`);
     }
     
-    console.log('Using filter:', filter);
+    const filter = `&$filter=${filterParts.join(' and ')}`;
+    console.log('Filter:', filter);
 
-    // Fetch properties with pagination
-    while (hasMore && allProperties.length < limit) {
-      const url = `${mlsGridBaseUrl}/Property?$top=${top}&$skip=${skip}${filter}`;
-      console.log('Fetching:', url);
+    // Use smaller batch for faster processing
+    const batchSize = 200;
+    let skip = startOffset;
+    let totalFetched = 0;
+    let recordsCreated = 0;
+    let recordsUpdated = 0;
+    let recordsMatched = 0;
+    const errors: Array<{ listingId: string; error: string }> = [];
+    let hasMore = true;
+    
+    // Track how many we need to save vs skip (for upsert optimization)
+    const propertiesToUpsert: any[] = [];
+
+    while (hasMore && recordsMatched < limit) {
+      const url = `${mlsGridBaseUrl}/Property?$top=${batchSize}&$skip=${skip}${filter}`;
+      console.log(`Batch at skip=${skip}, matched so far: ${recordsMatched}`);
 
       const response = await fetch(url, {
         headers: {
@@ -115,122 +164,101 @@ serve(async (req) => {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('MLS Grid API error:', response.status, errorText);
+        console.error('API error:', response.status);
         
-        // Update sync log with error
         if (syncLogId) {
           await supabase
             .from('mls_sync_log')
             .update({
               status: 'failed',
               completed_at: new Date().toISOString(),
-              errors: [{ message: `API error: ${response.status}`, details: errorText }]
+              errors: [{ message: `API error: ${response.status}`, offset: skip }]
             })
             .eq('id', syncLogId);
         }
 
         return new Response(
-          JSON.stringify({ success: false, error: `MLS Grid API error: ${response.status}` }),
+          JSON.stringify({ success: false, error: `API error: ${response.status}`, lastOffset: skip }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: response.status }
         );
       }
 
       const data = await response.json();
-      const properties = data.value || [];
-      
-      allProperties = [...allProperties, ...properties];
-      console.log(`Fetched ${properties.length} properties, total: ${allProperties.length}`);
+      const properties: MLSProperty[] = data.value || [];
+      totalFetched += properties.length;
 
-      // Check if there are more results
-      hasMore = properties.length === top && allProperties.length < limit;
-      skip += top;
-    }
-
-    // Limit to requested amount
-    allProperties = allProperties.slice(0, limit);
-
-    console.log(`Processing ${allProperties.length} properties`);
-
-    let recordsCreated = 0;
-    let recordsUpdated = 0;
-    const errors: Array<{ listingId: string; error: string }> = [];
-
-    // Process each property
-    for (const mlsProp of allProperties) {
-      try {
-        // Skip test listings
-        const address = (mlsProp.UnparsedAddress || '').toLowerCase();
-        const remarks = (mlsProp.PublicRemarks || '').toLowerCase();
-        if (address.includes('test') || remarks.includes('test listing') || remarks.includes('do not show')) {
-          console.log(`Skipping test listing: ${mlsProp.ListingId}`);
-          continue;
-        }
-        // Map MLS property to our schema
-        const propertyData = {
-          listing_id: mlsProp.ListingId,
-          title: mlsProp.UnparsedAddress || `${mlsProp.City}, ${mlsProp.StateOrProvince}`,
-          price: mlsProp.ListPrice || 0,
-          bedrooms: mlsProp.BedroomsTotal || 0,
-          bathrooms: mlsProp.BathroomsTotalInteger || 0,
-          sqft: mlsProp.LivingArea || 0,
-          year_built: mlsProp.YearBuilt,
-          location: [mlsProp.UnparsedAddress, mlsProp.City, mlsProp.StateOrProvince, mlsProp.PostalCode]
-            .filter(Boolean)
-            .join(', '),
-          property_type: mapPropertyType(mlsProp.PropertyType),
-          status: mapStatus(mlsProp.StandardStatus),
-          description: mlsProp.PublicRemarks,
-          latitude: mlsProp.Latitude,
-          longitude: mlsProp.Longitude,
-          days_on_market: mlsProp.DaysOnMarket,
-          original_list_price: mlsProp.OriginalListPrice,
-          virtual_tour_url: mlsProp.VirtualTourURLUnbranded,
-          listing_agent_mls_id: mlsProp.ListAgentMlsId,
-          listing_office_mls_id: mlsProp.ListOfficeMlsId,
-          modification_timestamp: mlsProp.ModificationTimestamp,
-          originating_system_name: mlsProp.OriginatingSystemName || 'Stellar MLS',
+      // Filter and collect properties
+      for (const prop of properties) {
+        if (recordsMatched >= limit) break;
+        if (isTestListing(prop)) continue;
+        if (hasLocalFilters && !passesFilters(prop, minPrice, maxPrice, county)) continue;
+        
+        recordsMatched++;
+        
+        propertiesToUpsert.push({
+          listing_id: prop.ListingId,
+          title: prop.UnparsedAddress || `${prop.City}, ${prop.StateOrProvince}`,
+          price: prop.ListPrice || 0,
+          bedrooms: prop.BedroomsTotal || 0,
+          bathrooms: prop.BathroomsTotalInteger || 0,
+          sqft: prop.LivingArea || 0,
+          year_built: prop.YearBuilt,
+          location: [prop.UnparsedAddress, prop.City, prop.StateOrProvince, prop.PostalCode].filter(Boolean).join(', '),
+          property_type: mapPropertyType(prop.PropertyType),
+          status: mapStatus(prop.StandardStatus),
+          description: prop.PublicRemarks,
+          latitude: prop.Latitude,
+          longitude: prop.Longitude,
+          days_on_market: prop.DaysOnMarket,
+          original_list_price: prop.OriginalListPrice,
+          virtual_tour_url: prop.VirtualTourURLUnbranded,
+          listing_agent_mls_id: prop.ListAgentMlsId,
+          listing_office_mls_id: prop.ListOfficeMlsId,
+          modification_timestamp: prop.ModificationTimestamp,
+          originating_system_name: prop.OriginatingSystemName || 'Stellar MLS',
           is_mls_listing: true,
           is_featured: false,
-          mls_status: mlsProp.StandardStatus,
-          mls_raw_data: mlsProp,
-        };
+          mls_status: prop.StandardStatus,
+          mls_raw_data: prop,
+        });
+      }
 
-        // Check if property already exists
-        const { data: existing } = await supabase
+      // Batch upsert every 50 properties to save time
+      if (propertiesToUpsert.length >= 50) {
+        const batch = propertiesToUpsert.splice(0, 50);
+        const { error: upsertError, data: upsertData } = await supabase
           .from('properties')
-          .select('id')
-          .eq('listing_id', mlsProp.ListingId)
-          .maybeSingle();
-
-        if (existing) {
-          // Update existing property
-          const { error: updateError } = await supabase
-            .from('properties')
-            .update(propertyData)
-            .eq('id', existing.id);
-
-          if (updateError) {
-            console.error('Error updating property:', mlsProp.ListingId, updateError);
-            errors.push({ listingId: mlsProp.ListingId, error: updateError.message });
-          } else {
-            recordsUpdated++;
-          }
+          .upsert(batch, { onConflict: 'listing_id', ignoreDuplicates: false })
+          .select('id');
+        
+        if (upsertError) {
+          console.error('Upsert error:', upsertError.message);
+          errors.push({ listingId: 'batch', error: upsertError.message });
         } else {
-          // Insert new property
-          const { error: insertError } = await supabase
-            .from('properties')
-            .insert(propertyData);
-
-          if (insertError) {
-            console.error('Error inserting property:', mlsProp.ListingId, insertError);
-            errors.push({ listingId: mlsProp.ListingId, error: insertError.message });
-          } else {
-            recordsCreated++;
-          }
+          recordsCreated += batch.length;
         }
-      } catch (propError) {
-        console.error('Error processing property:', mlsProp.ListingId, propError);
-        errors.push({ listingId: mlsProp.ListingId, error: propError.message });
+      }
+
+      hasMore = properties.length === batchSize;
+      skip += batchSize;
+
+      // Safety limit
+      if (totalFetched > 30000) {
+        console.log('Safety limit reached');
+        break;
+      }
+    }
+
+    // Upsert remaining properties
+    if (propertiesToUpsert.length > 0) {
+      const { error: upsertError } = await supabase
+        .from('properties')
+        .upsert(propertiesToUpsert, { onConflict: 'listing_id', ignoreDuplicates: false });
+      
+      if (upsertError) {
+        errors.push({ listingId: 'final_batch', error: upsertError.message });
+      } else {
+        recordsCreated += propertiesToUpsert.length;
       }
     }
 
@@ -241,25 +269,30 @@ serve(async (req) => {
         .update({
           status: errors.length > 0 ? 'completed_with_errors' : 'completed',
           completed_at: new Date().toISOString(),
-          records_processed: allProperties.length,
-          records_created: recordsCreated,
+          records_processed: totalFetched,
+          records_created: recordsMatched,
           records_updated: recordsUpdated,
-          errors: errors.length > 0 ? errors : null
+          errors: errors.length > 0 ? errors.slice(0, 20) : null
         })
         .eq('id', syncLogId);
     }
 
-    console.log(`Sync complete: ${recordsCreated} created, ${recordsUpdated} updated, ${errors.length} errors`);
+    console.log(`Done: ${recordsMatched} matched, ${recordsCreated} saved, fetched ${totalFetched} from API`);
 
     return new Response(
       JSON.stringify({
         success: true,
         syncLogId,
-        recordsProcessed: allProperties.length,
-        recordsCreated,
-        recordsUpdated,
+        totalFetched,
+        recordsMatched,
+        recordsSaved: recordsCreated,
         errorCount: errors.length,
-        errors: errors.slice(0, 10) // Return first 10 errors
+        lastOffset: skip,
+        // If we didn't find enough matches, provide next offset for continuation
+        nextOffset: recordsMatched < limit && hasMore ? skip : null,
+        message: recordsMatched < limit 
+          ? `Found ${recordsMatched} matching properties. Run again with startOffset=${skip} to continue.`
+          : `Successfully synced ${recordsMatched} properties.`
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -272,41 +305,3 @@ serve(async (req) => {
     );
   }
 });
-
-// Map MLS property types to our schema
-function mapPropertyType(mlsType?: string): string {
-  if (!mlsType) return 'House';
-  
-  const typeMap: Record<string, string> = {
-    'Residential': 'House',
-    'Single Family Residence': 'House',
-    'Condominium': 'Condo',
-    'Condo': 'Condo',
-    'Townhouse': 'Townhouse',
-    'Land': 'Land',
-    'Commercial': 'Commercial',
-    'Multi Family': 'Multi-Family',
-    'Manufactured Home': 'House',
-  };
-  
-  return typeMap[mlsType] || 'House';
-}
-
-// Map MLS status to our schema
-function mapStatus(mlsStatus?: string): string {
-  if (!mlsStatus) return 'For Sale';
-  
-  const statusMap: Record<string, string> = {
-    'Active': 'For Sale',
-    'Active Under Contract': 'Pending',
-    'Pending': 'Pending',
-    'Closed': 'Sold',
-    'Sold': 'Sold',
-    'Coming Soon': 'Coming Soon',
-    'Withdrawn': 'Off Market',
-    'Expired': 'Off Market',
-    'Canceled': 'Off Market',
-  };
-  
-  return statusMap[mlsStatus] || 'For Sale';
-}
