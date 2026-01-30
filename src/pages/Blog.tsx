@@ -9,6 +9,21 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+// Helper to convert Google Drive view/share links to direct image URLs
+const getDirectImageUrl = (url: string | null): string | null => {
+  if (!url) return null;
+  
+  // Match Google Drive file IDs from various URL formats
+  const driveFileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveFileIdMatch) {
+    const fileId = driveFileIdMatch[1];
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
+  }
+  
+  // Already a direct URL or other format
+  return url;
+};
+
 interface BlogPost {
   id: string;
   title: string;
@@ -28,7 +43,7 @@ const BlogCard = ({ post }: { post: BlogPost }) => (
     {post.featured_image && (
       <div className="h-48 overflow-hidden">
         <img 
-          src={post.featured_image} 
+          src={getDirectImageUrl(post.featured_image) || ''} 
           alt={post.title}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
@@ -148,10 +163,10 @@ const BlogList = () => {
             <h2 className="text-2xl font-bold mb-6">Featured Article</h2>
             <Card className="overflow-hidden">
               <div className="grid md:grid-cols-2 gap-0">
-                {featuredPost.featured_image && (
+              {featuredPost.featured_image && (
                   <div className="h-64 md:h-full">
                     <img 
-                      src={featuredPost.featured_image} 
+                      src={getDirectImageUrl(featuredPost.featured_image) || ''} 
                       alt={featuredPost.title}
                       className="w-full h-full object-cover"
                     />
