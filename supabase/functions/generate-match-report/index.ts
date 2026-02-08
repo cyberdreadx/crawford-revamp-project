@@ -55,10 +55,42 @@ serve(async (req) => {
     
     console.log(`Parsed price range: ${priceRange} -> $${minPrice} - $${maxPrice}`);
 
+    // Map survey property type preferences to database property_type values
+    const surveyPropertyTypes: string[] = survey.property_types || [];
+    const dbPropertyTypes: string[] = [];
+    
+    const typeMapping: Record<string, string[]> = {
+      'condo': ['Condo'],
+      'high-rise': ['Condo'],
+      'penthouse': ['Condo'],
+      'townhome': ['Townhouse'],
+      'townhouse': ['Townhouse'],
+      'home': ['House'],
+      'house': ['House'],
+      'estate': ['House'],
+      'single-family': ['House'],
+      'land': ['Land'],
+      'commercial': ['Commercial'],
+      'multi-family': ['Multi-Family'],
+    };
+    
+    for (const surveyType of surveyPropertyTypes) {
+      const lower = surveyType.toLowerCase();
+      for (const [keyword, mappedTypes] of Object.entries(typeMapping)) {
+        if (lower.includes(keyword)) {
+          for (const t of mappedTypes) {
+            if (!dbPropertyTypes.includes(t)) dbPropertyTypes.push(t);
+          }
+        }
+      }
+    }
+    
+    console.log(`Survey property types: ${surveyPropertyTypes.join(', ')} -> DB types: ${dbPropertyTypes.join(', ') || 'all'}`);
+
     // Build location filter from survey preferred locations
     const preferredLocations = survey.preferred_locations || [];
     
-    // Fetch properties matching the price range (both MLS and featured)
+    // Fetch properties matching the price range and property type (both MLS and featured)
     let query = supabase
       .from('properties')
       .select(`
@@ -68,6 +100,11 @@ serve(async (req) => {
       .gte('price', minPrice)
       .lte('price', maxPrice)
       .in('status', ['For Sale', 'Pending', 'Coming Soon']);
+    
+    // Apply property type filter if we have mapped types
+    if (dbPropertyTypes.length > 0) {
+      query = query.in('property_type', dbPropertyTypes);
+    }
     
     const { data: allProperties, error: propertiesError } = await query
       .order('price', { ascending: false })
