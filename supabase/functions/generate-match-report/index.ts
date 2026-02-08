@@ -118,7 +118,11 @@ Generate a comprehensive, personalized property match report that includes:
 
 Be specific, professional, and provide genuine value. Use markdown formatting.`;
 
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
     const userPrompt = `
+**Today's Date: ${today}** — Use this exact date whenever referencing "today", "prepared on", or "report date" in the report. Do NOT use any other date.
+
 ## Client Survey Responses
 
 **Name:** ${survey.name}
