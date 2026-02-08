@@ -11,16 +11,24 @@ const corsHeaders = {
 function parsePriceRange(priceRange: string | null): { min: number; max: number } {
   if (!priceRange) return { min: 0, max: Infinity };
   
-  const ranges: Record<string, { min: number; max: number }> = {
-    '$750,000 - $1.2M': { min: 750000, max: 1200000 },
-    '$1.2M - $2.5M': { min: 1200000, max: 2500000 },
-    '$2.5M - $5M': { min: 2500000, max: 5000000 },
-    '$5M - $10M': { min: 5000000, max: 10000000 },
-    '$10M+': { min: 10000000, max: Infinity },
-    'Open / based on value': { min: 0, max: Infinity },
-  };
+  // Try dynamic parsing first (handles "$750,000 – $1.2M", "$2.5M – $5M", etc.)
+  const priceMatches = priceRange.match(/\$?([\d,.]+)\s*([KkMm]?)\s*[–\-−to]+\s*\$?([\d,.]+)\s*([KkMm]?)/);
+  if (priceMatches) {
+    const parsePrice = (value: string, suffix: string): number => {
+      const num = parseFloat(value.replace(/,/g, ''));
+      if (suffix.toUpperCase() === 'M') return num * 1000000;
+      if (suffix.toUpperCase() === 'K') return num * 1000;
+      // If no suffix but number is small (e.g. "750,000"), it's already in dollars
+      return num;
+    };
+    return { min: parsePrice(priceMatches[1], priceMatches[2]), max: parsePrice(priceMatches[3], priceMatches[4]) };
+  }
   
-  return ranges[priceRange] || { min: 0, max: Infinity };
+  // Handle special cases
+  if (priceRange.includes('10M+') || priceRange.includes('10M +')) return { min: 10000000, max: Infinity };
+  if (priceRange.toLowerCase().includes('open') || priceRange.toLowerCase().includes('value')) return { min: 0, max: Infinity };
+  
+  return { min: 0, max: Infinity };
 }
 
 // Map location preferences to search keywords
@@ -45,6 +53,39 @@ function getLocationKeywords(locations: string[] | null): string[] {
   }
   
   return keywords;
+}
+
+// Map survey property type preferences to database property_type values
+function mapPropertyTypes(surveyTypes: string[] | null): string[] {
+  if (!surveyTypes || surveyTypes.length === 0) return [];
+  
+  const typeMapping: Record<string, string[]> = {
+    'condo': ['Condo'],
+    'high-rise': ['Condo'],
+    'penthouse': ['Condo'],
+    'townhome': ['Townhouse'],
+    'townhouse': ['Townhouse'],
+    'home': ['House'],
+    'house': ['House'],
+    'estate': ['House'],
+    'single-family': ['House'],
+    'land': ['Land'],
+    'commercial': ['Commercial'],
+    'multi-family': ['Multi-Family'],
+  };
+  
+  const dbTypes: string[] = [];
+  for (const surveyType of surveyTypes) {
+    const lower = surveyType.toLowerCase();
+    for (const [keyword, mappedTypes] of Object.entries(typeMapping)) {
+      if (lower.includes(keyword)) {
+        for (const t of mappedTypes) {
+          if (!dbTypes.includes(t)) dbTypes.push(t);
+        }
+      }
+    }
+  }
+  return dbTypes;
 }
 
 // Get valid image URL (only Supabase Storage URLs, not expired MLS URLs)
@@ -110,17 +151,31 @@ serve(async (req) => {
     // Parse price range for filtering
     const { min: minPrice, max: maxPrice } = parsePriceRange(survey.price_range);
     const locationKeywords = getLocationKeywords(survey.preferred_locations);
+    const dbPropertyTypes = mapPropertyTypes(survey.property_types);
     
-    console.log('Filter criteria:', { minPrice, maxPrice, locationKeywords });
+    console.log('Filter criteria:', { minPrice, maxPrice, locationKeywords, dbPropertyTypes: dbPropertyTypes.join(', ') || 'all' });
 
-    // Fetch ALL properties (MLS + featured) with images
-    const { data: allProperties, error: propertiesError } = await supabase
+    // Fetch properties with filters applied at the query level
+    let query = supabase
       .from('properties')
       .select(`
         *,
         property_images (image_url, is_primary, display_order)
       `)
-      .order('price', { ascending: false });
+      .gte('price', minPrice)
+      .in('status', ['For Sale', 'Pending', 'Coming Soon']);
+    
+    if (maxPrice !== Infinity) {
+      query = query.lte('price', maxPrice);
+    }
+    
+    if (dbPropertyTypes.length > 0) {
+      query = query.in('property_type', dbPropertyTypes);
+    }
+    
+    const { data: allProperties, error: propertiesError } = await query
+      .order('price', { ascending: false })
+      .limit(500);
 
     if (propertiesError) {
       console.error('Error fetching properties:', propertiesError);
@@ -128,47 +183,58 @@ serve(async (req) => {
 
     console.log('Total properties fetched:', allProperties?.length || 0);
 
-    // Filter properties based on survey preferences
-    let matchedProperties = (allProperties || []).filter((p: any) => {
-      // Price filter
-      const price = p.price || 0;
-      const priceMatch = price >= minPrice && (maxPrice === Infinity || price <= maxPrice);
-      
-      // Status filter - only active listings
-      const activeStatuses = ['Active', 'Active Under Contract', 'Coming Soon', 'For Sale', null];
-      const statusMatch = activeStatuses.includes(p.mls_status) || activeStatuses.includes(p.status);
-      
-      // Location filter (if specified)
-      let locationMatch = true;
-      if (locationKeywords.length > 0) {
+    // Filter by location preferences (price and type already filtered at query level)
+    let matchedProperties = (allProperties || []);
+    
+    if (locationKeywords.length > 0) {
+      const locationFiltered = matchedProperties.filter((p: any) => {
         const propertyLocation = (p.location || '').toUpperCase();
-        locationMatch = locationKeywords.some(keyword => propertyLocation.includes(keyword.toUpperCase()));
-      }
+        return locationKeywords.some(keyword => propertyLocation.includes(keyword.toUpperCase()));
+      });
       
-      return priceMatch && statusMatch && locationMatch;
-    });
+      // Only use location filter if it yields enough results
+      if (locationFiltered.length >= 3) {
+        matchedProperties = locationFiltered;
+      } else {
+        console.log('Relaxing location filter due to low matches:', locationFiltered.length);
+      }
+    }
 
     console.log('Properties after filtering:', matchedProperties.length);
 
-    // If no matches with all filters, relax location filter
-    if (matchedProperties.length < 3 && locationKeywords.length > 0) {
-      console.log('Relaxing location filter due to low matches');
-      matchedProperties = (allProperties || []).filter((p: any) => {
-        const price = p.price || 0;
-        const priceMatch = price >= minPrice && (maxPrice === Infinity || price <= maxPrice);
-        const activeStatuses = ['Active', 'Active Under Contract', 'Coming Soon', 'For Sale', null];
-        const statusMatch = activeStatuses.includes(p.mls_status) || activeStatuses.includes(p.status);
-        return priceMatch && statusMatch;
-      });
-      console.log('Properties after relaxed filtering:', matchedProperties.length);
+    // If too few matches, progressively broaden the search
+    if (matchedProperties.length < 3) {
+      console.log('Too few matches, broadening search: relaxing property type filter');
+      // Re-query without property type filter, keeping price range
+      let fallbackQuery = supabase
+        .from('properties')
+        .select(`*, property_images (image_url, is_primary, display_order)`)
+        .gte('price', minPrice)
+        .in('status', ['For Sale', 'Pending', 'Coming Soon']);
+      
+      if (maxPrice !== Infinity) {
+        fallbackQuery = fallbackQuery.lte('price', maxPrice);
+      }
+      
+      const { data: broadProperties } = await fallbackQuery
+        .order('price', { ascending: false })
+        .limit(200);
+      
+      if (broadProperties && broadProperties.length > matchedProperties.length) {
+        console.log(`Broadened search found ${broadProperties.length} properties (was ${matchedProperties.length})`);
+        matchedProperties = broadProperties;
+      }
     }
-
-    // If still no matches, fall back to featured properties + top priced
+    
+    // If still no matches, fall back to featured properties in any price range
     if (matchedProperties.length === 0) {
-      console.log('No price matches, falling back to featured + top listings');
-      matchedProperties = (allProperties || [])
-        .filter((p: any) => p.is_featured || p.price >= 500000)
-        .slice(0, 10);
+      console.log('No matches at all, falling back to featured properties');
+      const { data: featuredProperties } = await supabase
+        .from('properties')
+        .select(`*, property_images (image_url, is_primary, display_order)`)
+        .eq('is_featured', true)
+        .limit(10);
+      matchedProperties = featuredProperties || [];
     }
 
     // Sort by relevance: featured first, then by price
@@ -206,7 +272,11 @@ Be specific, professional, and provide genuine value. Use markdown formatting.
 Keep the report concise but comprehensive - aim for about 800-1000 words.
 Reference actual properties by name and explain specific features that match their lifestyle preferences.`;
 
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
     const userPrompt = `
+**Today's Date: ${today}** — Use this exact date whenever referencing "today", "prepared on", or "report date" in the report. Do NOT use any other date.
+
 ## Client Survey Responses
 
 **Name:** ${survey.name}
