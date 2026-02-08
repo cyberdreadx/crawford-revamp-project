@@ -23,6 +23,7 @@ interface MLSProperty {
   StateOrProvince?: string;
   PostalCode?: string;
   PropertyType?: string;
+  PropertySubType?: string;
   StandardStatus?: string;
   PublicRemarks?: string;
   Latitude?: number;
@@ -37,18 +38,36 @@ interface MLSProperty {
   CountyOrParish?: string;
 }
 
-function mapPropertyType(mlsType?: string): string {
+function mapPropertyType(mlsType?: string, mlsSubType?: string): string {
+  // PropertySubType is far more accurate than PropertyType in Stellar MLS
+  // because PropertyType is almost always just "Residential"
+  if (mlsSubType) {
+    const subTypeMap: Record<string, string> = {
+      'Single Family Residence': 'House',
+      'Condominium': 'Condo',
+      'Condo - Hotel': 'Condo',
+      'Townhouse': 'Townhouse',
+      'Villa': 'House',
+      'Farm': 'House',
+      'Manufactured Home': 'House',
+      'Manufactured Home - Post 1977': 'House',
+      'Half Duplex': 'Multi-Family',
+      'Duplex': 'Multi-Family',
+      'Apartment': 'Condo',
+    };
+    if (subTypeMap[mlsSubType]) return subTypeMap[mlsSubType];
+  }
+
+  // Fallback to PropertyType for non-residential categories
   if (!mlsType) return 'House';
   const typeMap: Record<string, string> = {
     'Residential': 'House',
-    'Single Family Residence': 'House',
-    'Condominium': 'Condo',
-    'Condo': 'Condo',
-    'Townhouse': 'Townhouse',
+    'Residential Lease': 'House',
     'Land': 'Land',
-    'Commercial': 'Commercial',
-    'Multi Family': 'Multi-Family',
-    'Manufactured Home': 'House',
+    'Commercial Sale': 'Commercial',
+    'Commercial Lease': 'Commercial',
+    'Residential Income': 'Multi-Family',
+    'Business Opportunity': 'Commercial',
   };
   return typeMap[mlsType] || 'House';
 }
@@ -212,7 +231,7 @@ serve(async (req) => {
           sqft: prop.LivingArea || 0,
           year_built: prop.YearBuilt,
           location: [prop.UnparsedAddress, prop.City, prop.StateOrProvince, prop.PostalCode].filter(Boolean).join(', '),
-          property_type: mapPropertyType(prop.PropertyType),
+          property_type: mapPropertyType(prop.PropertyType, prop.PropertySubType),
           status: mapStatus(prop.StandardStatus),
           description: prop.PublicRemarks,
           latitude: prop.Latitude,
