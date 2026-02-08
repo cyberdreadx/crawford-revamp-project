@@ -35,18 +35,72 @@ serve(async (req) => {
       throw new Error('Survey not found');
     }
 
-    // Fetch all luxury properties
-    const { data: properties, error: propertiesError } = await supabase
+    // Parse the survey's price range to filter properties
+    const priceRange = survey.price_range || '';
+    let minPrice = 0;
+    let maxPrice = 999999999;
+    
+    // Parse common price range formats like "$750K – $1M", "$2.5M – $5M", etc.
+    const priceMatches = priceRange.match(/\$?([\d,.]+)\s*([KkMm]?)\s*[–\-−to]+\s*\$?([\d,.]+)\s*([KkMm]?)/);
+    if (priceMatches) {
+      const parsePrice = (value: string, suffix: string): number => {
+        const num = parseFloat(value.replace(/,/g, ''));
+        if (suffix.toUpperCase() === 'M') return num * 1000000;
+        if (suffix.toUpperCase() === 'K') return num * 1000;
+        return num;
+      };
+      minPrice = parsePrice(priceMatches[1], priceMatches[2]);
+      maxPrice = parsePrice(priceMatches[3], priceMatches[4]);
+    }
+    
+    console.log(`Parsed price range: ${priceRange} -> $${minPrice} - $${maxPrice}`);
+
+    // Build location filter from survey preferred locations
+    const preferredLocations = survey.preferred_locations || [];
+    
+    // Fetch properties matching the price range (both MLS and featured)
+    let query = supabase
       .from('properties')
       .select(`
         *,
         property_images (image_url, is_primary)
       `)
-      .eq('is_featured', true);
+      .gte('price', minPrice)
+      .lte('price', maxPrice)
+      .in('status', ['For Sale', 'Pending', 'Coming Soon']);
+    
+    const { data: allProperties, error: propertiesError } = await query
+      .order('price', { ascending: false })
+      .limit(200);
 
     if (propertiesError) {
       console.error('Error fetching properties:', propertiesError);
     }
+
+    // If preferred locations specified, sort matching locations first
+    let properties = allProperties || [];
+    if (preferredLocations.length > 0) {
+      const locationKeywords = preferredLocations.map((loc: string) => loc.toLowerCase());
+      properties.sort((a: any, b: any) => {
+        const aMatch = locationKeywords.some((kw: string) => (a.location || '').toLowerCase().includes(kw));
+        const bMatch = locationKeywords.some((kw: string) => (b.location || '').toLowerCase().includes(kw));
+        if (aMatch && !bMatch) return -1;
+        if (!aMatch && bMatch) return 1;
+        return 0;
+      });
+    }
+    
+    // Also prioritize featured properties
+    properties.sort((a: any, b: any) => {
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+      return 0;
+    });
+    
+    // Limit to top 25 most relevant for the AI prompt
+    properties = properties.slice(0, 25);
+    
+    console.log(`Found ${allProperties?.length || 0} properties in range, sending top ${properties.length} to AI`);
 
     // Build AI prompt with survey data and properties
     const systemPrompt = `You are a luxury real estate advisor for The Crawford Team in St. Petersburg, Florida. 
