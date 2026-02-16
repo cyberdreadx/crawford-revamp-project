@@ -88,13 +88,17 @@ function mapStatus(mlsStatus?: string): string {
   return statusMap[mlsStatus] || 'For Sale';
 }
 
-function passesFilters(prop: MLSProperty, minPrice?: number, maxPrice?: number, county?: string): boolean {
+function passesFilters(prop: MLSProperty, minPrice?: number, maxPrice?: number, county?: string, city?: string): boolean {
   const price = prop.ListPrice || 0;
   if (minPrice && price < minPrice) return false;
   if (maxPrice && price > maxPrice) return false;
   if (county) {
     const propCounty = (prop.CountyOrParish || '').toUpperCase();
     if (!propCounty.includes(county.toUpperCase())) return false;
+  }
+  if (city) {
+    const propCity = (prop.City || '').toUpperCase();
+    if (!propCity.includes(city.toUpperCase())) return false;
   }
   return true;
 }
@@ -124,8 +128,9 @@ serve(async (req) => {
       minPrice,
       maxPrice,
       county,
+      city,
       propertyTypes,
-      startOffset = 0  // Allow resuming from a specific offset
+      startOffset = 0
     } = await req.json().catch(() => ({}));
 
     if (!mlsGridToken || !mlsGridBaseUrl) {
@@ -146,11 +151,11 @@ serve(async (req) => {
       .single();
 
     const syncLogId = syncLog?.id;
-    const hasLocalFilters = minPrice || maxPrice || county;
 
-    console.log(`Sync starting - limit: ${limit}, minPrice: ${minPrice}, county: ${county}, offset: ${startOffset}`);
+    console.log(`Sync starting - limit: ${limit}, minPrice: ${minPrice}, maxPrice: ${maxPrice}, city: ${city}, county: ${county}, offset: ${startOffset}`);
 
-    // Build API filter
+    // Build API filter - use only status and property type at API level
+    // Price and location filters are applied locally since MLS Grid returns 400 for numeric/city filters
     const activeStatusFilter = "StandardStatus eq 'Active' or StandardStatus eq 'Active Under Contract' or StandardStatus eq 'Pending' or StandardStatus eq 'Coming Soon'";
     const filterParts: string[] = [`(${activeStatusFilter})`];
     
@@ -161,9 +166,10 @@ serve(async (req) => {
     
     const filter = `&$filter=${filterParts.join(' and ')}`;
     console.log('Filter:', filter);
+    const hasLocalFilters = minPrice || maxPrice || county || city;
 
     // Use smaller batch size to reduce request frequency
-    const batchSize = 100; // Reduced from 200 to 100
+    const batchSize = 200; // Larger batches = fewer API calls
     let skip = startOffset;
     let totalFetched = 0;
     let recordsCreated = 0;
@@ -218,7 +224,7 @@ serve(async (req) => {
       for (const prop of properties) {
         if (recordsMatched >= limit) break;
         if (isTestListing(prop)) continue;
-        if (hasLocalFilters && !passesFilters(prop, minPrice, maxPrice, county)) continue;
+        if (hasLocalFilters && !passesFilters(prop, minPrice, maxPrice, county, city)) continue;
         
         recordsMatched++;
         
