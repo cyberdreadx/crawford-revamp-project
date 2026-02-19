@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Listings from "./pages/Listings";
 import MLSSearch from "./pages/MLSSearch";
-
+import LuxuryProperties from "./pages/LuxuryProperties";
 import LuxurySurvey from "./pages/LuxurySurvey";
 import MatchReport from "./pages/MatchReport";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/listings" element={<Listings />} />
             <Route path="/mls-search" element={<MLSSearch />} />
-            
+            <Route path="/luxury" element={<LuxuryProperties />} />
             <Route path="/luxury-survey" element={<LuxurySurvey />} />
             <Route path="/match-report" element={<MatchReport />} />
             <Route path="/blog" element={<Blog />} />
