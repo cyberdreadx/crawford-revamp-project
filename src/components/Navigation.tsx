@@ -100,9 +100,6 @@ const Navigation = () => {
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-background border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[9999]">
                     <div className="py-2">
                       {item.isResources ? <>
-                          <Link to="/luxury" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
-                            Luxury Portfolio
-                          </Link>
                           <Link to="/luxury-survey" className="block px-4 py-3 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors rounded-md mx-2">
                             Luxury Survey
                           </Link>

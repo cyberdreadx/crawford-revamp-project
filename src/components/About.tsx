@@ -197,45 +197,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Aline Sarria */}
-            <motion.div initial={{
-            opacity: 0,
-            y: 50
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.3
-          }} viewport={{
-            once: true
-          }}>
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div className="relative">
-                  <div className="max-w-lg mx-auto lg:mx-0">
-                    <img src="/lovable-uploads/af237420-08c6-4ffc-84bf-7e85f6f3df22.png" alt="Aline Sarria" className="w-full h-auto object-cover rounded-lg shadow-elegant" />
-                  </div>
-                </div>
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-5xl lg:text-6xl font-bold text-foreground mb-2">Aline Sarria</h3>
-                    <Badge variant="secondary" className="text-lg px-6 py-2 bg-[#7bbcb0]">Luxury Property Matchmaker</Badge>
-                  </div>
-                  <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                    <p>
-                      Aline Sarria is a dedicated luxury property matchmaker specializing in waterfront condos and high-end real estate in downtown St. Petersburg (DTSP). Known for her ability to uncover the hidden potential in every property, Aline brings a visionary approach to both buying and selling luxury homes.
-                    </p>
-                    <p>
-                      Before launching her real estate career, Aline spent decades as an educator and principal, where she mastered the art of identifying and nurturing human potential. That same talent now drives her success in luxury real estate. Native Spanish speaker and fluent in French, Aline serves a diverse clientele.
-                    </p>
-                    <p>
-                      Now a proud St. Petersburg resident, Aline is passionate about showcasing the city's best properties to local buyers and international investors alike, especially those drawn to Florida's Gulf Coast lifestyle.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
           </div>
 
           {/* Achievement Stats */}
