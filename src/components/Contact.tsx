@@ -159,11 +159,6 @@ const Contact = () => {
 
   const teamMembers = [
     {
-      name: "Aline",
-      calendlyUrl: "https://calendly.com/aline-yourcrawfordteam/30min",
-      description: "Luxury Property Expert"
-    },
-    {
       name: "Monica", 
       calendlyUrl: "https://calendly.com/monica-yourcrawfordteam/30min",
       description: "Senior Real Estate Specialist"
