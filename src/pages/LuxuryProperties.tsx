@@ -56,11 +56,6 @@ const DossierCard = ({
 						<Eye className="mr-2 h-4 w-4" /> View
 					</a>
 				</Button>
-				<Button className="flex-1 bg-coral-accent hover:bg-coral-accent/90 text-white" asChild>
-					<a href={dossier.downloadPdf} download>
-						<FileDown className="mr-2 h-4 w-4" /> Download
-					</a>
-				</Button>
 			</div>
 		</CardContent>
 	</Card>;
