@@ -146,11 +146,10 @@ const BlogList = () => {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
-              Luxury Market Insights
+              The Crawford Journal
             </h1>
             <p className="text-lg text-muted-foreground">
-              Expert analysis and insights into St. Petersburg's luxury real estate market. 
-              Stay informed with the latest trends, investment opportunities, and market reports.
+              Stories, insights, and local expertise from the Crawford Team — your guides to St. Petersburg real estate.
             </p>
           </div>
         </div>

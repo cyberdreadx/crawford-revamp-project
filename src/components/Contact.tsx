@@ -356,68 +356,6 @@ const Contact = () => {
                 </motion.div>
               )}
 
-              {/* Schedule a Consultation */}
-              <motion.div 
-                id="schedule-consultation"
-                initial={{
-                opacity: 0,
-                y: 30
-              }} whileInView={{
-                opacity: 1,
-                y: 0
-              }} transition={{
-                duration: 0.8,
-                delay: 1.0
-              }} viewport={{
-                once: true
-              }}>
-                <div className="mt-8">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-3 bg-gradient-gold rounded-full">
-                      <Calendar className="w-6 h-6 text-accent" />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-semibold text-foreground">Schedule a Consultation</h4>
-                      <p className="text-muted-foreground">Book a 30-minute call with our team</p>
-                    </div>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {teamMembers.map((member, index) => (
-                      <Card key={member.name} className="p-4 shadow-card border-0 bg-gradient-subtle hover:shadow-elegant transition-all duration-300">
-                        <CardContent className="p-0">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <div className="p-2 bg-accent/10 rounded-full">
-                                <Users className="w-5 h-5 text-accent" />
-                              </div>
-                              <div>
-                                <h5 className="font-semibold text-foreground">{member.name}</h5>
-                                <p className="text-sm text-muted-foreground">{member.description}</p>
-                              </div>
-                            </div>
-                            <Button 
-                              asChild
-                              size="sm"
-                              className="bg-gradient-gold hover:shadow-button transition-all duration-200"
-                            >
-                              <a 
-                                href={member.calendlyUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center space-x-2"
-                              >
-                                <Calendar className="w-4 h-4" />
-                                <span>Book Now</span>
-                              </a>
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
             </div>
 
             {/* Contact Information */}
