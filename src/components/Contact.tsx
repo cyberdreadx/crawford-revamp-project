@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Star, Facebook, Instagram, Linkedin, Calendar, Users } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, MessageSquare, Star, Facebook, Instagram, Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 
