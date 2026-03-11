@@ -1,0 +1,1 @@
+UPDATE blog_posts SET is_published = false WHERE id IN ('1965de3b-b556-4140-86b0-c5b10f94edab', '4928f35b-b81d-40d9-8552-7f5130fab983');
